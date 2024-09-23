@@ -2,14 +2,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 8rem;
+    height: 6rem;
     padding: 2rem;
     background-color: #ec1c2c;
 }
 
 .logo {
-    width: 22rem;
-    height: 6.5rem;
+    width: 20rem;
+    height: 5.5rem;
 }
 
 .buttons {
@@ -20,12 +20,12 @@
 }
 
 .buttonRegister {
-    width: 12rem;
-    height: 4rem;
+    width: 10rem;
+    height: 2.5rem;
     background-color: #F24A4A;
     border: none;
     border-radius: 8px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 400;
     color: #fff;
 }
@@ -35,12 +35,12 @@
 }
 
 .buttonLogin {
-    width: 12rem;
-    height: 4rem;
+    width: 10rem;
+    height: 2.5rem;
     background-color: #F5D0D0;
     border: none;
     border-radius: 8px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 400;
     color: #000;
 }
