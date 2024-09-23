@@ -10,7 +10,8 @@
     flex-direction: column;
     height: 75vh;
     width: 85vw;
-    background-color: #F0F0F0;
+    background: linear-gradient(to right, #8A8A8A, #F0F0F0);
+    overflow: hidden;
     gap: -20vw;
     padding: 4vw;
     border-radius: 15px;
@@ -41,18 +42,28 @@
     padding: 0.5rem;
 }
 
+.campos {
+    display: flex;
+}
+
+.icone {
+    margin-top: 0.5rem;
+}
+
 .inputs {
     display: block;
     background: transparent;
-    width: 70%;
+    width: 50%;
     line-height: 0.5rem;
     border: none;
+    border-bottom: 2px solid black;
+    outline: none;
     padding: 0.6rem;
 }
 
 .curso {
     color: #505050;
-    font-size: 0.1rem;
+    font-size: 1rem;
     padding: 0.5rem;
 }
 
