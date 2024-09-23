@@ -1,10 +1,10 @@
-import Link from 'next/link';
 import styles from "./page.module.css";
+import Header from "./components/Header/Header";
 
 export default function Home() {
   return (
     <div>
-      <Link href={'/Cadastro'}>Cadastro</Link>
+      <Header />
     </div>
   );
 }
