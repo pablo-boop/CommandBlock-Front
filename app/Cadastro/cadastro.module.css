@@ -1,0 +1,18 @@
+.cadastro {
+    background-color: #DA251C;
+    height: 100vh;
+    display: flex;
+}
+
+.card {
+    margin-left: 10vw;
+    margin-top: 7vw;
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    width: 80vw;
+    background-color: #F0F0F0;
+    gap: 20px;
+    padding: 40px;
+    border-radius: 15px;
+}
