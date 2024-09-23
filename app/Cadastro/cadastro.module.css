@@ -10,12 +10,21 @@
     flex-direction: column;
     height: 75vh;
     width: 85vw;
-    background: linear-gradient(to right, #8A8A8A, #F0F0F0);
+    background: linear-gradient(to right, #8A8A8A, 40%, #F0F0F0);
     overflow: hidden;
     gap: -20vw;
     padding: 4vw;
     border-radius: 15px;
     display: flex;
+}
+
+.arrow {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 6.5rem;
+    left: 6.8rem;
+    color: #FFFFFF;
 }
 
 .imagem {

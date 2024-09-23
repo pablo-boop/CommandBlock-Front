@@ -3,6 +3,7 @@ import styles from "./cadastro.module.css";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { IoLockClosedOutline } from "react-icons/io5";
+import {FiArrowLeft } from "react-icons/fi";
 
 const cadastro = () => {
     return (
@@ -11,8 +12,8 @@ const cadastro = () => {
             <div className={styles.card}>
 
                 <div className={styles.imagem}>
+                <FiArrowLeft className={styles.arrow} />
                     <img src={'/cadastro.svg'}></img>
-                    <div className={styles.placeholder}></div>
                 </div>
 
                 <div className={styles.forms}>
