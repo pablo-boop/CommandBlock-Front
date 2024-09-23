@@ -1,0 +1,96 @@
+.cadastro {
+    background-color: #DA251C;
+    height: 100vh;
+    display: flex;
+}
+
+.card {
+    margin-left: 7vw;
+    margin-top: 6vw;
+    flex-direction: column;
+    height: 75vh;
+    width: 85vw;
+    background: linear-gradient(to right, #8A8A8A, 40%, #F0F0F0);
+    overflow: hidden;
+    gap: -20vw;
+    padding: 4vw;
+    border-radius: 15px;
+    display: flex;
+}
+
+.arrow {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 6.5rem;
+    left: 6.8rem;
+    color: #FFFFFF;
+}
+
+.imagem {
+    flex: 1;
+    display: flex;
+    margin-top: 0vw;
+    margin-left: -5vw;
+    height: 20vw;
+}
+
+.forms {
+    margin-left: 40vw;
+    margin-top: -20vw;
+    margin-bottom: 30vw;
+}
+
+.title {
+    display: flex;
+    font-size: 1.4rem;
+}
+
+.text {
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+
+.campos {
+    display: flex;
+}
+
+.icone {
+    margin-top: 0.5rem;
+}
+
+.inputs {
+    display: block;
+    background: transparent;
+    width: 50%;
+    line-height: 0.5rem;
+    border: none;
+    border-bottom: 2px solid black;
+    outline: none;
+    padding: 0.6rem;
+}
+
+.curso {
+    color: #505050;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+
+.inputlabel {
+    display: flex;
+    font-size:  0.9rem;
+    padding: 0.7rem;
+}
+
+.input {
+    accent-color: black;
+}
+
+.logintext {
+    font-size: 0.9rem;
+    padding: 1rem;
+}
+
+.login {
+    color: #DA251C;
+}
