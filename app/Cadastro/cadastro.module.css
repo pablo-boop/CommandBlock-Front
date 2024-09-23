@@ -40,7 +40,11 @@
 
 .inputs {
     display: block;
-    padding: 10px;
+    background: transparent;
+    width: 70%;
+    line-height: 1.5rem;
+    border: none;
+    padding: 1rem;
 }
 
 .curso {
@@ -53,4 +57,12 @@
     display: flex;
     font-size: 1rem;
     padding: 0.7rem;
+}
+
+.logintext {
+    padding: 2rem;
+}
+
+.login {
+    color: #DA251C;
 }
