@@ -9,7 +9,7 @@ const Login = () => {
             <div className={styles.container}>
                 <FiArrowLeft className={styles.arrow} />
                 <div className={styles.left}>
-                    <h1>Bem-vindo de volta!</h1>
+                    <h1 className={styles.title}>Bem-vindo de volta!</h1>
                     <p className={styles.txt}>Por favor, faça o login antes de continuar</p>
                     <div className={styles.inputs}>
                         <div className={styles.inputWithIcon}>

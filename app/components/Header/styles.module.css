@@ -31,8 +31,9 @@
 }
 
 .buttonRegister:hover {
-    pointer-events: stroke;
+    cursor: pointer;
 }
+
 
 .buttonLogin {
     width: 10rem;
@@ -43,4 +44,8 @@
     font-size: 1rem;
     font-weight: 400;
     color: #000;
+}
+
+.buttonLogin:hover {
+    cursor: pointer;
 }

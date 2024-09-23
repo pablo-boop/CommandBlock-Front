@@ -70,9 +70,14 @@
     position: relative;
 }
 
+.title {
+    color: #000;
+}
+
 .icon {
     position: absolute;
     top: 3px;
+    color: #000;
 }
 
 .actionArea {
@@ -88,6 +93,10 @@
     color: #ec1c2c;
 }
 
+.register:hover {
+    cursor: pointer;
+}
+
 .buttonRegister {
     margin-top: 1rem;
     width: 10rem;
@@ -98,4 +107,8 @@
     font-size: 1rem;
     font-weight: 400;
     color: #fff;
+}
+
+.buttonRegister:hover {
+    cursor: pointer;
 }
