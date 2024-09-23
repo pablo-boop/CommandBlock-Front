@@ -69,8 +69,12 @@
 
 .inputlabel {
     display: flex;
-    font-size: 0.8rem;
+    font-size:  0.9rem;
     padding: 0.7rem;
+}
+
+.input {
+    accent-color: black;
 }
 
 .logintext {
