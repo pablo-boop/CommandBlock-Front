@@ -1,0 +1,18 @@
+.allred{
+    background-color: red;
+    height: 100vh;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding-top: 10rem;
+   
+}
+.block{
+    margin-left: 17rem;
+    background-color: rgb(236, 235, 235);
+    box-shadow: inset 7px 6px 7px rgba(1, 0, 0, 0);
+    width: 90rem;
+    height: 40rem;
+    border-radius: 9px;
+   
+}
