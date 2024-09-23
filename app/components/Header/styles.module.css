@@ -1,0 +1,46 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 8rem;
+    padding: 2rem;
+    background-color: #ec1c2c;
+}
+
+.logo {
+    width: 22rem;
+    height: 6.5rem;
+}
+
+.buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttonRegister {
+    width: 12rem;
+    height: 4rem;
+    background-color: #F24A4A;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #fff;
+}
+
+.buttonRegister:hover {
+    pointer-events: stroke;
+}
+
+.buttonLogin {
+    width: 12rem;
+    height: 4rem;
+    background-color: #F5D0D0;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #000;
+}
