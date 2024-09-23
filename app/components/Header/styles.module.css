@@ -1,0 +1,13 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 8rem;
+    padding: 2rem;
+    background-color: #DA251C;
+}
+
+.logo {
+    width: 6rem;
+    height: 2rem;
+}
