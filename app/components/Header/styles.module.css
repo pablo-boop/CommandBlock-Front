@@ -6,7 +6,9 @@
     padding: 2rem;
     background-color: #ec1c2c;
 }
-
+.buttonTxt{
+    font-weight: 450;
+}
 .logo {
     width: 20rem;
     height: 5.5rem;
