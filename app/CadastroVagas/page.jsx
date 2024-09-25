@@ -40,7 +40,7 @@ const cadastrovagas = () => {
 
                 <div className={styles.inputarea}> 
                 <label className={styles.label}>
-                    <input type="text"
+                    <input type="number"
                     name="telefone"
                     placeholder="Telefone"
                     className={styles.input3}
