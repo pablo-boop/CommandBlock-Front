@@ -1,0 +1,107 @@
+.container {
+    display: flex;
+    padding: 3rem;
+}
+
+.h3 {
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+.forms {
+    flex: 1;
+    padding: 1srem;
+    align-items: center;
+    text-align: center;
+    border-radius: 0.3rem;
+    background-color: #F9F6F6;
+    margin-right: 10rem;
+}
+
+.form {
+    display: flex;
+    justify-content: space-between;
+}
+
+.label {
+    display: block;
+    justify-content: center;
+}
+
+.textarea{
+    width: 100%;
+    padding: 2rem;
+    margin-bottom: 2px;
+    text-align: left;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0.9px 1px 0.9px gray inset;
+}
+
+.vagacontainer {
+    flex: 1;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    background-color: #F9F6F6;
+    border-radius: 8px;
+    text-align: center;
+    margin-left: -7rem;
+}
+
+.button {
+    background-color: #F24A4A;
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 0.8rem;
+}
+
+.vagaitem {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.input {
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0.9px 1px 0.9px gray inset;
+}
+
+.inputarea {
+    padding: 0.5rem;
+} 
+
+.input2 {
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 4rem;
+    box-shadow: 0.9px 1px 0.9px gray inset;
+}
+
+.input3 {
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 4rem;
+    box-shadow: 0.9px 1px 0.9px gray inset;
+}
+
+.empresas {
+    color: #DA251C;
+    text-align: right;
+    font-size: 0.8rem;
+    margin-right: 1rem;
+}
