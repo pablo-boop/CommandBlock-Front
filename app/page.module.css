@@ -105,11 +105,20 @@ a.secondary {
   flex-shrink: 0;
 }
 
+.all {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5%;
+}
+
 .container {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 80%;
+  width: 90%;
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -130,7 +139,7 @@ a.secondary {
   font-weight: 400;
   letter-spacing: -0.01em;
   color: #000;
-  width: 70%;
+  width: 80%;
 }
 
 .subtitle {
@@ -151,6 +160,41 @@ a.secondary {
   color: #000;
   text-align: justify;
   padding: 0 5%;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 25%;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5%;
+  background-color: #dedede;
+  border-radius: 8px;
+  padding-bottom: 32px;
+  padding-top: 10px;
+}
+
+.titleAside {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: black;
+}
+
+.card1 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: rgb(193, 193, 193);
+  width: 80%;
+  height: 150px;
+  padding: 20px;
 }
 
 /* Enable hover only on non-touch devices */
