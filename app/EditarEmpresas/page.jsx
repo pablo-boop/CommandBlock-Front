@@ -38,11 +38,11 @@ const cadastro = () => {
 
                     <div className={styles.campos}>
                     <CiPhone className={styles.icone} />
-                    <input type="password" placeholder="Telefone" required className={styles.inputs} />
+                    <input type="number" placeholder="Telefone" required className={styles.inputs} />
                     </div>
 
-                    <button className={styles.button} type="submit">Cadastrar</button>
-                    
+                    <button className={styles.button}>Atualizar</button>
+
                 </div>
 
             </div>

@@ -39,6 +39,7 @@
     margin-left: 40vw;
     margin-top: -20vw;
     margin-bottom: 30vw;
+    text-align: left
 }
 
 .title {
@@ -47,28 +48,28 @@
 }
 
 .text {
-    font-size: 1rem;
-    padding: 0.5rem;
+    font-size: 1.1rem;
+    padding: 0.4rem;
 }
 
 .campos {
     display: flex;
+    justify-content: flex-start;
 }
 
 .icone {
-    margin-top: 1.5rem;
+    margin-top: 2rem;
+    margin-right: 0.5rem;
 }
 
 .inputs {
-    display: block;
-    background: transparent;
-    width: 50%;
-    line-height: 0.5rem;
+    margin-top: 1.5rem;
+    background-color: transparent;
     border: none;
-    border-bottom: 2px solid black;
-    outline: none;
-    padding: 0.6rem;
-    height: 3rem;
+    border-bottom: 2px #000 solid;
+    width: 20rem;
+    height: 1.5rem;
+    padding: 0rem;
 }
 
 
@@ -76,7 +77,10 @@
     background-color: #F24A4A;
     color: white;
     border: none;
-    padding: 0.8rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    box-shadow: 2px 3px 1px gray;
+    padding: 0.8rem 2rem;
     margin-left: 8rem;
     margin-top: 3rem;
 }
