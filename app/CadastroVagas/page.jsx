@@ -73,7 +73,9 @@ const cadastrovagas = () => {
                     />
                 </div>    
 
+                <div className={styles.inputarea}>
                 <button className={styles.button} type="submit">Cadastrar</button>
+                </div>
             </form>
 
             <div className={styles.vagacontainer}>
