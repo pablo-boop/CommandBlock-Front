@@ -6,7 +6,7 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import {FiArrowLeft } from "react-icons/fi";
 import { CiPhone } from "react-icons/ci";
 
-const cadastro = () => {
+const editarempresas = () => {
     return (
         <>
         <div className={styles.cadastro}>
@@ -51,4 +51,4 @@ const cadastro = () => {
     )
 }
 
-export default cadastro;
+export default editarempresas;
