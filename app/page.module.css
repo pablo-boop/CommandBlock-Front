@@ -105,6 +105,54 @@ a.secondary {
   flex-shrink: 0;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 80%;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5%;
+}
+
+.title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #f24a4a;
+}
+
+.vagasDetalhes {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000;
+  width: 70%;
+}
+
+.subtitle {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #f24a4a;
+  text-align: left;
+  padding: 0 5%;
+}
+
+.text {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #000;
+  text-align: justify;
+  padding: 0 5%;
+}
+
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   a.primary:hover {
