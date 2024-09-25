@@ -5,6 +5,7 @@
 
 .h3 {
     padding: 1rem;
+    margin-top: 0.5rem;
 }
 
 .forms {
@@ -15,6 +16,7 @@
     border-radius: 0.3rem;
     background-color: #F9F6F6;
     margin-right: 10rem;
+    box-shadow: 1px 1px 5px gray inset;
 }
 
 .form {
@@ -29,8 +31,8 @@
 
 .textarea{
     width: 100%;
-    padding: 1rem;
-    margin-bottom: 5px;
+    padding: 2rem;
+    margin-bottom: 2px;
     text-align: left;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -53,6 +55,7 @@
     font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 0.8rem;
 }
 
 .vagaitem {
@@ -90,4 +93,11 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-right: 4rem;
+}
+
+.empresas {
+    color: #DA251C;
+    text-align: right;
+    font-size: 0.8rem;
+    margin-right: 1rem;
 }
