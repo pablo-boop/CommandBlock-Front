@@ -1,0 +1,86 @@
+.cadastro {
+    background-color: #DA251C;
+    height: 100vh;
+    display: flex;
+}
+
+.card {
+    margin-left: 7vw;
+    margin-top: 6vw;
+    flex-direction: column;
+    height: 75vh;
+    width: 85vw;
+    background: linear-gradient(to right, #8A8A8A, 40%, #F0F0F0);
+    overflow: hidden;
+    gap: -20vw;
+    padding: 4vw;
+    border-radius: 15px;
+    display: flex;
+}
+
+.arrow {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 6.5rem;
+    left: 6.8rem;
+    color: #FFFFFF;
+}
+
+.imagem {
+    flex: 1;
+    display: flex;
+    margin-top: 0vw;
+    margin-left: -5vw;
+    height: 20vw;
+}
+
+.forms {
+    margin-left: 40vw;
+    margin-top: -20vw;
+    margin-bottom: 30vw;
+    text-align: left
+}
+
+.title {
+    display: flex;
+    font-size: 1.4rem;
+}
+
+.text {
+    font-size: 1.1rem;
+    padding: 0.4rem;
+}
+
+.campos {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.icone {
+    margin-top: 2rem;
+    margin-right: 0.5rem;
+}
+
+.inputs {
+    margin-top: 1.5rem;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1.5px #000 solid;
+    width: 20rem;
+    height: 1.5rem;
+    padding: 0rem;
+}
+
+
+.button {
+    background-color: #F24A4A;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    box-shadow: 2px 3px 1px gray;
+    padding: 0.8rem 2rem;
+    margin-left: 8rem;
+    margin-top: 3rem;
+}
