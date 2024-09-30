@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     background-color: #ec1c2c;
-    height: 40rem;
+    height: 59.55rem;
 }
 
 .container {
@@ -17,6 +17,10 @@
     width: 65rem;
     border-radius: 0.5rem;
     background-image: linear-gradient(to right, #F0F0F0 67%, #8A8A8A);
+}
+
+.buttonArrow {
+    cursor: pointer;
 }
 
 .arrow {
