@@ -1,6 +1,6 @@
 .vagacontainer {
     flex: 1;
-    border: 1px solid #ccc;
+    border: none;
     background-color: #F9F6F6;
     border-radius: 8px;
     text-align: center;
