@@ -1,5 +1,6 @@
 import styles from "./cadastrovagas.module.css";
 import Header from "../components/Header/Header";
+import Vagas from "../components/Vagas/Vagas";
 
 const cadastrovagas = () => {
     return (
@@ -83,7 +84,13 @@ const cadastrovagas = () => {
 
             <div className={styles.vagacontainer}>
                 <h3>Vagas</h3>
-                <div className={styles.vagaitem}></div>
+                <div className={styles.vagaitem}>
+                    <div className={styles.vaga}>
+                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
+
+                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
+                </div>
+                </div>
             </div>
 
           </div>

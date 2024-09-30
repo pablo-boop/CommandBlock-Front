@@ -48,6 +48,17 @@
     margin-left: -7rem;
 }
 
+.vagaitem {
+    padding-top: 1rem;
+    margin-left: 2rem;
+}
+
+.vaga {
+    padding-left: -15rem;
+    align-items: center;
+    display: flex;
+}
+
 .button {
     background-color: #F24A4A;
     color: white;
@@ -57,13 +68,6 @@
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 0.8rem;
-}
-
-.vagaitem {
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #f0f0f0;
-    border-radius: 4px;
 }
 
 .input {

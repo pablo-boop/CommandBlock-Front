@@ -1,0 +1,20 @@
+.card {
+    background-color: #D9D9D9;
+    display: flex;
+    border-radius: 0.5rem;
+    width: 95%;
+    height: 23%;
+    align-items: center;
+    margin-top: 2rem;
+    padding-right: 5rem;
+}
+
+.imagem {
+    width: 12rem;
+    height: 12rem;
+    margin: 0.5rem;
+}
+
+.texto{
+    text-align: center;
+}
