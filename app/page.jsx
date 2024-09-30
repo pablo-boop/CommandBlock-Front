@@ -14,7 +14,7 @@ export default function Home() {
             alt="Pessoa estudando feliz"
             width={550}
           />
-
+ 
           <div className={styles.vagasDetalhes}>
             <p className={styles.subtitle}>Jovem Aprendiz</p>
 
