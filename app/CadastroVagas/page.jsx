@@ -85,11 +85,28 @@ const cadastrovagas = () => {
             <div className={styles.vagacontainer}>
                 <h3>Vagas</h3>
                 <div className={styles.vagaitem}>
-                    <div className={styles.vaga}>
+
+                <div className={styles.vaga}>
                 <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
 
                 <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
                 </div>
+
+                <div className={styles.vaga}>
+                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
+
+                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
+                </div>
+
+                <div className={styles.vaga}>
+                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
+
+                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
+                </div>
+
+
+
+
                 </div>
             </div>
 
