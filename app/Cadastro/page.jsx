@@ -26,6 +26,11 @@ const cadastro = () => {
                     </div>
 
                     <div className={styles.campos}>
+                    <IoLockClosedOutline className={styles.icone} />
+                    <input type="number" placeholder="CPF" required className={styles.inputs} />
+                    </div>
+
+                    <div className={styles.campos}>
                     <MdOutlineEmail className={styles.icone} />
                     <input type="email" placeholder="E-mail" required className={styles.inputs} />
                     </div>
@@ -53,6 +58,10 @@ const cadastro = () => {
                     Técnico de eletroeletronica
                     </label>
                     </div>
+
+                    <button className={styles.buttonRegister} >
+                            <p className={styles.buttonTxt}>Cadastrar-se</p>
+                    </button>
 
                     <p className={styles.logintext}>Já tem um cadastro?  <a href="/Login" className={styles.login}>Faça o Login</a> </p>
 
