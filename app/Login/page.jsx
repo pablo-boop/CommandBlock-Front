@@ -1,7 +1,8 @@
 "use client"
 import styles from "./login.module.css"
-
+import Link from 'next/link';
 import { FiUser, FiLock, FiArrowLeft } from "react-icons/fi";
+
 
 const Login = () => {
     return (
@@ -22,10 +23,13 @@ const Login = () => {
                         </div>
                     </div>
                     <div className={styles.actionArea}>
-                        <p className={styles.txt}>Caso ainda não tenha um login, <a className={styles.register}>Cadastre-se</a></p>
+                        <Link href="/">
                         <button className={styles.buttonRegister} >
-                            <p className={styles.buttonTxt}>Cadastrar-se</p>
+                            <p className={styles.buttonTxt}>Entrar</p>
                         </button>
+                        </Link>
+                        <p className={styles.txt}>Caso ainda não tenha um login, 
+                            <a href="./Cadastro" className={styles.register}>Cadastre-se</a></p>
                     </div>
                 </div>
                 <div className={styles.right}>

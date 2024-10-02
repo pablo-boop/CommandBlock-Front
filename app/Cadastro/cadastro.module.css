@@ -2,53 +2,52 @@
     background-color: #DA251C;
     height: 100vh;
     display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card {
-    margin-left: 7vw;
-    margin-top: 6vw;
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
     height: 75vh;
     width: 85vw;
-    background: linear-gradient(to right, #8A8A8A, 40%, #F0F0F0);
+    background: linear-gradient(to right, #8A8A8A, 38%, #F0F0F0);
     overflow: hidden;
-    gap: -20vw;
     padding: 4vw;
-    border-radius: 15px;
-    display: flex;
+    border-radius: 0.5rem;
 }
 
 .arrow {
     height: 1.5rem;
     width: 1.5rem;
     position: absolute;
-    top: 6.5rem;
-    left: 6.8rem;
-    color: #FFFFFF;
+    top: 3rem;
+    left: 3rem;
 }
 
 .imagem {
-    flex: 1;
-    display: flex;
-    margin-top: 0vw;
-    margin-left: -5vw;
     height: 20vw;
+    width: 50%;
 }
 
 .forms {
-    margin-left: 40vw;
-    margin-top: -20vw;
-    margin-bottom: 30vw;
+    margin-left: 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    width: 50%;
 }
 
 .title {
     display: flex;
-    font-size: 1.4rem;
+    font-weight: bold;
 }
 
 .text {
     font-size: 1rem;
-    padding: 0.5rem;
 }
 
 .campos {
@@ -65,7 +64,7 @@
     width: 50%;
     line-height: 0.5rem;
     border: none;
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid #505050;
     outline: none;
     padding: 0.6rem;
 }
@@ -93,4 +92,22 @@
 
 .login {
     color: #DA251C;
+}
+
+.buttonRegister {
+    margin-left: 2rem;
+    margin-top: 1rem;
+    width: 8rem;
+    height: 3rem;
+    background-color: #F24A4A;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+}
+
+.buttonRegister:hover {
+    cursor: pointer;
 }
