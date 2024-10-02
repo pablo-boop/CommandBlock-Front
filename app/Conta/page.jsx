@@ -6,7 +6,7 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import {FiArrowLeft, FiKey, FiUsers } from "react-icons/fi";
 import { CiCalendar } from "react-icons/ci";
 
-const cadastro = () => {
+const conta = () => {
     return (
         <>
         <div className={styles.cadastro}>
@@ -51,7 +51,7 @@ const cadastro = () => {
                 <div className={styles.direito}>
 
                  
-                    <p className={styles.curso}>Qual curso você deseja atribuir à este usuário?</p>
+                    <h3 className={styles.curso}>Qual curso você deseja atribuir à este usuário?</h3>
 
                     <div className={styles.opcoes}>
                     <label className={styles.inputlabel}>
@@ -91,4 +91,4 @@ const cadastro = () => {
     )
 }
 
-export default cadastro;
+export default conta;

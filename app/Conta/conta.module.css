@@ -48,10 +48,6 @@
     font-size: 1rem;
 }
 
-.campos {
-    display: flex;
-}
-
 .icone {
     margin-top: 1.5rem;
 }
@@ -63,13 +59,14 @@
     width: 20rem;
     height: 3rem;
     padding: 0.5rem;
-    padding-left: 1.5rem;
+    padding-left: 1rem;
     font-size: 15px;
 }
 
 .curso {
     color: #505050;
-    font-size: 1.3rem;
+    padding-bottom: 2rem;
+    display: flex;
 }
 
 .inputlabel {
@@ -115,5 +112,5 @@
 
 .direito {
     margin-right: 30rem;
-    margin-top: 10rem;
+    margin-top: 5rem;
 }
