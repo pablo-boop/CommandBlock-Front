@@ -22,10 +22,10 @@ const Login = () => {
                         </div>
                     </div>
                     <div className={styles.actionArea}>
-                        <p className={styles.txt}>Caso ainda não tenha um login, <a className={styles.register}>Cadastre-se</a></p>
                         <button className={styles.buttonRegister} >
-                            <p className={styles.buttonTxt}>Cadastrar-se</p>
+                            <p className={styles.buttonTxt}>Entrar</p>
                         </button>
+                        <p className={styles.txt}>Caso ainda não tenha um login, <a className={styles.register}>Cadastre-se</a></p>
                     </div>
                 </div>
                 <div className={styles.right}>
