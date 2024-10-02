@@ -2,8 +2,7 @@
 import styles from "./login.module.css"
 import Link from 'next/link';
 import { FiUser, FiLock, FiArrowLeft } from "react-icons/fi";
-import React, { useState, useEffect } from 'react';
-const vazio = useState([]);
+
 
 const Login = () => {
     return (
@@ -24,12 +23,13 @@ const Login = () => {
                         </div>
                     </div>
                     <div className={styles.actionArea}>
-                        <Link href="./Home">
+                        <Link href="/">
                         <button className={styles.buttonRegister} >
                             <p className={styles.buttonTxt}>Entrar</p>
                         </button>
                         </Link>
-                        <p className={styles.txt}>Caso ainda não tenha um login, <a className={styles.register}>Cadastre-se</a></p>
+                        <p className={styles.txt}>Caso ainda não tenha um login, 
+                            <a href="./Cadastro" className={styles.register}>Cadastre-se</a></p>
                     </div>
                 </div>
                 <div className={styles.right}>
