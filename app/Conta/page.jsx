@@ -76,7 +76,11 @@ const conta = () => {
                     </label>
 
                     <FiUsers className={styles.icone} />
-                    <input type="text" placeholder="Tipo de Conta" required className={styles.tipo} />
+                    <select type="text" placeholder="Tipo de Conta" required className={styles.tipo}>
+                        <option>Tipo de Conta</option>
+                        <option>Administrador</option>
+                        <option>Usuário</option>
+                    </select>
                     </div>
 
                     <button className={styles.buttonRegister} >
