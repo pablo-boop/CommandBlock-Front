@@ -1,0 +1,119 @@
+.cadastro {
+    background-color: #DA251C;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 75vh;
+    width: 85vw;
+    background: linear-gradient(to right, #8A8A8A, 38%, #F0F0F0);
+    border-radius: 0.5rem;
+}
+
+.arrow {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 3rem;
+    left: 3rem;
+}
+
+.imagem {
+    height: 20vw;
+    width: 50%;
+}
+
+.forms {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    width: 50%;
+    margin-right: 10rem;
+    margin-bottom: 5rem;
+}
+
+.title {
+    display: flex;
+    font-weight: bold;
+}
+
+.text {
+    font-size: 1rem;
+}
+
+.campos {
+    display: flex;
+}
+
+.icone {
+    margin-top: 1.5rem;
+}
+
+.inputs {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px #000 solid;
+    width: 20rem;
+    height: 3rem;
+    padding: 0.5rem;
+    padding-left: 1.5rem;
+    font-size: 15px;
+}
+
+.curso {
+    color: #505050;
+    font-size: 1.3rem;
+}
+
+.inputlabel {
+    display: flex;
+    font-size: 1rem;
+    padding: 0.7rem;
+}
+
+.input {
+    accent-color: black;
+}
+
+.login {
+    color: #DA251C;
+}
+
+.buttonRegister {
+    margin-left: 5rem;
+    margin-top: 5rem;
+    width: 8rem;
+    height: 3rem;
+    background-color: #F24A4A;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+}
+
+.buttonRegister:hover {
+    cursor: pointer;
+}
+
+.tipo{
+    background-color: transparent;
+    border: none;
+    width: 10rem;
+    height: 2rem;
+    font-size: 15px;
+    padding: 0.5rem;
+}
+
+.direito {
+    margin-right: 30rem;
+    margin-top: 10rem;
+}
