@@ -103,12 +103,14 @@
 }
 
 .tipo{
-    background-color: transparent;
+    background: linear-gradient(to right, #8A8A8A, 1%, #F0F0F0);
     border: none;
+    border-radius: 0.3rem;
     width: 10rem;
     height: 2.5rem;
     font-size: 15px;
     padding: 0.5rem;
+    margin-left: 0.5rem;
 }
 
 .direito {
