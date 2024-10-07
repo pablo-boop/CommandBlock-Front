@@ -99,14 +99,6 @@ const Cadastro = () => {
                         />
                     </div>
 
-                    <div>
-                        <DatePicker
-                            className={styles.datePicker}
-                            onChange={onChange} // Update here
-                            placeholder="Selecionar data de Nascimento"
-                        />
-                    </div>
-
                     <div className={styles.campos}>
                         <IoLockClosedOutline className={styles.icone} />
                         <input
@@ -140,6 +132,14 @@ const Cadastro = () => {
                             placeholder="Senha"
                             required
                             className={styles.inputs}
+                        />
+                    </div>
+
+                    <div>
+                        <DatePicker
+                            className={styles.datePicker}
+                            onChange={onChange} // Update here
+                            placeholder="Selecionar data de Nascimento"
                         />
                     </div>
 
