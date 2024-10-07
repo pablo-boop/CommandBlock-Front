@@ -54,6 +54,11 @@
     display: flex;
 }
 
+.datePicker {
+    margin: 1rem;
+    width: 50%;
+}
+
 .icone {
     margin-top: 0.5rem;
 }
