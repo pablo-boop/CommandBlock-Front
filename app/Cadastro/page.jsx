@@ -17,7 +17,7 @@ const cadastro = () => {
                 </div>
 
                 <div className={styles.forms}>
-                    <h1 className={styles.title}> Seja Bem-Vindo</h1>
+                    <h2 className={styles.title}> Seja Bem-Vindo</h2>
                     <p className={styles.text}>Por favor, faça o cadastro antes de continuar</p>
                     
                     <div className={styles.campos}>

@@ -29,12 +29,13 @@
 }
 
 .imagem {
-    height: 20vw;
-    width: 50%;
+    height: 25vw;
+    width: 20%;
+    display: flex;
 }
 
 .forms {
-    margin-left: 5rem;
+    margin-left: 20rem;
     display: flex;
     flex-direction: column;
     gap: 1vh;
@@ -47,7 +48,7 @@
 }
 
 .text {
-    font-size: 1rem;
+    font-size: 0,5rem;
 }
 
 .campos {
@@ -66,7 +67,6 @@
     border: none;
     border-bottom: 2px solid #505050;
     outline: none;
-    padding: 0.6rem;
 }
 
 .curso {
@@ -78,7 +78,7 @@
 .inputlabel {
     display: flex;
     font-size:  0.9rem;
-    padding: 0.7rem;
+    padding: 0.5rem;
 }
 
 .input {
@@ -87,7 +87,7 @@
 
 .logintext {
     font-size: 0.9rem;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 .login {
