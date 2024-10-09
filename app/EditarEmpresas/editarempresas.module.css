@@ -29,12 +29,13 @@
 }
 
 .imagem {
-    height: 20vw;
-    width: 50%;
+    height: 25vw;
+    width: 20%;
+    display: flex;
 }
 
 .forms {
-    margin-left: 5rem;
+    margin-left: 20rem;
     display: flex;
     flex-direction: column;
     gap: 1vh;
