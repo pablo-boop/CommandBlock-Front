@@ -50,7 +50,7 @@ const EditarEmpresas = () => {
         if (name === "" || email === "" || cnpj === "" || phone === "") {
             error("Preencha todos os campos!");
         } 
-        if (cnpj.length < 14) {
+        else if (cnpj.length < 14) {
             error("Insira um CNPJ válido!");
             return false;
         }else {
