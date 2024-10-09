@@ -49,9 +49,13 @@ const EditarEmpresas = () => {
     const handleSubmit = async () => {
         if (name === "" || email === "" || cnpj === "" || phone === "") {
             error("Preencha todos os campos!");
-        } else {
+        } 
+        if (cnpj.length < 14) {
+            error("Insira um CNPJ válido!");
+            return false;
+        }else {
             try {
-                const response = await fetch(`https://49ab-201-63-78-210.ngrok-free.app/companies`, {
+                const response = await fetch(`https://f550-200-231-33-146.ngrok-free.app/companies`, {
                     method: 'PUT', 
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -133,7 +137,7 @@ const EditarEmpresas = () => {
                             <input
                                 value={cnpj}
                                 onChange={e => setCnpj(e.target.value)}
-                                type="text"
+                                type="number"
                                 placeholder="CNPJ"
                                 required
                                 className={styles.inputs}
@@ -145,7 +149,7 @@ const EditarEmpresas = () => {
                             <input
                                 value={phone}
                                 onChange={e => setPhone(e.target.value)}
-                                type="text"
+                                type="number"
                                 placeholder="Telefone"
                                 required
                                 className={styles.inputs}
