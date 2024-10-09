@@ -13,7 +13,6 @@ import axios from "axios";
 
 const EditarEmpresas = () => {
 
-    
     const [response, setResponse] = useState("");
     
     const [name, setName] = useState("");
