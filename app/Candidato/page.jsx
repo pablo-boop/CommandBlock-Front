@@ -21,14 +21,14 @@ const Candidato = () => {
 
 
                 <h2 className={styles.tituloEstagio}>Estágio</h2>
-                <img src="./estagiarios.jpg" className={styles.image} />
+                <img src="./estagio.jpg" className={styles.image} />
                 <p className={styles.explicacaoVaga}>O estágio no SENAI é uma oportunidade única para os estudantes aplicarem seus conhecimentos em um ambiente profissional dinâmico e desafiador.
                     Oferece desenvolvimento de habilidades práticas, além de contribuir para a formação técnica e profissional. Com foco no aprendizado contínuo, os estagiários têm a chance de
                     trabalhar em projetos relevantes, sendo orientados por profissionais qualificados. O SENAI incentiva a inovação e a excelência, preparando jovens para o mercado de trabalho.
                 </p>
 
                 <h2 className={styles.tituloEfetivo}>Efetivação</h2>
-                <img src="./efetivos.jpg" className={styles.image} />
+                <img src="./efetivo.png" className={styles.image} />
                 <p className={styles.explicacaoVaga}>A efetivação no SENAI representa o reconhecimento do desempenho e dedicação de profissionais que demonstram excelência em suas funções.
                     Esse processo valoriza colaboradores que se destacam por seu comprometimento com a qualidade do ensino e com o desenvolvimento de competências técnicas dos alunos.
                     A efetivação garante estabilidade e continuidade na prestação de serviços, fortalecendo o crescimento do mercado de trabalho.</p>
