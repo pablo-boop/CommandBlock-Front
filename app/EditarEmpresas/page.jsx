@@ -51,7 +51,7 @@ const EditarEmpresas = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://49ab-201-63-78-210.ngrok-free.app/users`, {
+                const response = await fetch(`https://49ab-201-63-78-210.ngrok-free.app/companies`, {
                     method: 'PUT', 
                     headers: new Headers({
                         'Content-Type': 'application/json',
