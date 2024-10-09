@@ -9,14 +9,10 @@ import { FiArrowLeft } from "react-icons/fi";
 import { DatePicker } from 'antd';
 import { message, Space } from 'antd';
 // Back - API and Hooks
-import axios from "axios";
 import { useState } from "react";
-import { redirect } from 'next/navigation'
 
 const Cadastro = () => {
 
-    //Response
-    const [response, setResponse] = useState("");
     //Inputs
     const [name, setName] = useState("");
     const [birthdate, setBirthdate] = useState("");
@@ -62,7 +58,7 @@ const Cadastro = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://49ab-201-63-78-210.ngrok-free.app/users`, {
+                const response = await fetch(`https://f550-200-231-33-146.ngrok-free.app/users`, {
                     method: 'POST',
                     headers: new Headers({
                         'Content-Type': 'application/json',
