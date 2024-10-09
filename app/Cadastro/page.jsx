@@ -11,6 +11,7 @@ import { message, Space } from 'antd';
 // Back - API and Hooks
 import axios from "axios";
 import { useState } from "react";
+import { redirect } from 'next/navigation'
 
 const Cadastro = () => {
 
@@ -34,31 +35,11 @@ const Cadastro = () => {
         setPassword("");
         setCourse("");
     }
-
+    
     const onChange = (date, dateString) => {
         const formattedDate = dateString.split('-').reverse().join('-');
         setBirthdate(formattedDate);
     };
-
-    //Requisição POST users
-    const handleSubmit = async () => {
-        if (name === "" || birthdate === "" || cpf === "" || email === "" || password === "" || course === "") {
-            error("Preencha todos os campos!")
-        } else {
-            try {
-                const response = await axios.post('https://009e-201-63-78-210.ngrok-free.app/users', { name, birthdate, email, cpf, course, password, type: "Aluno" });
-                if (response.message == "Usuário cadastrado com sucesso!") {
-                    success(response.message);
-                    console.log(response);
-                } else {
-                    error(response.message);
-                }
-
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    }
 
     //Messages Succes and Error
     const success = (msg) => {
@@ -67,11 +48,65 @@ const Cadastro = () => {
             content: msg,
         });
     };
+
     const error = (msg) => {
         messageApi.open({
             type: 'error',
             content: msg,
         });
+    };
+    
+    // Requisição POST users
+    const handleSubmit = async () => {
+        if (name === "" || birthdate === "" || cpf === "" || email === "" || password === "" || course === "") {
+            error("Preencha todos os campos!");
+        } else {
+            try {
+                const response = await fetch(`https://49ab-201-63-78-210.ngrok-free.app/users`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        "ngrok-skip-browser-warning": "69420",
+                    }),
+                    body: JSON.stringify({
+                        name: name,
+                        birthdate: birthdate,
+                        cpf: cpf,
+                        email: email,
+                        password: password,
+                        course: course,
+                        type: "Aluno"
+                    })
+                });
+    
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage = response.statusText;
+    
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorMessage = errorJson.message;
+                    } catch (e) {
+                        console.error("Erro ao parsear JSON:", e);
+                    }
+    
+                    throw new Error(errorMessage);
+                }
+    
+                const responseData = await response.json();
+                clearInputs()
+                success(responseData.message);
+    
+                // Redireciona para a página de Login
+                setTimeout(() => {
+                    window.location.href = '/Login';
+                }, 2000);
+    
+            } catch (err) {
+                console.error(err);
+                error(err.message); // Exibe apenas a mensagem de erro
+            }
+        }
     };
 
     return (
