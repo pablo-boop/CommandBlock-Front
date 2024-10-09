@@ -24,7 +24,7 @@ export default function Home() {
               enquanto continua seus estudos.
             </p>
 
-            <p className={styles.subtitle}>Vagas CLT</p>
+            <p className={styles.subtitleCLT}>Vagas CLT</p>
             <img src="./vagasCLT.jpg" className={styles.image} />
             <p className={styles.text}>
               Uma vaga CLT refere-se a uma oportunidade de emprego sob o regime
@@ -37,7 +37,7 @@ export default function Home() {
               semanal remunerado.
             </p>
 
-            <p className={styles.subtitle}>Estágio</p>
+            <p className={styles.subtitleEstagio}>Estágio</p>
             <img src="./estagiariosHome.png" className={styles.image} />
             <p className={styles.text}>
               As vagas de estágio são oportunidades para estudantes aplicarem na
