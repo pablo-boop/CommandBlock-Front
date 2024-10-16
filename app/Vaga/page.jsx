@@ -6,7 +6,6 @@ import Header from "../components/Header/Header"
 import { useEffect, useState } from "react";
 import { message } from "antd";
 
-
 const Vaga = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [vacancies, setVacancies] = useState([]);
