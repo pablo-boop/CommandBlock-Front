@@ -9,7 +9,6 @@ import { CiPhone } from "react-icons/ci";
 import { message, Space } from 'antd';
 
 import { useState } from "react";
-import axios from "axios";
 
 const EditarEmpresas = () => {
 
@@ -54,8 +53,8 @@ const EditarEmpresas = () => {
             return false;
         }else {
             try {
-                const response = await fetch(`https://f550-200-231-33-146.ngrok-free.app/companies`, {
-                    method: 'POST', 
+                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/companies/:id`, {
+                    method: 'PUT', 
                     headers: new Headers({
                         'Content-Type': 'application/json',
                         "ngrok-skip-browser-warning": "69420",
