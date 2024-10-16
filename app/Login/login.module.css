@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 .background {
     display: flex;
     flex-direction: column;
@@ -69,6 +71,9 @@
     padding: 0.5rem;
     padding-left: 1.5rem;
     font-size: 15px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .inputWithIcon {
@@ -76,7 +81,9 @@
 }
 
 .title {
-    color: #000;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
 }
 
 .icon {
@@ -90,8 +97,9 @@
 }
 
 .txt {
-    color: #000;
-    font-size: 1rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .register {
@@ -110,8 +118,9 @@
     background-color: #F24A4A;
     border: none;
     border-radius: 5px;
-    font-size: 1rem;
+    font-family: "Poppins", sans-serif;
     font-weight: 400;
+    font-style: normal;
     color: #fff;
 }
 
