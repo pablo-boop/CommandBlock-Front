@@ -58,7 +58,7 @@ const Cadastro = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://f550-200-231-33-146.ngrok-free.app/users`, {
+                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/users`, {
                     method: 'POST',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -110,7 +110,9 @@ const Cadastro = () => {
             {contextHolder}
             <div className={styles.card}>
                 <div className={styles.imagem}>
-                    <FiArrowLeft className={styles.arrow} />
+                    <a href="/">
+                        <FiArrowLeft className={styles.arrow} />
+                    </a>
                     <img src={'/cadastro.svg'} alt="Cadastro" />
                 </div>
 
