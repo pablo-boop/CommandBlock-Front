@@ -2,6 +2,7 @@
 import Header from '../components/Header/Header';
 import styles from './candidato.module.css';
 import { FiUser, FiLock, FiMail } from "react-icons/fi";
+import { useState } from "react";
 
 import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
@@ -99,7 +100,6 @@ const Candidato = () => {
 
 
     return (
-        <div>
         <div className={styles.container}>
             {contextHolder}
             <Header />
@@ -163,10 +163,7 @@ const Candidato = () => {
                     <div className={styles.canto}>
                         <p className={styles.textin}>Candidate-se à vaga</p>
 
-                        <div className={styles.inputIcon}>
-                            <FiUser className={styles.icon} />
-                            <input className={styles.inputs} type="text" placeholder="Nome do Usuário"></input>
-                        </div>
+                    
                     <div className={styles.inputIcon}>
                         <FiUser className={styles.icon} />
                         <input 
@@ -200,16 +197,6 @@ const Candidato = () => {
                         type="text" 
                         placeholder="CPF" />
                     </div>
-
-                        <div className={styles.inputIcon}>
-                            <FiMail className={styles.icon} />
-                            <input className={styles.inputs} type="text" placeholder="Email" />
-                        </div>
-
-                        <div className={styles.inputIcon}>
-                            <FiLock className={styles.icon} />
-                            <input className={styles.inputs} type="text" placeholder="CPF" />
-                        </div>
 
                         <div className={styles.dragger}>
                             <Dragger {...props}>
