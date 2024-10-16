@@ -79,7 +79,9 @@ const Login = () => {
     return (  // JSX deve ser retornado diretamente no componente React
         <div className={styles.background}>
             <div className={styles.container}>
-                <FiArrowLeft className={styles.arrow} />
+                <a href="/">
+                    <FiArrowLeft className={styles.arrow} />
+                </a>
                 <div className={styles.left}>
                     <h1 className={styles.title}>Bem-vindo de volta!</h1>
                     <p className={styles.txt}>Por favor, faça o login antes de continuar</p>
