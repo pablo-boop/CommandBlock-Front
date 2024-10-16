@@ -13,7 +13,7 @@ export default function Home() {
   useEffect(() => {
     const handleSubmit = async () => {
       try {
-        const response = await fetch(`https://3a31-201-63-78-210.ngrok-free.app/vacancies`, {
+        const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/vacancies`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json',
