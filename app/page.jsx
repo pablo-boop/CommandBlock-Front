@@ -123,7 +123,9 @@ export default function Home() {
             ) : (
               vacancies.map((vacancy, index) => (
                 <div key={index} className={styles.card1}>
-                  <p>{vacancy.name}</p> 
+                  <h3>{vacancy.name}</h3> 
+                  <p>{vacancy.expiration_time}</p>
+                  <h4>{vacancy.type}</h4>
                 </div>
               ))
             )
