@@ -21,15 +21,63 @@ const cadastrovagas = () => {
     const [companyEmail, setCompanyEmail] = useState("");
     const [companyCnpj, setCompanyCnpj] = useState("");
     const [companyPhone, setCompanyPhone] = useState("");
+    const [companyOptions, setCompanyOptions] = useState([]); // Armazena as empresas sugeridas
+
     //Messages Pop Up
     const [messageApi, contextHolder] = message.useMessage();
     const [response, setResponse] = useState("");
     const [vacancies, setVacancies] = useState([]);
-    
+
+    const fetchCompanies = async (name) => {
+        try {
+            const response = await fetch(`http://10.88.200.155:4000/companies?name=${name}`);
+            if (!response.ok) {
+                throw new Error('Erro ao buscar empresas');
+            }
+            const data = await response.json();
+            setCompanyOptions(data.companies); // Armazena as empresas obtidas
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+    // Função para remover caracteres desnecessários (mantém apenas números)
+    const sanitizeInput = (value) => {
+        return value.replace(/\D/g, ''); // Remove tudo que não for dígito
+    };
+
+    const handleCnpjChange = (e) => {
+        const sanitizedValue = sanitizeInput(e.target.value);
+        setCompanyCnpj(sanitizedValue);
+    };
+
+    const handlePhoneChange = (e) => {
+        const sanitizedValue = sanitizeInput(e.target.value);
+        setCompanyPhone(sanitizedValue);
+    };
+
+    // Função para lidar com a mudança no campo de empresa
+    const handleCompanyChange = (e) => {
+        const input = e.target.value;
+        setCompanyName(input);
+        if (input.length > 2) {  // Inicia a busca após o usuário digitar 3 caracteres
+            fetchCompanies(input);
+        }
+    };
+
+    // Função para lidar com a seleção de uma empresa
+    const handleSelectCompany = (company) => {
+        setCompanyName(company.name);
+        setCompanyEmail(company.email);
+        setCompanyCnpj(company.cnpj);
+        setCompanyPhone(company.phone);
+        setCompanyOptions([]);  // Limpa as opções após a seleção
+    };
+
     useEffect(() => {
         const fetchVacancies = async () => {
             try {
-                const response = await fetch(`https://c84c-200-231-33-146.ngrok-free.app/vacancies`, {
+                const response = await fetch(`http://10.88.200.155:4000/vacancies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -52,7 +100,6 @@ const cadastrovagas = () => {
                 }
 
                 const responseData = await response.json();
-                console.log(responseData);
 
                 if (responseData.vacancies.length === 0) {
                     setResponse("Não há vagas disponíveis no momento.");
@@ -66,9 +113,9 @@ const cadastrovagas = () => {
             }
         }
         fetchVacancies();
-    }, [])
+    }, [vacancies])
 
-    
+
 
     const onChangeCreation = (date, dateString) => {
         const formattedDate = dateString.split('-').reverse().join('-');
@@ -109,7 +156,7 @@ const cadastrovagas = () => {
 
     const postVacancy = useCallback(async (data) => {
         try {
-            const response = await fetch(`https://c84c-200-231-33-146.ngrok-free.app/vacancies`, {
+            const response = await fetch(`http://10.88.200.155:4000/vacancies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -145,7 +192,7 @@ const cadastrovagas = () => {
 
     const postCompany = useCallback(async (data) => {
         try {
-            const response = await fetch(`https://c84c-200-231-33-146.ngrok-free.app/companies`, {
+            const response = await fetch(`http://10.88.200.155:4000/companies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -238,10 +285,19 @@ const cadastrovagas = () => {
                         <input type="text"
                             name="empresa"
                             value={companyName}
-                            onChange={(e) => setCompanyName(e.target.value)}
+                            onChange={handleCompanyChange}
                             placeholder="Empresa"
                             className={styles.input}
                         />
+                        {companyOptions.length > 0 && (
+                            <ul className={styles.dropdown}>
+                                {companyOptions.map((company, index) => (
+                                    <li className={styles.options} key={index} onClick={() => handleSelectCompany(company)}>
+                                        {company.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
 
                     <div className={styles.form}>
@@ -251,7 +307,7 @@ const cadastrovagas = () => {
                                 <input type="text"
                                     name="cnpj"
                                     value={companyCnpj}
-                                    onChange={(e) => setCompanyCnpj(e.target.value)}
+                                    onChange={handleCnpjChange}
                                     placeholder="CNPJ"
                                     className={styles.input2}
                                 />
@@ -260,10 +316,10 @@ const cadastrovagas = () => {
 
                         <div className={styles.inputarea}>
                             <label className={styles.label}>
-                                <input type="number"
+                                <input type="text"
                                     name="telefone"
                                     value={companyPhone}
-                                    onChange={(e) => setCompanyPhone(e.target.value)}
+                                    onChange={handlePhoneChange}
                                     placeholder="Telefone"
                                     className={styles.input3}
                                 />
