@@ -25,16 +25,11 @@ const cadastrovagas = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [response, setResponse] = useState("");
     const [vacancies, setVacancies] = useState([]);
-
-    useEffect(() => {
-        
-        
-    }, [name, description, creationTime, expirationTime, type, companyName, companyEmail, companyCnpj, companyPhone])
     
     useEffect(() => {
         const fetchVacancies = async () => {
             try {
-                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/vacancies`, {
+                const response = await fetch(`https://c84c-200-231-33-146.ngrok-free.app/vacancies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -114,7 +109,7 @@ const cadastrovagas = () => {
 
     const postVacancy = useCallback(async (data) => {
         try {
-            const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/vacancies`, {
+            const response = await fetch(`https://c84c-200-231-33-146.ngrok-free.app/vacancies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -150,7 +145,7 @@ const cadastrovagas = () => {
 
     const postCompany = useCallback(async (data) => {
         try {
-            const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/companies`, {
+            const response = await fetch(`https://c84c-200-231-33-146.ngrok-free.app/companies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -203,13 +198,6 @@ const cadastrovagas = () => {
                 phone: companyPhone,
             });
 
-            if (vacancyResult && companyResult) {
-                setResponse("Vaga e empresa cadastradas com sucesso!");
-                success(response)
-            } else {
-                setResponse("Falha ao cadastrar vaga ou empresa");
-                error(response);
-            }
         }
         console.log({
             message: 'Vacancies',
@@ -329,7 +317,9 @@ const cadastrovagas = () => {
                         />
                     </div>
 
-                    <p className={styles.empresas}>* Empresas</p>
+                    <a href="/EditarEmpresas">
+                        <p className={styles.empresas}>* Empresas</p>
+                    </a>
 
                     <div className={styles.inputarea}>
                         <button className={styles.button} type="submit" onClick={(e) => {
@@ -341,13 +331,13 @@ const cadastrovagas = () => {
                 </form>
 
                 <div className={styles.vagacontainer}>
-                    <h3>Vagas</h3>
+                    <h3 className={styles.h3}>Vagas</h3>
                     <div className={styles.vagaitem}>
 
                         <div className={styles.vaga}>
                             {
                                 vacancies.length === 0 ? (
-                                    <p>Nenhuma vaga cadastrada</p>
+                                    <p className={styles.text}>Nenhuma vaga cadastrada</p>
                                 ) : (
                                     vacancies.map((vacancy, index) => {
                                         return <Vagas key={index} title={vacancy.title} text={vacancy.description} imageURL={'/cadastro.svg'} />
