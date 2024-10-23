@@ -99,7 +99,6 @@ const Candidato = () => {
 
 
     return (
-        <div>
         <div className={styles.container}>
             {contextHolder}
             <Header />
