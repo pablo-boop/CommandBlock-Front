@@ -1,10 +1,22 @@
-
+"use client"
 import Header from '../components/Header/Header';
 import styles from './candidato.module.css';
 import { FiUser, FiLock, FiMail } from "react-icons/fi";
 import Link from 'next/link';
-
+import { useState } from 'react';
 const Candidato = () => {
+    const [nome, setNome] = useState('');
+    const [email, setEmail] = useState('');
+    const [cpf, setcpf] = useState('');
+    
+    const register = async ()=>{
+        try {
+            const response = await fetch.post('http://10.88.199.225:4000/condidatura/candidacies/')
+        } catch (error) {
+            
+        }
+    }
+
     return (
         <div className={styles.container}>
             <Header />
@@ -35,22 +47,37 @@ const Candidato = () => {
             </div>
 
             <div className={styles.formsContainer}>
-                <div className={styles.canto}>
+                <form className={styles.canto} onSubmit={register}>
                     <p className={styles.textin}>Candidate-se à vaga</p>
 
                     <div className={styles.inputIcon}>
                         <FiUser className={styles.icon} />
-                        <input className={styles.inputs} type="text" placeholder="Nome do Usuário"></input>
+                        <input
+                        className={styles.inputs}
+                        value={nome}
+                        onChange={(e)=> setNome(e.target.value)}
+                        type="text"
+                        placeholder="Nome do Usuário" />
                     </div>
 
                     <div className={styles.inputIcon}>
                         <FiMail className={styles.icon} />
-                        <input className={styles.inputs} type="text" placeholder="Email" />
+                        <input
+                        className={styles.inputs}
+                        value={email}
+                        onChange={(e)=> setEmail(e.target.value)}
+                        type="email"
+                        placeholder="E-mail" />
                     </div>
 
                     <div className={styles.inputIcon}>
                         <FiLock className={styles.icon} />
-                        <input className={styles.inputs} type="text" placeholder="CPF" />
+                        <input
+                        className={styles.inputs}
+                        value={cpf}
+                        onChange={(e)=> setcpf(e.target.value)}
+                        type="text"
+                        placeholder="CPF" />
                     </div>
 
                     <div>
@@ -64,7 +91,7 @@ const Candidato = () => {
                             <p className={styles.buttonEnviar}>Enviar</p>
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );
