@@ -107,7 +107,7 @@ const Candidato = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://3a31-201-63-78-210.ngrok-free.app/users`, {
+                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/users`, {
                     method: "POST",
                     headers: new Headers({
                         "Content-Type": "application/json",
@@ -243,16 +243,6 @@ const Candidato = () => {
                                 className={styles.inputs}
                                 type="text"
                                 placeholder="CPF" />
-                        </div>
-
-                        <div className={styles.inputIcon}>
-                            <FiMail className={styles.icon} />
-                            <input className={styles.inputs} type="text" placeholder="Email" />
-                        </div>
-
-                        <div className={styles.inputIcon}>
-                            <FiLock className={styles.icon} />
-                            <input className={styles.inputs} type="text" placeholder="CPF" />
                         </div>
 
                         <div className={styles.dragger}>
