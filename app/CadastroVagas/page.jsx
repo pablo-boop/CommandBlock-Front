@@ -7,8 +7,6 @@ import { DatePicker } from 'antd';
 import { message, Space } from 'antd';
 import { useState, useEffect, useCallback } from "react";
 
-
-
 const cadastrovagas = () => {
     //Vacancies properties
     const [name, setName] = useState("");
@@ -29,7 +27,7 @@ const cadastrovagas = () => {
     useEffect(() => {
         const fetchVacancies = async () => {
             try {
-                const response = await fetch(`https://c84c-200-231-33-146.ngrok-free.app/vacancies`, {
+                const response = await fetch(`http://10.88.199.225:4000/vacancies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -52,7 +50,6 @@ const cadastrovagas = () => {
                 }
 
                 const responseData = await response.json();
-                console.log(responseData);
 
                 if (responseData.vacancies.length === 0) {
                     setResponse("Não há vagas disponíveis no momento.");
@@ -66,9 +63,7 @@ const cadastrovagas = () => {
             }
         }
         fetchVacancies();
-    }, [])
-
-    
+    }, [vacancies])
 
     const onChangeCreation = (date, dateString) => {
         const formattedDate = dateString.split('-').reverse().join('-');
@@ -78,6 +73,20 @@ const cadastrovagas = () => {
     const onChangeExpiration = (date, dateString) => {
         const formattedDate = dateString.split('-').reverse().join('-');
         setExpirationTime(formattedDate);
+    };
+
+    //Formatação da data
+    const maskDate = (dateString) => {
+        const dateParts = dateString.split('-');
+
+        if (dateParts.length !== 3 || !/^\d{4}$/.test(dateParts[2])) {
+            return dateString; // Retorna o valor original se não for um formato válido
+        }
+
+        const day = dateParts[0].padStart(2, '0');
+        const month = dateParts[1].padStart(2, '0');
+
+        return `${day}/${month}/${dateParts[2]}`;
     };
 
     //Messages Succes and Error
@@ -109,7 +118,7 @@ const cadastrovagas = () => {
 
     const postVacancy = useCallback(async (data) => {
         try {
-            const response = await fetch(`https://c84c-200-231-33-146.ngrok-free.app/vacancies`, {
+            const response = await fetch(`http://10.88.199.225:4000/vacancies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -145,7 +154,7 @@ const cadastrovagas = () => {
 
     const postCompany = useCallback(async (data) => {
         try {
-            const response = await fetch(`https://c84c-200-231-33-146.ngrok-free.app/companies`, {
+            const response = await fetch(`http://10.88.199.225:4000/companies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -183,6 +192,7 @@ const cadastrovagas = () => {
         if (name === "" || description === "" || creationTime === "" || expirationTime === "" || type === "" || companyName === "" || companyEmail === "" || companyCnpj === "" || companyPhone === "") {
             error("Preencha todos os campos!");
         } else {
+
             const vacancyResult = await postVacancy({
                 name: name,
                 description: description,
@@ -340,7 +350,7 @@ const cadastrovagas = () => {
                                     <p className={styles.text}>Nenhuma vaga cadastrada</p>
                                 ) : (
                                     vacancies.map((vacancy, index) => {
-                                        return <Vagas key={index} title={vacancy.title} text={vacancy.description} imageURL={'/cadastro.svg'} />
+                                        return <Vagas key={index} title={vacancy.name} text={vacancy.description} creation_time={vacancy.creation_time} expiration_time={vacancy.expiration_time} type={vacancy.type} />
                                     })
                                 )
                             }
