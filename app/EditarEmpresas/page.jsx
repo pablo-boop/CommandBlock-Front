@@ -46,14 +46,10 @@ const EditarEmpresas = () => {
     const handleSubmit = async () => {
         if (name === "" || email === "" || cnpj === "" || phone === "") {
             error("Preencha todos os campos!");
-        } 
-        else if (cnpj.length < 14) {
-            error("Insira um CNPJ válido!");
-            return false;
-        }else {
+        } else {
             try {
-                const response = await fetch(`https://f550-200-231-33-146.ngrok-free.app/companies`, {
-                    method: 'POST', 
+                const response = await fetch(`http://10.88.200.155:4000/companies/:name`, {
+                    method: 'PUT',
                     headers: new Headers({
                         'Content-Type': 'application/json',
                         "ngrok-skip-browser-warning": "69420",
@@ -97,7 +93,9 @@ const EditarEmpresas = () => {
             {contextHolder}
                 <div className={styles.card}>
                     <div className={styles.imagem}>
-                        <FiArrowLeft className={styles.arrow} />
+                        <a href="/CadastroVagas">
+                            <FiArrowLeft className={styles.arrow} />
+                        </a>
                         <img src={'/cadastro.svg'} alt="Editar Empresas" />
                     </div>
 

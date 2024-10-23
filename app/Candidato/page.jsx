@@ -2,7 +2,8 @@
 import Header from '../components/Header/Header';
 import styles from './candidato.module.css';
 import { FiUser, FiLock, FiMail } from "react-icons/fi";
-
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from "next/navigation";
 import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 const { Dragger } = Upload;
@@ -35,6 +36,51 @@ const Candidato = () => {
     const [cpf, setCpf] = useState("");
     const [messageApi, contextHolder] = message.useMessage();
 
+    //vaga pelo ID
+    const [vacancies, setVacancies] = useState([]);
+
+    //Props throw params
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
+
+    useEffect(() => {
+        const handleSubmit = async () => {
+            try {
+                const response = await fetch(`http://10.88.199.225:4000/vacancies/${id}`, {
+                    method: 'GET',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        "ngrok-skip-browser-warning": "69420",
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage = response.statusText;
+
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorMessage = errorJson.message;
+                    } catch (e) {
+                        console.error("Erro ao parsear JSON:", e);
+                    }
+
+                    throw new Error(errorMessage);
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+                setVacancies(responseData.vacancy);
+
+            } catch (err) {
+                console.error(err);
+                error(err.message);
+            }
+        };
+        handleSubmit();
+    }, []);
+
     const clearInputs = () => {
         setName("");
         setEmail("");
@@ -61,7 +107,7 @@ const Candidato = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://3a31-201-63-78-210.ngrok-free.app/users`, {
+                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/users`, {
                     method: "POST",
                     headers: new Headers({
                         "Content-Type": "application/json",
@@ -97,13 +143,12 @@ const Candidato = () => {
         }
     };
 
-
     return (
         <div className={styles.container}>
             {contextHolder}
             <Header />
             <h2 className={styles.tituloVaga}>Vaga no SENAI</h2>
-            <div className={styles.container}>
+            {/* <div className={styles.container}>
                 <div className={styles.allTexto}>
                     <img src="./candidatoImage.png" className={styles.image} />
                     <h2 className={styles.title}>Sobre a vaga</h2>
@@ -113,36 +158,36 @@ const Candidato = () => {
                         ambiente de mudanças e constantes desafios. O Investimento na formação das lideranças,
                         acreditando em pessoas preparadas é fundamental para qualquer empresa. </p>
 
-            <div className={styles.allTexto}>
-                <h2 className={styles.tituloVaga}>Vaga no SENAI</h2>
-                <img src="./candidatoImage.png" className={styles.image} />
-                <h2 className={styles.detalhesVaga}>Sobre a vaga</h2>
-                <p className={styles.explicacaoVaga}>Para manter a qualidade de seus processos, produtos e garantir o seu crescimento,
-                    o SENAI investe constantemente no aprimoramento de seus colaboradores. Por meio de programas
-                    de capacitação e qualificação, fortalecemos as competências organizacionais necessárias em um
-                    ambiente de mudanças e constantes desafios. O Investimento na formação das lideranças,
-                    acreditando em pessoas preparadas é fundamental para qualquer empresa. </p>
+                    <div className={styles.allTexto}>
+                        <h2 className={styles.tituloVaga}>Vaga no SENAI</h2>
+                        <img src="./candidatoImage.png" className={styles.image} />
+                        <h2 className={styles.detalhesVaga}>Sobre a vaga</h2>
+                        <p className={styles.explicacaoVaga}>Para manter a qualidade de seus processos, produtos e garantir o seu crescimento,
+                            o SENAI investe constantemente no aprimoramento de seus colaboradores. Por meio de programas
+                            de capacitação e qualificação, fortalecemos as competências organizacionais necessárias em um
+                            ambiente de mudanças e constantes desafios. O Investimento na formação das lideranças,
+                            acreditando em pessoas preparadas é fundamental para qualquer empresa. </p>
 
 
-                <h2 className={styles.tituloEstagio}>Estágio</h2>
-                <img src="./estagio.jpg" className={styles.image} />
-                <p className={styles.explicacaoVaga}>O estágio no SENAI é uma oportunidade única para os estudantes aplicarem
-                    conhecimentos em um ambiente profissional dinâmico e desafiador.
-                    Oferece desenvolvimento de habilidades práticas, além de contribuir para a formação técnica e profissional.
-                    Com foco no aprendizado contínuo, os estagiários têm a chance de
-                    trabalhar em projetos relevantes, sendo orientados por profissionais qualificados.
-                    O SENAI incentiva a inovação e a excelência, preparando jovens para o mercado de trabalho.
-                </p>
+                        <h2 className={styles.tituloEstagio}>Estágio</h2>
+                        <img src="./estagio.jpg" className={styles.image} />
+                        <p className={styles.explicacaoVaga}>O estágio no SENAI é uma oportunidade única para os estudantes aplicarem
+                            conhecimentos em um ambiente profissional dinâmico e desafiador.
+                            Oferece desenvolvimento de habilidades práticas, além de contribuir para a formação técnica e profissional.
+                            Com foco no aprendizado contínuo, os estagiários têm a chance de
+                            trabalhar em projetos relevantes, sendo orientados por profissionais qualificados.
+                            O SENAI incentiva a inovação e a excelência, preparando jovens para o mercado de trabalho.
+                        </p>
 
-                <h2 className={styles.tituloEfetivo}>Efetivação</h2>
-                <img src="./efetivo.png" className={styles.image} />
-                <p className={styles.explicacaoVaga}>A efetivação no SENAI representa o reconhecimento do desempenho e dedicação de
-                    profissionais que demonstram excelência em suas funções.
-                    Esse processo valoriza colaboradores que se destacam por seu comprometimento com a
-                    qualidade do ensino e com o desenvolvimento de competências técnicas dos alunos.
-                    A efetivação garante estabilidade e continuidade na prestação de serviços,
-                    fortalecendo o crescimento do mercado de trabalho.</p>
-            </div>
+                        <h2 className={styles.tituloEfetivo}>Efetivação</h2>
+                        <img src="./efetivo.png" className={styles.image} />
+                        <p className={styles.explicacaoVaga}>A efetivação no SENAI representa o reconhecimento do desempenho e dedicação de
+                            profissionais que demonstram excelência em suas funções.
+                            Esse processo valoriza colaboradores que se destacam por seu comprometimento com a
+                            qualidade do ensino e com o desenvolvimento de competências técnicas dos alunos.
+                            A efetivação garante estabilidade e continuidade na prestação de serviços,
+                            fortalecendo o crescimento do mercado de trabalho.</p>
+                    </div>
 
                     <h2 className={styles.title}>Estágio</h2>
                     <img src="./estagio.jpg" className={styles.image} />
@@ -166,48 +211,38 @@ const Candidato = () => {
                             <FiUser className={styles.icon} />
                             <input className={styles.inputs} type="text" placeholder="Nome do Usuário"></input>
                         </div>
-                    <div className={styles.inputIcon}>
-                        <FiUser className={styles.icon} />
-                        <input 
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        required
-                        className={styles.inputs} 
-                        type="text" 
-                        placeholder="Nome do Usuário">
-                        </input>
-                    </div>
-
-                    <div className={styles.inputIcon}>
-                        <FiMail className={styles.icon} />
-                        <input 
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        required
-                        className={styles.inputs} 
-                        type="text" 
-                        placeholder="Email" />
-                    </div>
-
-                    <div className={styles.inputIcon}>
-                        <FiLock className={styles.icon} />
-                        <input 
-                        value={cpf}
-                        onChange={e => setCpf(e.target.value)}
-                        required
-                        className={styles.inputs} 
-                        type="text" 
-                        placeholder="CPF" />
-                    </div>
+                        <div className={styles.inputIcon}>
+                            <FiUser className={styles.icon} />
+                            <input
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                required
+                                className={styles.inputs}
+                                type="text"
+                                placeholder="Nome do Usuário">
+                            </input>
+                        </div>
 
                         <div className={styles.inputIcon}>
                             <FiMail className={styles.icon} />
-                            <input className={styles.inputs} type="text" placeholder="Email" />
+                            <input
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                required
+                                className={styles.inputs}
+                                type="text"
+                                placeholder="Email" />
                         </div>
 
                         <div className={styles.inputIcon}>
                             <FiLock className={styles.icon} />
-                            <input className={styles.inputs} type="text" placeholder="CPF" />
+                            <input
+                                value={cpf}
+                                onChange={e => setCpf(e.target.value)}
+                                required
+                                className={styles.inputs}
+                                type="text"
+                                placeholder="CPF" />
                         </div>
 
                         <div className={styles.dragger}>
@@ -230,8 +265,12 @@ const Candidato = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </div> */}
+            {
+                vacancies.map((vacancy, index) => (
+                    <p>{vacancy.name}</p>
+                ))
+            }
         </div>
     );
 }
