@@ -11,10 +11,11 @@ const Vaga = () => {
     const [vacancies, setVacancies] = useState([]);
     const [response, setResponse] = useState("");
 
+
     useEffect(() => {
         const handleSubmit = async () => {
             try {
-                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/vacancies`, {
+                const response = await fetch(`http://10.88.199.225:4000/vacancies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',

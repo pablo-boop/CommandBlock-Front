@@ -93,7 +93,9 @@ const EditarEmpresas = () => {
             {contextHolder}
                 <div className={styles.card}>
                     <div className={styles.imagem}>
-                        <FiArrowLeft className={styles.arrow} />
+                        <a href="/CadastroVagas">
+                            <FiArrowLeft className={styles.arrow} />
+                        </a>
                         <img src={'/cadastro.svg'} alt="Editar Empresas" />
                     </div>
 

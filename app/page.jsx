@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { message } from 'antd';
+import Link from 'next/link';
 import styles from "./page.module.css";
 import Header from "./components/Header/Header";
 
@@ -13,37 +14,37 @@ export default function Home() {
   useEffect(() => {
     const handleSubmit = async () => {
       try {
-        const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/vacancies`, {
+        const response = await fetch(`http://10.88.199.225:4000/vacancies`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json',
             "ngrok-skip-browser-warning": "69420",
           })
         });
-  
+
         if (!response.ok) {
           const errorText = await response.text();
           let errorMessage = response.statusText;
-  
+
           try {
             const errorJson = JSON.parse(errorText);
             errorMessage = errorJson.message;
           } catch (e) {
             console.error("Erro ao parsear JSON:", e);
           }
-  
+
           throw new Error(errorMessage);
         }
-  
+
         const responseData = await response.json();
         console.log(responseData);
-        
+
         if (responseData.vacancies.length === 0) {
           setResponse("Não há vagas disponíveis no momento.");
         } else {
           setVacancies(responseData.vacancies);
         }
-  
+
       } catch (err) {
         console.error(err);
         error(err.message);
@@ -125,11 +126,14 @@ export default function Home() {
               <p>{response}</p>
             ) : (
               vacancies.map((vacancy, index) => (
-                <div key={index} className={styles.card1}>
-                  <h3>{vacancy.name}</h3> 
-                  <p>{vacancy.expiration_time}</p>
-                  <h4>{vacancy.type}</h4>
-                </div>
+                <Link key={index} className={styles.card1} href={`/Candidato?id=${vacancy.id}`}>
+                  <h3 className={styles.titleCards}>{vacancy.name}</h3>
+                  <div className={styles.card1Time}>
+                    <p className={styles.text}>Data de criação:</p>
+                    <p className={styles.timeCards}>{vacancy.expiration_time}</p>
+                  </div>
+                  <h4 className={styles.typeCards}>{vacancy.type}</h4>
+                </Link>
               ))
             )
           }

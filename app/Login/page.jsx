@@ -2,6 +2,7 @@
 import styles from "./login.module.css"
 import Link from 'next/link';
 import { FiUser, FiLock, FiArrowLeft } from "react-icons/fi";
+import { message, Space } from 'antd';
 import { useState } from "react";
 
 const Login = () => {
@@ -9,6 +10,8 @@ const Login = () => {
     //input
     const [email, setEmail] = useState('');  // Corrigido
     const [password, setPassword] = useState('');  // Corrigido
+    const [messageApi, contextHolder] = message.useMessage();
+
 
     const clearInputs = () => {
         setEmail("");
@@ -35,7 +38,7 @@ const Login = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://f550-200-231-33-146.ngrok-free.app/login`, {
+                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/login`, {
                     method: 'PUT',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -66,7 +69,7 @@ const Login = () => {
                 success(responseData.message);
 
                 setTimeout(() => {
-                    window.location.href = '/Home';
+                    window.location.href = '/';
                 }, 2000);
 
             } catch (err) {
