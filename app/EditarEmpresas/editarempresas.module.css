@@ -121,3 +121,25 @@
     font-weight: 400;
     font-style: normal;
 }
+
+.listaEmpresas {
+    display: flex;
+}
+.empresas {
+    list-style-type: none;
+    padding: 0;
+}
+.empresaItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #ccc;
+}
+.acoes {
+    display: flex;
+    gap: 1rem;
+}
+.iconeAcao {
+    cursor: pointer;
+    color: #DA251C;
+}

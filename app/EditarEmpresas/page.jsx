@@ -1,24 +1,34 @@
 "use client"
 import styles from "./editarempresas.module.css";
-import { FaRegUser } from "react-icons/fa";
+import { FaRegUser, FaEdit, FaTrashAlt } from "react-icons/fa"; 
 import { MdOutlineEmail } from "react-icons/md";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FiArrowLeft } from "react-icons/fi";
 import { CiPhone } from "react-icons/ci";
-
 import { message, Space } from 'antd';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const EditarEmpresas = () => {
-
-    const [response, setResponse] = useState("");
-    
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [cnpj, setCnpj] = useState("");
     const [phone, setPhone] = useState("");
-    
+    const [empresas, setEmpresas] = useState([]); // Estado para armazenar as empresas
     const [messageApi, contextHolder] = message.useMessage();
+
+    useEffect(() => {
+        // Função para buscar as empresas já cadastradas
+        const fetchEmpresas = async () => {
+            try {
+                const response = await fetch(`http://10.88.200.155:4000/companies`);
+                const data = await response.json();
+                setEmpresas(data);
+            } catch (err) {
+                console.error("Erro ao buscar empresas:", err);
+            }
+        };
+        fetchEmpresas();
+    }, []); // Carregar as empresas ao montar o componente
 
     const clearInputs = () => {
         setName("");
@@ -27,7 +37,6 @@ const EditarEmpresas = () => {
         setPhone("");
     }
 
-    
     const success = (msg) => {
         messageApi.open({
             type: 'success',
@@ -42,13 +51,12 @@ const EditarEmpresas = () => {
         });
     };
 
-    
     const handleSubmit = async () => {
         if (name === "" || email === "" || cnpj === "" || phone === "") {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`http://10.88.200.155:4000/companies/:name`, {
+                const response = await fetch(`http://10.88.200.155:4000/companies/${name}`, {
                     method: 'PUT',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -61,28 +69,23 @@ const EditarEmpresas = () => {
                         phone: phone,
                     })
                 });
-
                 if (!response.ok) {
                     const errorText = await response.text();
                     let errorMessage = response.statusText;
-
                     try {
                         const errorJson = JSON.parse(errorText);
                         errorMessage = errorJson.message;
                     } catch (e) {
                         console.error("Erro ao parsear JSON:", e);
                     }
-
                     throw new Error(errorMessage);
                 }
-
                 const responseData = await response.json();
                 clearInputs();
                 success(responseData.message);
-
             } catch (err) {
                 console.error(err);
-                error(err.message); 
+                error(err.message);
             }
         }
     };
@@ -90,19 +93,15 @@ const EditarEmpresas = () => {
     return (
         <>
             <div className={styles.cadastro}>
-            {contextHolder}
+                {contextHolder}
                 <div className={styles.card}>
-                    <div className={styles.imagem}>
-                        <a href="/CadastroVagas">
-                            <FiArrowLeft className={styles.arrow} />
-                        </a>
-                        <img src={'/cadastro.svg'} alt="Editar Empresas" />
-                    </div>
+                    <a href="/CadastroVagas">
+                        <FiArrowLeft className={styles.arrow} />
+                    </a>
 
                     <div className={styles.forms}>
                         <h1 className={styles.title}> Editar Empresas</h1>
                         <p className={styles.text}>Por favor, Preencha o campo de nome e atualize os outros dados</p>
-
                         <div className={styles.campos}>
                             <FaRegUser className={styles.icone} />
                             <input
@@ -156,6 +155,22 @@ const EditarEmpresas = () => {
                                 Atualizar
                             </button>
                         </Space>
+
+                        {/* Lista de empresas */}
+                        <div className={styles.listaEmpresas}>
+                            <h2>Empresas Cadastradas</h2>
+                            <ul className={styles.empresas}>
+                                {empresas.map((company) => (
+                                    <li key={company.id} className={styles.empresaItem}>
+                                        <span>{company.name}</span>
+                                        <div className={styles.acoes}>
+                                            <FaEdit className={styles.iconeAcao} />
+                                            <FaTrashAlt className={styles.iconeAcao} />
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
                     </div>
                 </div>
