@@ -1,41 +1,69 @@
 "use client"
 import styles from "./editarempresas.module.css";
-import { FaRegUser, FaEdit, FaTrashAlt } from "react-icons/fa"; 
-import { MdOutlineEmail } from "react-icons/md";
+import { FaRegUser, FaPencilAlt} from "react-icons/fa"; 
+import { MdOutlineEmail, MdDelete } from "react-icons/md";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FiArrowLeft } from "react-icons/fi";
 import { CiPhone } from "react-icons/ci";
 import { message, Space } from 'antd';
 import { useState, useEffect } from "react";
 
+
+
 const EditarEmpresas = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [cnpj, setCnpj] = useState("");
     const [phone, setPhone] = useState("");
-    const [empresas, setEmpresas] = useState([]); // Estado para armazenar as empresas
+    const [companies, setCompanies] = useState([]); 
+    const [response, setResponse] = useState("");
     const [messageApi, contextHolder] = message.useMessage();
 
+    const [editMode, setEditMode] = useState(false);
+    const [editId, setEditId] = useState(null); 
+
     useEffect(() => {
-        // Função para buscar as empresas já cadastradas
+        // buscar as empresas cadastradas
         const fetchEmpresas = async () => {
             try {
-                const response = await fetch(`http://10.88.200.155:4000/companies`);
-                const data = await response.json();
-                setEmpresas(data);
+                const response = await fetch(`http://10.88.200.155:4000/companies`, {
+                    method: 'GET',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        "ngrok-skip-browser-warning": "69420",
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage = response.statusText;
+
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorMessage = errorJson.message;
+                    } catch (e) {
+                        console.error("Erro ao parsear JSON:", e);
+                    }
+
+                    throw new Error(errorMessage);
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+        
+                if (responseData.companies.length === 0) {
+                  setResponse("Não há empresas disponíveis no momento.");
+                } else {
+                  setCompanies(responseData.companies);
+                }
+
             } catch (err) {
-                console.error("Erro ao buscar empresas:", err);
+                console.error(err);
+                error(err.message);
             }
         };
         fetchEmpresas();
-    }, []); // Carregar as empresas ao montar o componente
-
-    const clearInputs = () => {
-        setName("");
-        setEmail("");
-        setCnpj("");
-        setPhone("");
-    }
+    }, []);
 
     const success = (msg) => {
         messageApi.open({
@@ -51,12 +79,37 @@ const EditarEmpresas = () => {
         });
     };
 
+    const handleEdit = (company) => {
+        setEditMode(true);
+        setEditId(company.id);
+        setName(company.name);
+        setEmail(company.email);
+        setCnpj(company.cnpj);
+        setPhone(company.phone);
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`http://10.88.200.155:4000/companies/${id}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error("Erro ao excluir a empresa.");
+            }
+            success("Empresa excluída com sucesso!");
+            const updatedCompanies = await fetch(`http://10.88.200.155:4000/companies`).then(res => res.json());
+            setCompanies(updatedCompanies);
+        } catch (err) {
+            error(err.message);
+        }
+    };
+
     const handleSubmit = async () => {
         if (name === "" || email === "" || cnpj === "" || phone === "") {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`http://10.88.200.155:4000/companies/${name}`, {
+                const response = await fetch(`http://10.88.200.155:4000/companies/${id}`, {
                     method: 'PUT',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -88,7 +141,9 @@ const EditarEmpresas = () => {
                 error(err.message);
             }
         }
+        
     };
+
 
     return (
         <>
@@ -156,21 +211,29 @@ const EditarEmpresas = () => {
                             </button>
                         </Space>
 
+
                         {/* Lista de empresas */}
-                        <div className={styles.listaEmpresas}>
+                             <div className={styles.listaEmpresas}>
                             <h2>Empresas Cadastradas</h2>
                             <ul className={styles.empresas}>
-                                {empresas.map((company) => (
+                                {
+                                companies.length === 0 ? (
+                                <p>{response}</p>
+                                ) : ( 
+                                companies.map((company) => (
                                     <li key={company.id} className={styles.empresaItem}>
-                                        <span>{company.name}</span>
-                                        <div className={styles.acoes}>
-                                            <FaEdit className={styles.iconeAcao} />
-                                            <FaTrashAlt className={styles.iconeAcao} />
+                                    <p>{company.name}</p>
+                                    <div className={styles.acoes}>
+                                        <FaPencilAlt   onClick={() => handleEdit(company)} 
+                                        className={styles.iconeAcao} />
+                                        <MdDelete  onClick={() => handleDelete(company.id)}  
+                                        className={styles.iconeAcao} />
                                         </div>
                                     </li>
-                                ))}
+                                )))}
                             </ul>
                         </div>
+
 
                     </div>
                 </div>
