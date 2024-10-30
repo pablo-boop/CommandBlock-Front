@@ -140,8 +140,12 @@ const handleDelete = async (id) => {
             throw new Error("Erro ao excluir a empresa.");
         }
         success("Empresa excluída com sucesso!");
-        const updatedCompanies = await fetch(`http://10.88.200.155:4000/companies`).then(res => res.json());
-        setCompanies(updatedCompanies);
+        const responseGet = await fetch(`http://10.88.200.155:4000/companies`);
+
+        const updatedCompanies = await responseGet.json()
+
+        console.log(updatedCompanies.companies)
+        setCompanies(updatedCompanies.companies);
     } catch (err) {
         error(err.message);
     }
@@ -174,7 +178,7 @@ const handleSubmit = async (id) => {
                 }
                 throw new Error(errorMessage);
             }
-            const responseData = await response.json();
+            clearInputs();
 
         } catch (err) {
             console.error(err);
@@ -224,6 +228,12 @@ const postCompany = async () => {
     }
 };
 
+const clearInputs = () => {
+    setName("");
+    setCnpj("");
+    setEmail("");
+    setPhone("");
+}
 
 return (
     <>
@@ -287,7 +297,7 @@ return (
 
                     <Space>
                         {editMode == false ? (
-                             <button className={styles.button} onClick={() => postCompany}>
+                             <button className={styles.button} onClick={() => postCompany()}>
                              Cadastrar
                          </button>
                         ) : (
