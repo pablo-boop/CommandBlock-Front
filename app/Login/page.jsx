@@ -3,12 +3,14 @@ import styles from "./login.module.css"
 import Link from 'next/link';
 import { FiUser, FiLock, FiArrowLeft } from "react-icons/fi";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
 
     //input
     const [email, setEmail] = useState('');  // Corrigido
     const [password, setPassword] = useState('');  // Corrigido
+    const router = useRouter();
 
     const clearInputs = () => {
         setEmail("");
@@ -24,6 +26,7 @@ const Login = () => {
     };
 
     const error = (msg) => {
+        alert(msg)
         messageApi.open({
             type: 'error',
             content: msg,
@@ -32,20 +35,27 @@ const Login = () => {
 
     const login = async () => {
         if (email === '' || password === '') {
+            alert("erro")
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://f550-200-231-33-146.ngrok-free.app/login`, {
-                    method: 'PUT',
+                const response = await fetch(`http://localhost:7000/login`, {
+                    method: 'POST',
                     headers: new Headers({
                         'Content-Type': 'application/json',
-                        "ngrok-skip-browser-warning": "69420",
                     }),
                     body: JSON.stringify({
                         email: email,
                         password: password,
                     })
                 });
+
+                const data = await response.json();
+
+                if (data.token) {
+                    // Armazene o token no localStorage
+                    localStorage.setItem('token', data.token);
+                }
 
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -61,17 +71,15 @@ const Login = () => {
                     throw new Error(errorMessage);
                 }
 
-                const responseData = await response.json();
+                //const responseData = await response.json();
                 clearInputs();
-                success(responseData.message);
-
-                setTimeout(() => {
-                    window.location.href = '/Home';
-                }, 2000);
+                alert(data.message)
+                alert(data.token)
+                success(data.message);
+                router.push('/Candidato')
 
             } catch (err) {
                 console.error(err);
-                error(err.message); // Exibe apenas a mensagem de erro
             }
         }
     };
