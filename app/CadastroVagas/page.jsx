@@ -26,92 +26,78 @@ const cadastrovagas = () => {
     const [response, setResponse] = useState("");
     const [vacancies, setVacancies] = useState([]);
 
-    const fetchCompanies = async (name) => {
-        try {
-            const response = await fetch(`http://10.88.200.155:4000/companies?name=${name}`);
-            if (!response.ok) {
-                throw new Error('Erro ao buscar empresas');
+    useEffect(() => {
+        const fetchCompanies = async (name) => {
+            try {
+                const response = await fetch(`http://10.88.199.202:4000/companies?name=${name}`);
+                if (!response.ok) throw new Error('Erro ao buscar empresas');
+                const data = await response.json();
+                setCompanyOptions(data.companies);
+                console.log(companyOptions);
+                
+            } catch (error) {
+                console.error(error.message);
             }
-            const data = await response.json();
-            setCompanyOptions(data.companies); // Armazena as empresas obtidas
-        } catch (error) {
-            console.error(error.message);
+        };
+
+        if (companyName) {
+            fetchCompanies(companyName);
         }
-    };
+    }, [companyName]);
 
-    // Função para remover caracteres desnecessários (mantém apenas números)
-    const sanitizeInput = (value) => {
-        return value.replace(/\D/g, ''); // Remove tudo que não for dígito
-    };
+    const sanitizeInput = (value) => value.replace(/\D/g, '');
+    const handleCnpjChange = (e) => setCompanyCnpj(sanitizeInput(e.target.value));
+    const handlePhoneChange = (e) => setCompanyPhone(sanitizeInput(e.target.value));
+    const handleCompanyChange = (e) => setCompanyName(e.target.value);
 
-    const handleCnpjChange = (e) => {
-        const sanitizedValue = sanitizeInput(e.target.value);
-        setCompanyCnpj(sanitizedValue);
-    };
-
-    const handlePhoneChange = (e) => {
-        const sanitizedValue = sanitizeInput(e.target.value);
-        setCompanyPhone(sanitizedValue);
-    };
-
-    // Função para lidar com a mudança no campo de empresa
-    const handleCompanyChange = (e) => {
-        const input = e.target.value;
-        setCompanyName(input);
-        if (input.length > 2) {  // Inicia a busca após o usuário digitar 3 caracteres
-            fetchCompanies(input);
-        }
-    };
-
-    // Função para lidar com a seleção de uma empresa
     const handleSelectCompany = (company) => {
         setCompanyName(company.name);
         setCompanyEmail(company.email);
         setCompanyCnpj(company.cnpj);
         setCompanyPhone(company.phone);
-        setCompanyOptions([]);  // Limpa as opções após a seleção
+        setCompanyOptions([]);
     };
 
     useEffect(() => {
         const fetchVacancies = async () => {
             try {
-                const response = await fetch(`http://10.88.200.155:4000/vacancies`, {
+                const response = await fetch(`http://10.88.199.202:4000/vacancies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
                         "ngrok-skip-browser-warning": "69420",
                     })
                 });
-
+    
                 if (!response.ok) {
                     const errorText = await response.text();
                     let errorMessage = response.statusText;
-
+    
                     try {
                         const errorJson = JSON.parse(errorText);
                         errorMessage = errorJson.message;
                     } catch (e) {
                         console.error("Erro ao parsear JSON:", e);
                     }
-
+    
                     throw new Error(errorMessage);
                 }
-
+    
                 const responseData = await response.json();
-
+                setVacancies(responseData.vacancies);
+    
                 if (responseData.vacancies.length === 0) {
                     setResponse("Não há vagas disponíveis no momento.");
-                } else {
-                    setVacancies(responseData.vacancies);
                 }
-
+    
             } catch (err) {
                 console.error(err);
                 error(err.message);
             }
-        }
+        };
         fetchVacancies();
-    }, [vacancies])
+    }, []);
+    
 
     const onChangeCreation = (date, dateString) => {
         const formattedDate = dateString.split('-').reverse().join('-');
@@ -166,7 +152,7 @@ const cadastrovagas = () => {
 
     const postVacancy = useCallback(async (data) => {
         try {
-            const response = await fetch(`http://10.88.200.155:4000/vacancies`, {
+            const response = await fetch(`http://10.88.199.202:4000/vacancies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -202,7 +188,7 @@ const cadastrovagas = () => {
 
     const postCompany = useCallback(async (data) => {
         try {
-            const response = await fetch(`http://10.88.200.155:4000/companies`, {
+            const response = await fetch(`http://10.88.199.202:4000/companies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -237,41 +223,12 @@ const cadastrovagas = () => {
     }, []);
 
     const handleSubmit = async () => {
-        if (name === "" || description === "" || creationTime === "" || expirationTime === "" || type === "" || companyName === "" || companyEmail === "" || companyCnpj === "" || companyPhone === "") {
-            error("Preencha todos os campos!");
+        if (name && description && creationTime && expirationTime && type && companyName && companyEmail && companyCnpj && companyPhone) {
+            await postVacancy({ name, description, creation_time: creationTime, expiration_time: expirationTime, type });
+            await postCompany({ name: companyName, cnpj: companyCnpj, email: companyEmail, phone: companyPhone });
         } else {
-
-            const vacancyResult = await postVacancy({
-                name: name,
-                description: description,
-                creation_time: creationTime,
-                expiration_time: expirationTime,
-                type: type,
-            });
-
-            const companyResult = await postCompany({
-                name: companyName,
-                cnpj: companyCnpj,
-                email: companyEmail,
-                phone: companyPhone,
-            });
-
+            error("Preencha todos os campos!");
         }
-        console.log({
-            message: 'Vacancies',
-            name: name,
-            description: description,
-            creationTime: creationTime,
-            expirationTime: expirationTime,
-            type: type,
-        });
-        console.log({
-            message: 'Companies',
-            companyName: companyName,
-            companyEmail: companyEmail,
-            companyCnpj: companyCnpj,
-            companyPhone: companyPhone,
-        });
     };
 
     return (
@@ -293,19 +250,11 @@ const cadastrovagas = () => {
                     </div>
 
                     <div className={styles.inputarea}>
-                        <input type="text"
-                            name="empresa"
-                            value={companyName}
-                            onChange={handleCompanyChange}
-                            placeholder="Empresa"
-                            className={styles.input}
-                        />
+                        <input type="text" value={companyName} onChange={handleCompanyChange} placeholder="Empresa" className={styles.input} />
                         {companyOptions.length > 0 && (
                             <ul className={styles.dropdown}>
                                 {companyOptions.map((company, index) => (
-                                    <li className={styles.options} key={index} onClick={() => handleSelectCompany(company)}>
-                                        {company.name}
-                                    </li>
+                                    <li key={index} onClick={() => handleSelectCompany(company)} className={styles.options}>{company.name}</li>
                                 ))}
                             </ul>
                         )}
@@ -336,6 +285,7 @@ const cadastrovagas = () => {
                                 />
                             </label>
                         </div>
+
                     </div>
 
                     <div className={styles.inputarea}>
