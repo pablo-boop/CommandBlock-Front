@@ -76,39 +76,46 @@ const EditarEmpresas = () => {
                     "ngrok-skip-browser-warning": "69420",
                 })
             });
-
+    
             if (!response.ok) {
                 const errorText = await response.text();
                 let errorMessage = response.statusText;
-
+    
                 try {
                     const errorJson = JSON.parse(errorText);
                     errorMessage = errorJson.message;
                 } catch (e) {
                     console.error("Erro ao parsear JSON:", e);
                 }
-
+    
                 throw new Error(errorMessage);
             }
-
+    
             const responseData = await response.json();
-            console.log(responseData);
+            const selectedCompany = responseData.company; // Ajuste aqui, se companies for um array, use companies[0]
 
+            const limparCNPJ = (cnpj) =>{
+                return cnpj.replace(/[-./]/g, '');
+            }
 
-            setCompany(responseData.companies);
-            setEditMode(true);
-            setEditId(company.id);
-            setName(company.name);
-            setEmail(company.email);
-            setCnpj(company.cnpj);
-            setPhone(company.phone);
+            const limparPhone = (phone) =>{
+                return phone.replace(/[()-\s]/g, '');
+            }
+    
+            if (selectedCompany) {
+                setCompany(selectedCompany);
+                setEditMode(true);
+                setEditId(selectedCompany.id);
+                setName(selectedCompany.name);
+                setEmail(selectedCompany.email);
+                setCnpj(limparCNPJ(selectedCompany.cnpj));
+                setPhone(limparPhone(selectedCompany.phone));
+            }
+        } catch (err) {
+            console.error(err);
+            error(err.message);
         }
-
-             catch (err) {
-        console.error(err);
-        error(err.message);
-    }
-};
+    };
 
 const success = (msg) => {
     messageApi.open({
@@ -140,7 +147,7 @@ const handleDelete = async (id) => {
     }
 };
 
-const handleSubmit = async () => {
+const handleSubmit = async (id) => {
     if (name === "" || email === "" || cnpj === "" || phone === "") {
         error("Preencha todos os campos!");
     } else {
@@ -283,9 +290,16 @@ return (
                     </div>
 
                     <Space>
-                        <button className={styles.button} onClick={postCompany}>
-                            Atualizar
-                        </button>
+                        {editMode == false ? (
+                             <button className={styles.button} onClick={postCompany}>
+                             Cadastrar
+                         </button>
+                        ) : (
+                            <button className={styles.button} onClick={handleSubmit(editId)}>
+                             Atualizar
+                         </button>
+                        )}
+    
                     </Space>
 
 
