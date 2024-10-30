@@ -148,9 +148,7 @@ const handleDelete = async (id) => {
 };
 
 const handleSubmit = async (id) => {
-    if (name === "" || email === "" || cnpj === "" || phone === "") {
-        error("Preencha todos os campos!");
-    } else {
+     
         try {
             const response = await fetch(`http://10.88.200.155:4000/companies/${id}`, {
                 method: 'PUT',
@@ -177,13 +175,11 @@ const handleSubmit = async (id) => {
                 throw new Error(errorMessage);
             }
             const responseData = await response.json();
-            clearInputs();
-            success(responseData.message);
+
         } catch (err) {
             console.error(err);
             error(err.message);
         }
-    }
 
 };
 
@@ -291,11 +287,11 @@ return (
 
                     <Space>
                         {editMode == false ? (
-                             <button className={styles.button} onClick={postCompany}>
+                             <button className={styles.button} onClick={() => postCompany}>
                              Cadastrar
                          </button>
                         ) : (
-                            <button className={styles.button} onClick={handleSubmit(editId)}>
+                            <button className={styles.button} onClick={() => handleSubmit(editId)}>
                              Atualizar
                          </button>
                         )}
@@ -324,7 +320,6 @@ return (
                                     )))}
                         </ul>
                     </div>
-
 
                 </div>
             </div>
