@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 .cadastro {
     background-color: #DA251C;
     height: 100vh;
@@ -36,8 +38,8 @@
     height: 1.5rem;
     width: 1.5rem;
     position: absolute;
-    top: 6rem;
-    left: 7rem;
+    top: 10rem;
+    left: 12rem;
     color: #fff;
 }
 
@@ -52,23 +54,34 @@
 
 .title {
     display: flex;
-    font-weight: bold;
     padding: 1rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
 }
 
 .text {
     font-size: 0.5rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .campos {
     display: flex;
     margin: 0.5rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .datePicker {
     margin: 1rem;
     width: 20rem;
     margin-left: -0.02rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .icone {
@@ -84,23 +97,35 @@
     padding: 0.5rem;
     padding-left: 1rem;
     font-size: 15px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .curso {
-    color: #505050;
+    color: #000;
     padding-bottom: 0.3rem;
     display: flex;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
 }
 
 .inputlabel {
     display: flex;
     font-size: 1rem;
     padding: 0.6rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .input {
     accent-color: black;
     margin-right: 1rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .login {
@@ -119,6 +144,9 @@
     font-weight: 400;
     color: #fff;
     box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .buttonRegister:hover {
@@ -134,6 +162,9 @@
     font-size: 15px;
     padding: 0.5rem;
     margin-left: 0.5rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .direito {

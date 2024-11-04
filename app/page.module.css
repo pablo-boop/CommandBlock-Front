@@ -89,7 +89,8 @@
   background-color: #dedede;
   border-radius: 8px;
   padding: 3rem;
-  position: fixed; 
+  position: fixed;
+  scroll-behavior: auto;
 }
 
 .titleAside {
@@ -128,6 +129,10 @@
   height: 100%;
   padding: 2rem;
   cursor: pointer;
+}
+
+.load {
+  padding: 1rem;
 }
 
 .card1Time {

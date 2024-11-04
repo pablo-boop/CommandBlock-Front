@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { message } from 'antd';
+import { message, Skeleton } from 'antd';
 import Link from 'next/link';
 import styles from "./page.module.css";
 import Header from "./components/Header/Header";
@@ -123,7 +123,14 @@ export default function Home() {
           <p className={styles.titleAside}>Novas Vagas</p>
           {
             vacancies.length === 0 ? (
-              <p>{response}</p>
+              <>
+                <div className={styles.card1}>
+                  <Skeleton className={styles.load} />
+                </div>
+                <div className={styles.card1}>
+                  <Skeleton className={styles.load} />
+                </div>
+              </>
             ) : (
               vacancies.map((vacancy, index) => (
                 <Link key={index} className={styles.card1} href={`/Candidato?id=${vacancy.id}`}>
