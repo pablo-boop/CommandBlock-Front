@@ -1,116 +1,371 @@
+"use client"
 import styles from "./cadastrovagas.module.css";
 import Header from "../components/Header/Header";
 import Vagas from "../components/Vagas/Vagas";
 
+import { DatePicker } from 'antd';
+import { message, Space } from 'antd';
+import { useState, useEffect, useCallback } from "react";
+
 const cadastrovagas = () => {
+    //Vacancies properties
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [creationTime, setCreationTime] = useState("");
+    const [expirationTime, setExpirationTime] = useState("");
+    const [type, setType] = useState("");
+    //Companies properties
+    const [companyName, setCompanyName] = useState("");
+    const [companyEmail, setCompanyEmail] = useState("");
+    const [companyCnpj, setCompanyCnpj] = useState("");
+    const [companyPhone, setCompanyPhone] = useState("");
+    const [companyOptions, setCompanyOptions] = useState([]); // Armazena as empresas sugeridas
+
+    //Messages Pop Up
+    const [messageApi, contextHolder] = message.useMessage();
+    const [response, setResponse] = useState("");
+    const [vacancies, setVacancies] = useState([]);
+
+    useEffect(() => {
+        const fetchCompanies = async (name) => {
+            try {
+                const response = await fetch(`http://10.88.199.202:4000/companies?name=${name}`);
+                if (!response.ok) throw new Error('Erro ao buscar empresas');
+                const data = await response.json();
+                setCompanyOptions(data.companies);
+                console.log(companyOptions);
+                
+            } catch (error) {
+                console.error(error.message);
+            }
+        };
+
+        if (companyName) {
+            fetchCompanies(companyName);
+        }
+    }, [companyName]);
+
+    const sanitizeInput = (value) => value.replace(/\D/g, '');
+    const handleCnpjChange = (e) => setCompanyCnpj(sanitizeInput(e.target.value));
+    const handlePhoneChange = (e) => setCompanyPhone(sanitizeInput(e.target.value));
+    const handleCompanyChange = (e) => setCompanyName(e.target.value);
+
+    const handleSelectCompany = (company) => {
+        setCompanyName(company.name);
+        setCompanyEmail(company.email);
+        setCompanyCnpj(company.cnpj);
+        setCompanyPhone(company.phone);
+        setCompanyOptions([]);
+    };
+
+    useEffect(() => {
+        const fetchVacancies = async () => {
+            try {
+                const response = await fetch(`http://10.88.199.202:4000/vacancies`, {
+                    method: 'GET',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        "ngrok-skip-browser-warning": "69420",
+                    })
+                });
+    
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage = response.statusText;
+    
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorMessage = errorJson.message;
+                    } catch (e) {
+                        console.error("Erro ao parsear JSON:", e);
+                    }
+    
+                    throw new Error(errorMessage);
+                }
+    
+                const responseData = await response.json();
+                setVacancies(responseData.vacancies);
+    
+                if (responseData.vacancies.length === 0) {
+                    setResponse("Não há vagas disponíveis no momento.");
+                }
+    
+            } catch (err) {
+                console.error(err);
+                error(err.message);
+            }
+        };
+        fetchVacancies();
+    }, []);
+    
+
+    const onChangeCreation = (date, dateString) => {
+        const formattedDate = dateString.split('-').reverse().join('-');
+        setCreationTime(formattedDate);
+    };
+
+    const onChangeExpiration = (date, dateString) => {
+        const formattedDate = dateString.split('-').reverse().join('-');
+        setExpirationTime(formattedDate);
+    };
+
+    //Formatação da data
+    const maskDate = (dateString) => {
+        const dateParts = dateString.split('-');
+
+        if (dateParts.length !== 3 || !/^\d{4}$/.test(dateParts[2])) {
+            return dateString; // Retorna o valor original se não for um formato válido
+        }
+
+        const day = dateParts[0].padStart(2, '0');
+        const month = dateParts[1].padStart(2, '0');
+
+        return `${day}/${month}/${dateParts[2]}`;
+    };
+
+    //Messages Succes and Error
+    const success = (msg) => {
+        messageApi.open({
+            type: 'success',
+            content: msg,
+        });
+    };
+
+    const error = (msg) => {
+        messageApi.open({
+            type: 'error',
+            content: msg,
+        });
+    };
+
+    const clearInputs = () => {
+        setName("");
+        setDescription("");
+        setCreationTime("");
+        setExpirationTime("");
+        setType("");
+        setCompanyName("");
+        setCompanyCnpj("");
+        setCompanyPhone("");
+        setCompanyEmail("");
+    }
+
+    const postVacancy = useCallback(async (data) => {
+        try {
+            const response = await fetch(`http://10.88.199.202:4000/vacancies`, {
+                method: 'POST',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                }),
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = response.statusText;
+
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.message;
+                } catch (e) {
+                    console.error("Erro ao parsear JSON:", e);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            const responseData = await response.json();
+            clearInputs();
+            success(responseData.message);
+            return responseData;
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+            return null;
+        }
+    }, []);
+
+    const postCompany = useCallback(async (data) => {
+        try {
+            const response = await fetch(`http://10.88.199.202:4000/companies`, {
+                method: 'POST',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                }),
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = response.statusText;
+
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.message;
+                } catch (e) {
+                    console.error("Erro ao parsear JSON:", e);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            const responseData = await response.json();
+            clearInputs();
+            success(responseData.message);
+            return responseData;
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+            return null;
+        }
+    }, []);
+
+    const handleSubmit = async () => {
+        if (name && description && creationTime && expirationTime && type && companyName && companyEmail && companyCnpj && companyPhone) {
+            await postVacancy({ name, description, creation_time: creationTime, expiration_time: expirationTime, type });
+            await postCompany({ name: companyName, cnpj: companyCnpj, email: companyEmail, phone: companyPhone });
+        } else {
+            error("Preencha todos os campos!");
+        }
+    };
+
     return (
         <>
-          <Header />
+            <Header />
+            {contextHolder}
+            <div className={styles.container}>
+                <form className={styles.forms}>
+                    <h3 className={styles.h3}>Cadastrar Nova Vaga</h3>
 
-          <div className={styles.container}>
-            <form className={styles.forms}>
-                <h3 className={styles.h3}>Cadastrar Nova Vaga</h3>
+                    <div className={styles.inputarea}>
+                        <input type="text"
+                            name="nome da vaga"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Nome da Vaga"
+                            className={styles.input}
+                        />
+                    </div>
 
-                <div className={styles.inputarea}>  
-                    <input type="text"
-                    name="nome da vaga"
-                    placeholder="Nome da Vaga"
-                    className={styles.input}
-                    />
+                    <div className={styles.inputarea}>
+                        <input type="text" value={companyName} onChange={handleCompanyChange} placeholder="Empresa" className={styles.input} />
+                        {companyOptions.length > 0 && (
+                            <ul className={styles.dropdown}>
+                                {companyOptions.map((company, index) => (
+                                    <li key={index} onClick={() => handleSelectCompany(company)} className={styles.options}>{company.name}</li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+
+                    <div className={styles.form}>
+
+                        <div className={styles.inputarea}>
+                            <label className={styles.label}>
+                                <input type="text"
+                                    name="cnpj"
+                                    value={companyCnpj}
+                                    onChange={handleCnpjChange}
+                                    placeholder="CNPJ"
+                                    className={styles.input2}
+                                />
+                            </label>
+                        </div>
+
+                        <div className={styles.inputarea}>
+                            <label className={styles.label}>
+                                <input type="text"
+                                    name="telefone"
+                                    value={companyPhone}
+                                    onChange={handlePhoneChange}
+                                    placeholder="Telefone"
+                                    className={styles.input3}
+                                />
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div className={styles.inputarea}>
+                        <input type="email"
+                            name="email"
+                            value={companyEmail}
+                            onChange={(e) => setCompanyEmail(e.target.value)}
+                            placeholder="Email"
+                            className={styles.input}
+                        />
+                    </div>
+
+                    <div className={styles.inputarea}>
+                        <DatePicker
+                            className={styles.datePicker}
+                            onChange={onChangeCreation} // Update here
+                            placeholder="Selecionar data de Criação"
+                        />
+                    </div>
+
+                    <div className={styles.inputarea}>
+                        <DatePicker
+                            className={styles.datePicker}
+                            onChange={onChangeExpiration} // Update here
+                            placeholder="Selecionar data de Expiração"
+                        />
+                    </div>
+
+                    <div className={styles.inputarea}>
+                        <input type="text"
+                            name="tipoVaga"
+                            value={type}
+                            onChange={(e) => setType(e.target.value)}
+                            placeholder="Tipo da Vaga"
+                            className={styles.input}
+                        />
+                    </div>
+
+                    <div className={styles.inputarea}>
+                        <textarea
+                            name="descricao"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Descrição da Vaga"
+                            className={styles.textarea}
+                        />
+                    </div>
+
+                    <a href="/EditarEmpresas">
+                        <p className={styles.empresas}>* Empresas</p>
+                    </a>
+
+                    <div className={styles.inputarea}>
+                        <button className={styles.button} type="submit" onClick={(e) => {
+                            e.preventDefault();
+                            handleSubmit();
+                        }}>Cadastrar</button>
+                    </div>
+
+                </form>
+
+                <div className={styles.vagacontainer}>
+                    <h3 className={styles.h3}>Vagas</h3>
+                    <div className={styles.vagaitem}>
+
+                        <div className={styles.vaga}>
+                            {
+                                vacancies.length === 0 ? (
+                                    <p className={styles.text}>Nenhuma vaga cadastrada</p>
+                                ) : (
+                                    vacancies.map((vacancy, index) => {
+                                        return <Vagas key={index} title={vacancy.name} text={vacancy.description} creation_time={vacancy.creation_time} expiration_time={vacancy.expiration_time} type={vacancy.type} />
+                                    })
+                                )
+                            }
+                        </div>
+                    </div>
                 </div>
 
-                <div className={styles.inputarea}> 
-                    <input type="text"
-                    name="empresa"
-                    placeholder="Empresa"
-                    className={styles.input}
-                    />
-                </div>
-
-                <div className={styles.form}>
-
-                <div className={styles.inputarea}> 
-                <label className={styles.label}>
-                    <input type="text"
-                    name="cnpj"
-                    placeholder="CNPJ"
-                    className={styles.input2}
-                    />
-                </label>
-                </div>
-
-                <div className={styles.inputarea}> 
-                <label className={styles.label}>
-                    <input type="number"
-                    name="telefone"
-                    placeholder="Telefone"
-                    className={styles.input3}
-                    />
-                </label>
-                </div>
-                </div>
-
-                <div className={styles.inputarea}> 
-                    <input type="email"
-                    name="email"
-                    placeholder="Email"
-                    className={styles.input}
-                    />
-                </div>
-
-                <div className={styles.inputarea}>     
-                    <input type="text"
-                    name="tipoVaga"
-                    placeholder="Tipo da Vaga"
-                    className={styles.input}
-                    />
-                </div>
-
-                <div className={styles.inputarea}>     
-                    <textarea
-                    name="descricao"
-                    placeholder="Descrição da Vaga"
-                    className={styles.textarea}
-                    />
-                </div>    
-
-                <p className={styles.empresas}>* Empresas</p>
-
-                <div className={styles.inputarea}>
-                <button className={styles.button} type="submit">Cadastrar</button>
-                </div>
-
-            </form>
-
-            <div className={styles.vagacontainer}>
-                <h3>Vagas</h3>
-                <div className={styles.vagaitem}>
-
-                <div className={styles.vaga}>
-                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
-
-                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
-                </div>
-
-                <div className={styles.vaga}>
-                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
-
-                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
-                </div>
-
-                <div className={styles.vaga}>
-                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
-
-                <Vagas imageURL="./cadastro.svg" text="Descrição da Vaga" />
-                </div>
-
-
-
-
-                </div>
             </div>
-
-          </div>
 
         </>
     )
