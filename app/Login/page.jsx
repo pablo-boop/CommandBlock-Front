@@ -38,8 +38,8 @@ const Login = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/login`, {
-                    method: 'PUT',
+                const response = await fetch(`http://10.88.199.225:4000/login`, {
+                    method: 'POST',
                     headers: new Headers({
                         'Content-Type': 'application/json',
                         "ngrok-skip-browser-warning": "69420",
