@@ -61,6 +61,7 @@
 }
 
 .subtitle {
+  text-align: justify;
   font-size: 2rem;
   color: #DA251C;
   font-family: "Poppins", sans-serif;
@@ -152,8 +153,21 @@
     text-underline-offset: 4px;
   }
 }
+@media only screen and (max-width: 700px){
+  .aside{
+    padding: 0;
+  
+  }
+  .subtitle{
+    font-size: large;
+  }
+  .title{
+    font-size: x-large;
+    margin-right: 4.2rem;
+  }
+}
 
-@media (max-width: 600px) {
+@media only screen and (max-width: 1310px) {
   .page {
     padding: 32px;
     padding-bottom: 80px;
@@ -186,10 +200,17 @@
     align-items: center;
     justify-content: center;
   }
+  .aside{
+    margin-right: -3rem;
+  }
+.titleAside{
+  font-size: medium;
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
+
 }
+
+
+
+
+
