@@ -30,6 +30,17 @@ export function AuthProvider({ children }) {
                 body: JSON.stringify({ email, password }),
             });
 
+            const users = await fetch('http://192.168.1.2:4000/users', {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                }),
+            })
+
+            const usersData = await users.json();
+
+            const user = usersData.users.find(user => user.email === email);
+
             if (!response.ok) {
                 throw new Error('Login failed');
             }
@@ -38,9 +49,13 @@ export function AuthProvider({ children }) {
 
             // Save token to localStorage
             localStorage.setItem('auth_token', data.token);
+            localStorage.setItem('id', user.id);
 
             // Update user state
-            setUser({ token: data.token });
+            setUser({ 
+                token: data.token,
+                id: user.id 
+            });
 
             // Redirect to dashboard or home page
             router.push('/');
