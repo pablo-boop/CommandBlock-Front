@@ -132,7 +132,7 @@
     font-size: 2.3rem;
     width: 28vw;
     color: #353535;
-    margin-top: -3rem;
+    margin-top: -7rem;
 }
 
 .listaEmpresas {
@@ -161,4 +161,45 @@
 .iconeAcao {
     cursor: pointer;
     color: #DA251C;
+}
+.form{
+    display: flex;
+}
+@media only screen and (max-width: 1400px){
+    .form{
+        display: flex;
+        flex-direction: column;
+       margin-left: 0;
+       margin-right: 0;
+        text-align: center;
+        align-items: center;
+    }
+    .titulo{
+        margin-top: 0;
+    }
+    .inputs{
+        width: 18rem;
+    }
+    .card{
+        padding: 0;
+        padding-top: 10rem;
+        align-items: center;
+        text-align: center;
+        height: auto;
+        margin-left: 0;
+    }
+    .forms{
+        margin-left: 0rem;
+        margin-right: 0rem;
+        text-align: center;
+        align-items: center;
+
+    }
+    .listaEmpresas{
+        margin-right: 0;
+        align-items: center;
+        text-align: center;
+        display: flex;
+        margin-left: -5rem;
+    }
 }

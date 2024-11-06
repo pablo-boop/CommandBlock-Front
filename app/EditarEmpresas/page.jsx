@@ -246,7 +246,7 @@ return (
                 
                     {/* Lista de empresas */}
                     
-
+                    <div className={styles.form}>
                 <div className={styles.forms}>
                     <h1 className={styles.title}> Editar Empresas</h1>
                     <p className={styles.text}>Por favor, Preencha o campo de nome e atualize os outros dados</p>
@@ -310,9 +310,10 @@ return (
                         )}
     
                     </Space>
+                    </div>
 
 
-                </div>
+                
                 <div className={styles.listaEmpresas}>
                         <h1 className={styles.titulo}>Empresas Cadastradas</h1>
                         <ul className={styles.empresas}>
@@ -333,7 +334,7 @@ return (
                                     )))}
                         </ul>
                     </div>
-            </div>
+            </div></div>
             
         </div>
     </>
