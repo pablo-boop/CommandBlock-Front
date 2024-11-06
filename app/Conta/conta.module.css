@@ -141,3 +141,9 @@
     margin-right: 40rem;
     margin-top: 1.5rem;
 }
+@media only screen and (max-width: 1400px){
+    .card {
+        display: flex;
+        flex-direction: column;
+    }
+}
