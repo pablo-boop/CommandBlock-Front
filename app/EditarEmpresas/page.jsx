@@ -245,26 +245,7 @@ return (
                 </a>
                 
                     {/* Lista de empresas */}
-                    <div className={styles.listaEmpresas}>
-                        <h1 className={styles.titulo}>Empresas Cadastradas</h1>
-                        <ul className={styles.empresas}>
-                            {
-                                companies.length === 0 ? (
-                                    <p>{response}</p>
-                                ) : (
-                                    companies.map((company) => (
-                                        <li key={company.id} className={styles.empresaItem}>
-                                            <p>{company.name}</p>
-                                            <div className={styles.acoes}>
-                                                <FaPencilAlt onClick={() => fillInputs(company.id)}
-                                                    className={styles.iconeAcao} />
-                                                <MdDelete onClick={() => handleDelete(company.id)}
-                                                    className={styles.iconeAcao} />
-                                            </div>
-                                        </li>
-                                    )))}
-                        </ul>
-                    </div>
+                    
 
                 <div className={styles.forms}>
                     <h1 className={styles.title}> Editar Empresas</h1>
@@ -332,7 +313,28 @@ return (
 
 
                 </div>
+                <div className={styles.listaEmpresas}>
+                        <h1 className={styles.titulo}>Empresas Cadastradas</h1>
+                        <ul className={styles.empresas}>
+                            {
+                                companies.length === 0 ? (
+                                    <p>{response}</p>
+                                ) : (
+                                    companies.map((company) => (
+                                        <li key={company.id} className={styles.empresaItem}>
+                                            <p>{company.name}</p>
+                                            <div className={styles.acoes}>
+                                                <FaPencilAlt onClick={() => fillInputs(company.id)}
+                                                    className={styles.iconeAcao} />
+                                                <MdDelete onClick={() => handleDelete(company.id)}
+                                                    className={styles.iconeAcao} />
+                                            </div>
+                                        </li>
+                                    )))}
+                        </ul>
+                    </div>
             </div>
+            
         </div>
     </>
 );
