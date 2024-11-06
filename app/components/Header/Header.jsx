@@ -20,7 +20,7 @@ const Header = () => {
             try {
                 const id = localStorage.getItem('id');
                 console.log('Stored ID:', id); // Debug log 1
-                
+
                 if (!id) {
                     console.log('No ID found in localStorage'); // Debug log 2
                     setLoading(false);
@@ -86,7 +86,9 @@ const Header = () => {
     if (loading) {
         return (
             <div className={styles.container}>
-                <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                <Link href='/'>
+                    <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                </Link><Image src={senaiLogo} alt="logo" className={styles.logo} />
                 <div className={styles.buttons}>
                     <p>Carregando...</p>
                 </div>
@@ -97,7 +99,9 @@ const Header = () => {
     if (error) {
         return (
             <div className={styles.container}>
-                <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                <Link href='/'>
+                    <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                </Link>
                 <div className={styles.buttons}>
                     <p>Erro: {error}</p>
                 </div>
@@ -108,15 +112,17 @@ const Header = () => {
     if (user) {
         return (
             <div className={styles.container}>
-                <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                <Link href='/'>
+                    <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                </Link>
                 <div className={styles.buttons}>
                     <p className={styles.welcome}>Seja bem-vindo {user.name}</p>
                     <Button className={styles.buttonRegister} variant="primary">
-                        <Link href='/Vagas'>
+                        <Link href='/Vaga'>
                             <p className={styles.buttonTxt}>Vagas</p>
                         </Link>
                     </Button>
-                    <CiLogout className={styles.logout} onClick={handleLogout}/>
+                    <CiLogout className={styles.logout} onClick={handleLogout} />
                 </div>
             </div>
         );
@@ -125,7 +131,9 @@ const Header = () => {
     // Default return for not logged in state
     return (
         <div className={styles.container}>
-            <Image src={senaiLogo} alt="logo" className={styles.logo} />
+            <Link href='/'>
+                <Image src={senaiLogo} alt="logo" className={styles.logo} />
+            </Link>
             <div className={styles.buttons}>
                 <Button className={styles.buttonRegister} variant="primary">
                     <Link href='/Cadastro'>

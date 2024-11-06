@@ -48,7 +48,6 @@ const Vaga = () => {
 
             } catch (err) {
                 console.error(err);
-                error(err.message);
             }
         };
         handleSubmit();
@@ -78,7 +77,12 @@ const Vaga = () => {
                     <div className={styles.vaga}>
                         {
                             vacancies.length === 0 ? (
-                                <Skeleton className={styles.load}/>
+                                <>
+                                    <Skeleton className={styles.load} />
+                                    <Skeleton className={styles.load} />
+                                    <Skeleton className={styles.load} />
+                                </>
+
                             ) : (
                                 vacancies.map((vacancy, index) => (
                                     <Vagas key={index} imageURL="./cadastro.svg" text={vacancy.description} />
