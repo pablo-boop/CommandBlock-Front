@@ -1,15 +1,132 @@
+'use client'
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/app/contexts/AuthContext';
 import styles from './styles.module.css';
 import senaiLogo from '../../../public/senai.png';
 import Image from 'next/image';
 import Link from 'next/link';
+//Imports styles
 import { Button } from "antd";
+import { CiLogout } from "react-icons/ci";
 
 const Header = () => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { logout } = useAuth();
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const id = localStorage.getItem('id');
+                console.log('Stored ID:', id); // Debug log 1
+                
+                if (!id) {
+                    console.log('No ID found in localStorage'); // Debug log 2
+                    setLoading(false);
+                    return;
+                }
+
+                console.log('Fetching user data...'); // Debug log 3
+                const response = await fetch('http://192.168.1.2:4000/users', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+                console.log('API Response:', data); // Debug log 4
+
+                if (!data.users) {
+                    console.log('No users array in response'); // Debug log 5
+                    setError('Invalid data format from API');
+                    setLoading(false);
+                    return;
+                }
+
+                const foundUser = data.users.find(u => {
+                    console.log('Comparing:', u.id, id); // Debug log 6
+                    return u.id.toString() === id.toString(); // Convert both to strings for comparison
+                });
+
+                console.log('Found User:', foundUser); // Debug log 7
+                setUser(foundUser || null);
+                setLoading(false);
+
+            } catch (error) {
+                console.error('Error in fetchUserData:', error); // Debug log 8
+                setError(error.message);
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+
+        // Cleanup function
+        return () => {
+            setUser(null);
+            setLoading(true);
+            setError(null);
+        };
+    }, []); // Empty dependency array means this runs once on mount
+
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        const result = await logout();
+
+        if (!result.success) {
+            setError(result.error || 'Failed to login');
+        }
+    };
+
+    // Debug render log
+    console.log('Render State:', { user, loading, error });
+
+    if (loading) {
+        return (
+            <div className={styles.container}>
+                <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                <div className={styles.buttons}>
+                    <p>Carregando...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className={styles.container}>
+                <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                <div className={styles.buttons}>
+                    <p>Erro: {error}</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (user) {
+        return (
+            <div className={styles.container}>
+                <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                <div className={styles.buttons}>
+                    <p className={styles.welcome}>Seja bem-vindo {user.name}</p>
+                    <Button className={styles.buttonRegister} variant="primary">
+                        <Link href='/Vagas'>
+                            <p className={styles.buttonTxt}>Vagas</p>
+                        </Link>
+                    </Button>
+                    <CiLogout className={styles.logout} onClick={handleLogout}/>
+                </div>
+            </div>
+        );
+    }
+
+    // Default return for not logged in state
     return (
         <div className={styles.container}>
             <Image src={senaiLogo} alt="logo" className={styles.logo} />
             <div className={styles.buttons}>
-
                 <Button className={styles.buttonRegister} variant="primary">
                     <Link href='/Cadastro'>
                         <p className={styles.buttonTxt}>Cadastrar-se</p>
@@ -23,7 +140,7 @@ const Header = () => {
                 </Link>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Header;
