@@ -4,7 +4,7 @@ import styles from "./vaga.module.css"
 import Vagas from "../components/Vagas/Vagas"
 import Header from "../components/Header/Header"
 import { useEffect, useState } from "react";
-import { message } from "antd";
+import { message, Skeleton } from "antd";
 
 const Vaga = () => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -48,7 +48,6 @@ const Vaga = () => {
 
             } catch (err) {
                 console.error(err);
-                error(err.message);
             }
         };
         handleSubmit();
@@ -73,12 +72,17 @@ const Vaga = () => {
             {contextHolder}
             <Header />
             <div className={styles.vagacontainer}>
-                <h2>Vagas</h2>
+                <h2 className={styles.title}>Vagas</h2>
                 <div className={styles.vagaitem}>
                     <div className={styles.vaga}>
                         {
                             vacancies.length === 0 ? (
-                                <p>{response}</p>
+                                <>
+                                    <Skeleton className={styles.load} />
+                                    <Skeleton className={styles.load} />
+                                    <Skeleton className={styles.load} />
+                                </>
+
                             ) : (
                                 vacancies.map((vacancy, index) => (
                                     <Vagas key={index} imageURL="./cadastro.svg" text={vacancy.description} />

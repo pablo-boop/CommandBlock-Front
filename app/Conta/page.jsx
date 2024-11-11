@@ -114,7 +114,9 @@ const conta = () => {
         <div className={styles.cadastro}>
             {contextHolder}
             <div className={styles.card}>
-                <FiArrowLeft className={styles.arrow} />
+                <a href="/">
+                    <FiArrowLeft className={styles.arrow} />
+                </a>
                 <div className={styles.leftForms}>
                     <h2 className={styles.title}>Criação de Contas</h2>
                     <div className={styles.campos}>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { message } from 'antd';
+import { message, Skeleton } from 'antd';
 import Link from 'next/link';
 import styles from "./page.module.css";
 import Header from "./components/Header/Header";
@@ -14,7 +14,7 @@ export default function Home() {
   useEffect(() => {
     const handleSubmit = async () => {
       try {
-        const response = await fetch(`http://10.88.199.225:4000/vacancies`, {
+        const response = await fetch(`http://192.168.56.1:4000/vacancies`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json',
@@ -123,7 +123,14 @@ export default function Home() {
           <p className={styles.titleAside}>Novas Vagas</p>
           {
             vacancies.length === 0 ? (
-              <p>{response}</p>
+              <>
+                <div className={styles.card1}>
+                  <Skeleton className={styles.load} />
+                </div>
+                <div className={styles.card1}>
+                  <Skeleton className={styles.load} />
+                </div>
+              </>
             ) : (
               vacancies.map((vacancy, index) => (
                 <Link key={index} className={styles.card1} href={`/Candidato?id=${vacancy.id}`}>

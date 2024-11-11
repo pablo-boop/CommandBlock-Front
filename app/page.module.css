@@ -90,7 +90,8 @@
   background-color: #dedede;
   border-radius: 8px;
   padding: 3rem;
-  position: fixed; 
+  position: fixed;
+  scroll-behavior: auto;
 }
 
 .titleAside {
@@ -99,6 +100,7 @@
   font-weight: 700;
   font-style: normal;
   font-size: 1.5rem;
+  margin: 1rem;
 }
 
 .titleCards {
@@ -129,6 +131,10 @@
   height: 100%;
   padding: 2rem;
   cursor: pointer;
+}
+
+.load {
+  padding: 1rem;
 }
 
 .card1Time {
