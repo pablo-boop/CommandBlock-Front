@@ -13,6 +13,7 @@
     font-weight: 500;
     font-style: normal;
 }
+
 .logo {
     width: 20rem;
     height: 5.5rem;
@@ -26,6 +27,16 @@
 }
 
 .buttonRegister {
+    width: 10rem;
+    height: 2.5rem;
+    background-color: #F24A4A;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #fff;
+}
+.buttonRegister1 {
     width: 10rem;
     height: 2.5rem;
     background-color: #F24A4A;
@@ -67,4 +78,14 @@
     font-size: 2rem;
     color: #fff;
     cursor: pointer;
+}
+@media only screen and (max-width: 1400px){
+    .buttonRegister1{
+        display:none;
+    }
+    .logo {
+        width: 12rem;
+        height: 4.5rem;
+        margin-left: -2vw;
+    }
 }

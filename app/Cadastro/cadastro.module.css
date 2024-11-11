@@ -134,3 +134,23 @@
 .buttonRegister:hover {
     cursor: pointer;
 }
+@media only screen and (max-width: 1400px){
+    .img{
+        display: none;
+    }
+   .imagem{
+    width: 0;
+    height: 0;
+   }
+   .forms{
+    margin-left: 0;
+    width: 50vw;
+    }
+    .card{
+        height: auto;
+    }
+    .buttonRegister{
+        width: 10rem;
+        margin-left: 0;
+    }
+}
