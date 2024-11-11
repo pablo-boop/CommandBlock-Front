@@ -28,7 +28,7 @@ const Header = () => {
                 }
 
                 console.log('Fetching user data...'); // Debug log 3
-                const response = await fetch('http://192.168.1.2:4000/users', {
+                const response = await fetch('http://192.168.56.1:4000/users', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
