@@ -113,7 +113,9 @@ const Cadastro = () => {
                     <a href="/">
                         <FiArrowLeft className={styles.arrow} />
                     </a>
-                    <img src={'/cadastro.svg'} alt="Cadastro" />
+                    <div className={styles.img}>
+                    <img  src={'/cadastro.svg'} alt="Cadastro" />
+                    </div>
                 </div>
 
                 <div className={styles.forms}>
