@@ -15,7 +15,7 @@
     align-items: center;
     position: relative;
     height: 75vh;
-    width: 85vw;
+    width: 75vw;
     background: linear-gradient(to right, #8A8A8A, 40%, #F0F0F0);
     overflow: hidden;
     padding: 4vw;
@@ -37,23 +37,26 @@
 }
 
 .forms {
-    margin-left: 20rem;
+    margin-left: 11rem;
     display: flex;
     flex-direction: column;
     gap: 1vh;
     width: 50%;
+    margin-right:18rem;
 }
 
 .title {
     font-family: "Poppins", sans-serif;
     font-weight: 700;
     font-style: normal;
+    font-size: 2.5rem;
 }
 
 .text {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-style: normal;
+    font-size: 1.2rem;
 }
 
 .campos {
@@ -67,7 +70,7 @@
 .inputs {
     display: block;
     background: transparent;
-    width: 50%;
+    width: 23rem;
     line-height: 0.5rem;
     border: none;
     border-bottom: 2px solid #505050;
@@ -76,6 +79,7 @@
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-style: normal;
+    font-size: x-large;
 }
 
 .curso {
@@ -111,9 +115,10 @@
     width: 8rem;
     border: none;
     border-radius: 5px;
-    font-size: 1rem;
+    font-size: 1.3rem;
     font-weight: 400;
     padding: 0.8rem 2rem;
+    padding-right: 9rem;
     margin-left: 2rem;
     margin-top: 1rem;
     box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
@@ -121,15 +126,19 @@
     font-weight: 400;
     font-style: normal;
 }
-
 .titulo{
     display: flex;
     padding: 2rem;
+    font-size: 2.3rem;
+    width: 28vw;
+    color: #353535;
+    margin-top: -7rem;
 }
 
 .listaEmpresas {
     margin-bottom: 20rem;
-    margin-left: 10rem;
+    margin-right: 50rem;
+    display: flex;
 }
 
 .empresas {
@@ -152,4 +161,45 @@
 .iconeAcao {
     cursor: pointer;
     color: #DA251C;
+}
+.form{
+    display: flex;
+}
+@media only screen and (max-width: 1400px){
+    .form{
+        display: flex;
+        flex-direction: column;
+       margin-left: 0;
+       margin-right: 0;
+        text-align: center;
+        align-items: center;
+    }
+    .titulo{
+        margin-top: 0;
+    }
+    .inputs{
+        width: 18rem;
+    }
+    .card{
+        padding: 0;
+        padding-top: 10rem;
+        align-items: center;
+        text-align: center;
+        height: auto;
+        margin-left: 0;
+    }
+    .forms{
+        margin-left: 0rem;
+        margin-right: 0rem;
+        text-align: center;
+        align-items: center;
+
+    }
+    .listaEmpresas{
+        margin-right: 0;
+        align-items: center;
+        text-align: center;
+        display: flex;
+        margin-left: -5rem;
+    }
 }
