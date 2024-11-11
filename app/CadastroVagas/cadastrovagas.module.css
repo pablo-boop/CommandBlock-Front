@@ -182,3 +182,17 @@
     font-style: normal;
     cursor: pointer;
 }
+@media only screen and (max-width: 1400px){
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding: 3rem;
+    }
+    .forms {
+        margin-right: 0rem;
+    }
+    .vagacontainer{
+        margin-left: 0;
+    }
+   
+}
