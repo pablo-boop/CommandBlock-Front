@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { FiUser, FiLock, FiArrowLeft } from "react-icons/fi";
 import { message, Space } from 'antd';
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
 
@@ -11,6 +12,8 @@ const Login = () => {
     const [email, setEmail] = useState('');  // Corrigido
     const [password, setPassword] = useState('');  // Corrigido
     const [messageApi, contextHolder] = message.useMessage();
+    const [errorLogin, setErrorLogin] = useState('');
+    const { login } = useAuth();
 
 
     const clearInputs = () => {
@@ -33,49 +36,15 @@ const Login = () => {
         });
     };
 
-    const login = async () => {
-        if (email === '' || password === '') {
-            error("Preencha todos os campos!");
-        } else {
-            try {
-                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/login`, {
-                    method: 'PUT',
-                    headers: new Headers({
-                        'Content-Type': 'application/json',
-                        "ngrok-skip-browser-warning": "69420",
-                    }),
-                    body: JSON.stringify({
-                        email: email,
-                        password: password,
-                    })
-                });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrorLogin('');
+        console.log(email, password);
 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    let errorMessage = response.statusText;
+        const result = await login(email, password);
 
-                    try {
-                        const errorJson = JSON.parse(errorText);
-                        errorMessage = errorJson.message;
-                    } catch (e) {
-                        console.error("Erro ao parsear JSON:", e);
-                    }
-
-                    throw new Error(errorMessage);
-                }
-
-                const responseData = await response.json();
-                clearInputs();
-                success(responseData.message);
-
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 2000);
-
-            } catch (err) {
-                console.error(err);
-                error(err.message); // Exibe apenas a mensagem de erro
-            }
+        if (!result.success) {
+            setErrorLogin(result.error || 'Failed to login');
         }
     };
 
@@ -113,7 +82,7 @@ const Login = () => {
                         </div>
                     </div>
                     <div className={styles.actionArea}>
-                        <button className={styles.buttonRegister} onClick={login} >
+                        <button className={styles.buttonRegister} onClick={handleSubmit} >
                             <p className={styles.buttonTxt}>Entrar</p>
                         </button>
                         <p className={styles.txt}>Caso ainda não tenha um login,
