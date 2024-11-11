@@ -85,7 +85,7 @@ const Vaga = () => {
 
                             ) : (
                                 vacancies.map((vacancy, index) => (
-                                    <Vagas key={index} imageURL="./cadastro.svg" text={vacancy.description} />
+                                    <Vagas key={index} imageURL="./cadastro.svg" text={vacancy.description} id={vacancy.id}/>
                                 ))
                             )
                         }

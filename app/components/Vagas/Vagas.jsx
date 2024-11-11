@@ -1,9 +1,14 @@
-import styles from "./styles.module.css"
+import styles from "./styles.module.css";
+import { useRouter } from 'next/navigation';
 
-const Vagas = ({ text, title, creation_time, expiration_time, type }) => {
+const Vagas = ({ text, title, creation_time, expiration_time, type, id }) => {
+    const router = useRouter();
+    const handleClick = () => {
+        router.push(`/Candidato?id=${id}`);
+    };
 
     return (
-        <div>
+        <div onClick={handleClick}>
             <div className={styles.card}>
                 <div className={styles.texts}>
                     <p className={styles.title}>{title}</p>
