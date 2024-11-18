@@ -29,7 +29,7 @@ const cadastrovagas = () => {
     useEffect(() => {
         const fetchCompanies = async (name) => {
             try {
-                const response = await fetch(`http://10.88.199.202:4000/companies?name=${name}`);
+                const response = await fetch(`http://192.168.1.9:4000/companies?name=${name}`);
                 if (!response.ok) throw new Error('Erro ao buscar empresas');
                 const data = await response.json();
                 setCompanyOptions(data.companies);
@@ -45,23 +45,23 @@ const cadastrovagas = () => {
         }
     }, [companyName]);
 
-    const sanitizeInput = (value) => value.replace(/\D/g, '');
     const handleCnpjChange = (e) => setCompanyCnpj(sanitizeInput(e.target.value));
     const handlePhoneChange = (e) => setCompanyPhone(sanitizeInput(e.target.value));
     const handleCompanyChange = (e) => setCompanyName(e.target.value);
 
+    const sanitizeInput = (value) => value.replace(/\D/g, '');
     const handleSelectCompany = (company) => {
         setCompanyName(company.name);
         setCompanyEmail(company.email);
-        setCompanyCnpj(company.cnpj);
-        setCompanyPhone(company.phone);
+        setCompanyCnpj(sanitizeInput(company.cnpj));
+        setCompanyPhone(sanitizeInput(company.phone));
         setCompanyOptions([]);
     };
 
     useEffect(() => {
         const fetchVacancies = async () => {
             try {
-                const response = await fetch(`http://10.88.199.202:4000/vacancies`, {
+                const response = await fetch(`http://192.168.1.9:4000/vacancies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ const cadastrovagas = () => {
 
     const postVacancy = useCallback(async (data) => {
         try {
-            const response = await fetch(`http://10.88.199.202:4000/vacancies`, {
+            const response = await fetch(`http://192.168.1.9:4000/vacancies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ const cadastrovagas = () => {
 
     const postCompany = useCallback(async (data) => {
         try {
-            const response = await fetch(`http://10.88.199.202:4000/companies`, {
+            const response = await fetch(`http://192.168.1.9:4000/companies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -224,8 +224,53 @@ const cadastrovagas = () => {
 
     const handleSubmit = async () => {
         if (name && description && creationTime && expirationTime && type && companyName && companyEmail && companyCnpj && companyPhone) {
-            await postVacancy({ name, description, creation_time: creationTime, expiration_time: expirationTime, type });
-            await postCompany({ name: companyName, cnpj: companyCnpj, email: companyEmail, phone: companyPhone });
+            try {
+                // First check if company exists by CNPJ
+                const response = await fetch(`http://192.168.1.9:4000/companies?cnpj=${companyCnpj}`);
+                if (!response.ok) {
+                    throw new Error('Erro ao verificar empresa');
+                }
+                const data = await response.json();
+                
+                let companyId;
+                
+                // If company doesn't exist in the suggestions, create new company first
+                if (!data.companies || data.companies.length === 0) {
+                    const companyResponse = await postCompany({ 
+                        name: companyName, 
+                        cnpj: companyCnpj, 
+                        email: companyEmail, 
+                        phone: companyPhone 
+                    });
+
+                    console.log(companyResponse);
+                    
+                    
+                    if (!companyResponse) {
+                        throw new Error('Erro ao cadastrar empresa');
+                    }
+                    
+                    // Get the ID from the newly created company
+                    companyId = companyResponse.id;
+                } else {
+                    // Get the ID from the existing company
+                    companyId = data.companies[0].id;
+                }
+                
+                // Create the vacancy with the correct company ID
+                await postVacancy({ 
+                    name, 
+                    description, 
+                    creation_time: creationTime, 
+                    expiration_time: expirationTime, 
+                    type,
+                    company_id: companyId
+                });
+    
+            } catch (err) {
+                console.error(err);
+                error(err.message || 'Erro ao processar requisição');
+            }
         } else {
             error("Preencha todos os campos!");
         }
