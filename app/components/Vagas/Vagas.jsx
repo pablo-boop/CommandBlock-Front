@@ -1,5 +1,6 @@
 import styles from "./styles.module.css";
 import { useRouter } from 'next/navigation';
+import { Card } from 'antd';
 
 const Vagas = ({ text, title, creation_time, expiration_time, type, id }) => {
     const router = useRouter();
@@ -7,22 +8,31 @@ const Vagas = ({ text, title, creation_time, expiration_time, type, id }) => {
         router.push(`/Candidato?id=${id}`);
     };
 
+    const formatDate = (dateString) => {
+        // Cria um objeto Date a partir da string
+        const date = new Date(dateString);
+        
+        // Pega os componentes da data
+        const day = date.getUTCDate().toString().padStart(2, '0');
+        const month = (date.getUTCMonth() + 1).toString().padStart(2, '0'); // Mês começa do 0
+        const year = date.getUTCFullYear();
+        
+        // Retorna a data formatada
+        return `${day}-${month}-${year}`;
+    }
+
     return (
-        <div onClick={handleClick}>
-            <div className={styles.card}>
-                <div className={styles.texts}>
-                    <p className={styles.title}>{title}</p>
-                    <p className={styles.text}>{text}</p>
-                </div>
-                <div className={styles.infos}>
-                    <p className={styles.type}>{type}</p>
-                    <div className={styles.times}>
-                        <p className={styles.text}>Data de criação: <p className={styles.time}>{creation_time}</p></p>
-                        <p className={styles.text}>Data de expiração: <p className={styles.time}>{expiration_time}</p></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <Card
+                onClick={handleClick}
+                title={title}
+                style={{
+                    width: '100%'
+                }}
+            >
+                <p className={styles.subTitle}>Tipo: <p className={styles.text}>{type}</p></p>
+                <p className={styles.subTitle}>Data de Criação: <p className={styles.text}>{formatDate(creation_time)}</p></p>
+                <p className={styles.subTitle}>Data de Expiração: <p className={styles.text}>{formatDate(expiration_time)}</p></p>
+            </Card>
     )
 }
 

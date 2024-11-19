@@ -3,63 +3,19 @@
 .card {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 500vw;
     height: 25%;
-    padding: 2rem;
-    background-color: #D9D9D9;
-    border-radius: 0.5rem;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
-.texts {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: start;
+.subTitle {
+    font-size: 1rem;
+    color: #000;
+    font-family: "Poppins", sans-serif;
     gap: 0.5rem;
 }
 
-.title {
-    font-family: "Poppins", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-    font-size: 1rem;
-}
-
-.text{
-    font-family: "Poppins", sans-serif;
-    font-weight: 500;
-    font-style: normal;
+.text {
     font-size: 0.8rem;
-    text-align: justify;
-}
-
-.infos {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin: 1rem;
-}
-
-.times {
-    gap: 0.5rem;
-}
-
-.type {
+    color: #333;
     font-family: "Poppins", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-    font-size: 1.2rem;
-}
-
-.time {
-    font-family: "Poppins", sans-serif;
-    font-weight: 600;
-    font-style: normal;
-    font-size: 1rem;
-}
-
-.textContainer {
-    display: flex;
 }

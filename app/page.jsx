@@ -5,6 +5,7 @@ import { message, Skeleton } from 'antd';
 import Link from 'next/link';
 import styles from "./page.module.css";
 import Header from "./components/Header/Header";
+import Vagas from './components/Vagas/Vagas';
 
 export default function Home() {
   const [messageApi, contextHolder] = message.useMessage();
@@ -14,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     const handleSubmit = async () => {
       try {
-        const response = await fetch(`http://192.168.56.1:4000/vacancies`, {
+        const response = await fetch(`http://192.168.1.9:4000/vacancies`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json',
@@ -133,14 +134,7 @@ export default function Home() {
               </>
             ) : (
               vacancies.map((vacancy, index) => (
-                <Link key={index} className={styles.card1} href={`/Candidato?id=${vacancy.id}`}>
-                  <h3 className={styles.titleCards}>{vacancy.name}</h3>
-                  <div className={styles.card1Time}>
-                    <p className={styles.text}>Data de criação:</p>
-                    <p className={styles.timeCards}>{vacancy.expiration_time}</p>
-                  </div>
-                  <h4 className={styles.typeCards}>{vacancy.type}</h4>
-                </Link>
+                <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time}/>
               ))
             )
           }
