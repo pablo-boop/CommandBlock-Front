@@ -43,7 +43,7 @@ export default function Home() {
         if (responseData.vacancies.length === 0) {
           setResponse("Não há vagas disponíveis no momento.");
         } else {
-          setVacancies(responseData.vacancies);
+          setVacancies(responseData.vacancies.slice(-2));
         }
 
       } catch (err) {
