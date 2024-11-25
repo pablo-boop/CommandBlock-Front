@@ -19,6 +19,11 @@
     font-style: normal;
 }
 
+.modal {
+    width: 85%;
+    height: 100%;
+}
+
 .forms {
     flex: 1;
     padding: 1srem;

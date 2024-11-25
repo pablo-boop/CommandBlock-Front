@@ -8,7 +8,7 @@ import { message, Space, Modal } from 'antd';
 import { useState, useEffect, useCallback } from "react";
 
 const cadastrovagas = () => {
-    //Vacancies properties
+    //candidacies properties
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [creationTime, setCreationTime] = useState("");
@@ -24,7 +24,7 @@ const cadastrovagas = () => {
     //Messages Pop Up
     const [messageApi, contextHolder] = message.useMessage();
     const [response, setResponse] = useState("");
-    const [vacancies, setVacancies] = useState([]);
+    const [candidacies, setCandidacies] = useState([]);
 
     //Modal Pop Up
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,9 +78,9 @@ const cadastrovagas = () => {
     };
 
     useEffect(() => {
-        const fetchVacancies = async () => {
+        const fetchCandidacies = async () => {
             try {
-                const response = await fetch(`http://192.168.1.9:4000/vacancies`, {
+                const response = await fetch(`http://192.168.1.9:4000/candidacies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -103,10 +103,10 @@ const cadastrovagas = () => {
                 }
 
                 const responseData = await response.json();
-                setVacancies(responseData.vacancies);
+                setCandidacies(responseData.candidacies);
 
-                if (responseData.vacancies.length === 0) {
-                    setResponse("Não há vagas disponíveis no momento.");
+                if (responseData.candidacies.length === 0) {
+                    setResponse("Não há candidaturas disponíveis no momento.");
                 }
 
             } catch (err) {
@@ -114,7 +114,7 @@ const cadastrovagas = () => {
                 error(err.message);
             }
         };
-        fetchVacancies();
+        fetchCandidacies();
     }, []);
 
 
@@ -305,6 +305,7 @@ const cadastrovagas = () => {
                     open={isModalOpen}
                     onOk={handleOk}
                     onCancel={handleCancel}
+                    className={styles.modal}
                 >
                     {selectedVacancy ? (
                         <>
@@ -429,15 +430,15 @@ const cadastrovagas = () => {
                 </form>
 
                 <div className={styles.vagacontainer}>
-                    <h3 className={styles.h3}>Vagas</h3>
+                    <h3 className={styles.h3}>Candidaturas</h3>
                     <div className={styles.vagaitem}>
 
                         <div className={styles.vaga}>
                             {
-                                vacancies.length === 0 ? (
+                                candidacies.length === 0 ? (
                                     <p className={styles.text}>Nenhuma vaga cadastrada</p>
                                 ) : (
-                                    vacancies.map((vacancy, index) => {
+                                    candidacies.map((vacancy, index) => {
                                         return <Vagas onClick={() => openModal(vacancy)} key={index} title={vacancy.name} text={vacancy.description} creation_time={vacancy.creation_time} expiration_time={vacancy.expiration_time} type={vacancy.type} />
                                     })
                                 )
