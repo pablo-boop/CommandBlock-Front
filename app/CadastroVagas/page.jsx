@@ -4,7 +4,7 @@ import Header from "../components/Header/Header";
 import Vagas from "../components/Vagas/Vagas";
 
 import { DatePicker } from 'antd';
-import { message, Space } from 'antd';
+import { message, Space, Modal } from 'antd';
 import { useState, useEffect, useCallback } from "react";
 
 const cadastrovagas = () => {
@@ -26,6 +26,25 @@ const cadastrovagas = () => {
     const [response, setResponse] = useState("");
     const [vacancies, setVacancies] = useState([]);
 
+    //Modal Pop Up
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedVacancy, setSelectedVacancy] = useState(null);
+
+    const openModal = (vacancy) => {
+        setSelectedVacancy(vacancy); // Define a vaga selecionada
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+        setSelectedVacancy(null); // Limpa a vaga selecionada
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+        setSelectedVacancy(null);
+    };
+
     useEffect(() => {
         const fetchCompanies = async (name) => {
             try {
@@ -34,7 +53,7 @@ const cadastrovagas = () => {
                 const data = await response.json();
                 setCompanyOptions(data.companies);
                 console.log(companyOptions);
-                
+
             } catch (error) {
                 console.error(error.message);
             }
@@ -68,28 +87,28 @@ const cadastrovagas = () => {
                         "ngrok-skip-browser-warning": "69420",
                     })
                 });
-    
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     let errorMessage = response.statusText;
-    
+
                     try {
                         const errorJson = JSON.parse(errorText);
                         errorMessage = errorJson.message;
                     } catch (e) {
                         console.error("Erro ao parsear JSON:", e);
                     }
-    
+
                     throw new Error(errorMessage);
                 }
-    
+
                 const responseData = await response.json();
                 setVacancies(responseData.vacancies);
-    
+
                 if (responseData.vacancies.length === 0) {
                     setResponse("Não há vagas disponíveis no momento.");
                 }
-    
+
             } catch (err) {
                 console.error(err);
                 error(err.message);
@@ -97,7 +116,7 @@ const cadastrovagas = () => {
         };
         fetchVacancies();
     }, []);
-    
+
 
     const onChangeCreation = (date, dateString) => {
         const formattedDate = dateString.split('-').reverse().join('-');
@@ -231,42 +250,42 @@ const cadastrovagas = () => {
                     throw new Error('Erro ao verificar empresa');
                 }
                 const data = await response.json();
-                
+
                 let companyId;
-                
+
                 // If company doesn't exist in the suggestions, create new company first
                 if (!data.companies || data.companies.length === 0) {
-                    const companyResponse = await postCompany({ 
-                        name: companyName, 
-                        cnpj: companyCnpj, 
-                        email: companyEmail, 
-                        phone: companyPhone 
+                    const companyResponse = await postCompany({
+                        name: companyName,
+                        cnpj: companyCnpj,
+                        email: companyEmail,
+                        phone: companyPhone
                     });
 
                     console.log(companyResponse);
-                    
-                    
+
+
                     if (!companyResponse) {
                         throw new Error('Erro ao cadastrar empresa');
                     }
-                    
+
                     // Get the ID from the newly created company
                     companyId = companyResponse.id;
                 } else {
                     // Get the ID from the existing company
                     companyId = data.companies[0].id;
                 }
-                
+
                 // Create the vacancy with the correct company ID
-                await postVacancy({ 
-                    name, 
-                    description, 
-                    creation_time: creationTime, 
-                    expiration_time: expirationTime, 
+                await postVacancy({
+                    name,
+                    description,
+                    creation_time: creationTime,
+                    expiration_time: expirationTime,
                     type,
                     company_id: companyId
                 });
-    
+
             } catch (err) {
                 console.error(err);
                 error(err.message || 'Erro ao processar requisição');
@@ -281,6 +300,23 @@ const cadastrovagas = () => {
             <Header />
             {contextHolder}
             <div className={styles.container}>
+                <Modal
+                    title={selectedVacancy?.name || "Detalhes da Vaga"}
+                    open={isModalOpen}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                >
+                    {selectedVacancy ? (
+                        <>
+                            <p><strong>Descrição:</strong> {selectedVacancy.description}</p>
+                            <p><strong>Data de Criação:</strong> {selectedVacancy.creation_time}</p>
+                            <p><strong>Data de Expiração:</strong> {selectedVacancy.expiration_time}</p>
+                            <p><strong>Tipo:</strong> {selectedVacancy.type}</p>
+                        </>
+                    ) : (
+                        <p>Carregando...</p>
+                    )}
+                </Modal>
                 <form className={styles.forms}>
                     <h3 className={styles.h3}>Cadastrar Nova Vaga</h3>
 
@@ -402,7 +438,7 @@ const cadastrovagas = () => {
                                     <p className={styles.text}>Nenhuma vaga cadastrada</p>
                                 ) : (
                                     vacancies.map((vacancy, index) => {
-                                        return <Vagas key={index} title={vacancy.name} text={vacancy.description} creation_time={vacancy.creation_time} expiration_time={vacancy.expiration_time} type={vacancy.type} />
+                                        return <Vagas onClick={() => openModal(vacancy)} key={index} title={vacancy.name} text={vacancy.description} creation_time={vacancy.creation_time} expiration_time={vacancy.expiration_time} type={vacancy.type} />
                                     })
                                 )
                             }
