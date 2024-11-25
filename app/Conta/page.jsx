@@ -61,7 +61,7 @@ const conta = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://192.168.1.9/users`, {
+                const response = await fetch(`http://192.168.1.9:4000/users`, {
                     method: 'POST',
                     headers: new Headers({
                         'Content-Type': 'application/json',

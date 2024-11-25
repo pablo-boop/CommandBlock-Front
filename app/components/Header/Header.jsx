@@ -50,7 +50,6 @@ const Header = () => {
                     return u.id.toString() === id.toString(); // Convert both to strings for comparison
                 });
 
-                ('Found User:', foundUser); // Debug log 7
                 setUser(foundUser || null);
                 setLoading(false);
 
@@ -111,22 +110,48 @@ const Header = () => {
     }
 
     if (user) {
-        return (
-            <div className={styles.container}>
-                <Link href='/'>
-                    <Image src={senaiLogo} alt="logo" className={styles.logo} />
-                </Link>
-                <div className={styles.buttons}>
-                    <p className={styles.welcome}>Seja bem-vindo {user.name}</p>
-                    <Button className={styles.buttonRegister} variant="primary">
-                        <Link href='/Vaga'>
-                            <p className={styles.buttonTxt}>Vagas</p>
-                        </Link>
-                    </Button>
-                    <CiLogout className={styles.logout} onClick={handleLogout} />
+        if (user.type == 'Aluno') {
+            return (
+                <div className={styles.container}>
+                    <Link href='/'>
+                        <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                    </Link>
+                    <div className={styles.buttons}>
+                        <p className={styles.welcome}>Seja bem-vindo {user.name}</p>
+                        <Button className={styles.buttonRegister} variant="primary">
+                            <Link href='/Vaga'>
+                                <p className={styles.buttonTxt}>Vagas</p>
+                            </Link>
+                        </Button>
+                        <CiLogout className={styles.logout} onClick={handleLogout} />
+                    </div>
                 </div>
-            </div>
-        );
+            )
+        }
+
+        if (user.type == 'Administrador') {
+            return (
+                <div className={styles.container}>
+                    <Link href='/'>
+                        <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                    </Link>
+                    <div className={styles.buttons}>
+                        <p className={styles.welcome}>Seja bem-vindo {user.name}</p>
+                        <Button className={styles.buttonRegister} variant="primary">
+                            <Link href='/Conta'>
+                                <p className={styles.buttonTxt}>Cadastros</p>
+                            </Link>
+                        </Button>
+                        <Button className={styles.buttonRegister} variant="primary">
+                            <Link href='/CadastroVagas'>
+                                <p className={styles.buttonTxt}>Gerenciamento</p>
+                            </Link>
+                        </Button>
+                        <CiLogout className={styles.logout} onClick={handleLogout} />
+                    </div>
+                </div>
+            )
+        }
     }
 
     // Default return for not logged in state
