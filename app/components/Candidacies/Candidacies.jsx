@@ -1,6 +1,9 @@
+//Styles
 import styles from "./styles.module.css";
-import { useRouter } from "next/navigation";
 import { Card } from "antd";
+import { AiOutlineCheck } from "react-icons/ai";
+//Hooks
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Candidacies = ({ student, vacancy, company, description, creation_time }) => {
@@ -131,13 +134,20 @@ const Candidacies = ({ student, vacancy, company, description, creation_time }) 
                         <p className={styles.text}>{companyName}</p>
                     </div>
                 </div>
-                <div className={styles.bottomTexts}>
-                    <p className={styles.subTitle}>Data de Criação: </p>
-                    <p className={styles.text}>{formatDate(creation_time)}</p>
-                </div>
-                <div className={styles.bottomTexts}>
-                    <p className={styles.subTitle}>Description: </p>
-                    <p className={styles.text}>{description}</p>
+                <div className={styles.bottom}>
+                    <>
+                        <div className={styles.bottomTexts}>
+                            <p className={styles.subTitle}>Data de Criação: </p>
+                            <p className={styles.text}>{formatDate(creation_time)}</p>
+                        </div>
+                        <div className={styles.bottomTexts}>
+                            <p className={styles.subTitle}>Description: </p>
+                            <p className={styles.text}>{description}</p>
+                        </div>
+                    </>
+                    <div className={styles.icons}>
+                        <AiOutlineCheck className={styles.icon}/>
+                    </div>
                 </div>
             </div>
         </Card>

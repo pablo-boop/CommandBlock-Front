@@ -49,3 +49,15 @@
     color: #333;
     font-family: "Poppins", sans-serif;
 }
+
+.icons {
+    position: relative;
+}
+
+.icon {
+    width: 5vw;
+    height: 5vh;
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+}
