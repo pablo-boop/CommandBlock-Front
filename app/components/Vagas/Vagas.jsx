@@ -6,6 +6,7 @@ const Vagas = ({ text, title, creation_time, expiration_time, type, id }) => {
     const router = useRouter();
     const handleClick = () => {
         router.push(`/Candidato?id=${id}`);
+        console.log(id);
     };
 
     const formatDate = (dateString) => {

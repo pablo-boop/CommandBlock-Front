@@ -15,7 +15,7 @@ const Vaga = () => {
     useEffect(() => {
         const handleSubmit = async () => {
             try {
-                const response = await fetch(`http://10.88.199.225:4000/vacancies`, {
+                const response = await fetch(`http://192.168.1.9:4000/vacancies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',

@@ -58,7 +58,7 @@ const Cadastro = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`http://192.168.56.1:4000/users`, {
+                const response = await fetch(`http://192.168.1.9:4000/users`, {
                     method: 'POST',
                     headers: new Headers({
                         'Content-Type': 'application/json',

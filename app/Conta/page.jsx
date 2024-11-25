@@ -61,7 +61,7 @@ const conta = () => {
             error("Preencha todos os campos!");
         } else {
             try {
-                const response = await fetch(`https://49ab-201-63-78-210.ngrok-free.app/users`, {
+                const response = await fetch(`https://192.168.1.9/users`, {
                     method: 'POST',
                     headers: new Headers({
                         'Content-Type': 'application/json',

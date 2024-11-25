@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
 
     const login = (email, password) => {
         return new Promise((resolve, reject) => {
-            fetch('http://192.168.56.1:4000/login', {
+            fetch('http://192.168.1.9:4000/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

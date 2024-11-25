@@ -44,11 +44,12 @@ const Candidato = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const vacancyId = searchParams.get('id');
+    
 
     useEffect(() => {
         const handleSubmit = async () => {
             try {
-                const vacancyResponse = await fetch(`http://10.88.199.225:4000/vacancies/${vacancyId}`, {
+                const vacancyResponse = await fetch(`http://192.168.1.9:4000/vacancies/${vacancyId}`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -71,9 +72,11 @@ const Candidato = () => {
                 }
 
                 const vacancyData = await vacancyResponse.json();
-                setVacancy(vacancyData);
+                setVacancy(vacancyData.vacancy);
+                console.log(vacancyData.vacancy.company_id);
+                
 
-                const companyResponse = await fetch(`http://10.88.199.225:4000/companies/${vacancyData.id_company}`, {
+                const companyResponse = await fetch(`http://192.168.1.9:4000/companies/${vacancyData.vacancy.company_id}`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -96,13 +99,12 @@ const Candidato = () => {
                 }
 
                 const companyData = await companyResponse.json();
-                setCompanyId(companyData.id);
+                setCompanyId(companyData.company.id);
                 console.log(companyData);
                 
 
             } catch (err) {
                 console.error(err);
-                error(err.message);
             }
         };
         handleSubmit();
@@ -138,18 +140,14 @@ const Candidato = () => {
             if (!idLS) {
                 error("Por favor, faça o login para se candidatar!")
             }
+
             try {
-                const response = await fetch(`https://10.88.199.225:4000/candidacies/${idLS}/${id}/${companyId}`, {
+                const response = await fetch(`http://192.168.1.9:4000/candidacies/${idLS}/${vacancyId}/${companyId}`, {
                     method: "POST",
                     headers: new Headers({
                         "Content-Type": "application/json",
                         "ngrok-skip-browser-warning": "69420",
-                    }),
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,
-                        cpf: cpf,
-                    }),
+                    })
                 });
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -168,9 +166,12 @@ const Candidato = () => {
                 clearInputs()
                 success(responseData.message);
 
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+
             } catch (err) {
                 console.error(err);
-                error(err.message); // Exibe apenas a mensagem de erro
             }
         }
     };
