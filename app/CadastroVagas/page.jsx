@@ -6,6 +6,7 @@ import Vagas from "../components/Vagas/Vagas";
 import { DatePicker } from 'antd';
 import { message, Space, Modal } from 'antd';
 import { useState, useEffect, useCallback } from "react";
+import Candidacies from "../components/Candidacies/Candidacies";
 
 const cadastrovagas = () => {
     //candidacies properties
@@ -28,21 +29,21 @@ const cadastrovagas = () => {
 
     //Modal Pop Up
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedVacancy, setSelectedVacancy] = useState(null);
+    const [selectedCandidacy, setSelectedCandidacy] = useState(null);
 
-    const openModal = (vacancy) => {
-        setSelectedVacancy(vacancy); // Define a vaga selecionada
+    const openModal = (candidacy) => {
+        setSelectedCandidacy(candidacy); // Define a vaga selecionada
         setIsModalOpen(true);
     };
 
     const handleOk = () => {
         setIsModalOpen(false);
-        setSelectedVacancy(null); // Limpa a vaga selecionada
+        setSelectedCandidacy(null); // Limpa a vaga selecionada
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
-        setSelectedVacancy(null);
+        setSelectedCandidacy(null);
     };
 
     useEffect(() => {
@@ -301,13 +302,13 @@ const cadastrovagas = () => {
             {contextHolder}
             <div className={styles.container}>
                 <Modal
-                    title={selectedVacancy?.name || "Detalhes da Vaga"}
+                    title={selectedCandidacy?.name || "Detalhes da Candidatura"}
                     open={isModalOpen}
                     onOk={handleOk}
                     onCancel={handleCancel}
                     className={styles.modal}
                 >
-                    {selectedVacancy ? (
+                    {selectedCandidacy ? (
                         <>
                             <p><strong>Descrição:</strong> {selectedVacancy.description}</p>
                             <p><strong>Data de Criação:</strong> {selectedVacancy.creation_time}</p>
@@ -438,8 +439,8 @@ const cadastrovagas = () => {
                                 candidacies.length === 0 ? (
                                     <p className={styles.text}>Nenhuma vaga cadastrada</p>
                                 ) : (
-                                    candidacies.map((vacancy, index) => {
-                                        return <Vagas onClick={() => openModal(vacancy)} key={index} title={vacancy.name} text={vacancy.description} creation_time={vacancy.creation_time} expiration_time={vacancy.expiration_time} type={vacancy.type} />
+                                    candidacies.map((candidacy, index) => {
+                                        return <Candidacies onClick={() => openModal(candidacy)} key={index} student={candidacy.id_student} vacancy={candidacy.id_vacancy} company={candidacy.id_company} creation_time={candidacy.creation_time} description={candidacy.description ? candidacy.creation_time : "Sem comentário"} />
                                     })
                                 )
                             }
