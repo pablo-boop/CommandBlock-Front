@@ -1,15 +1,9 @@
 import styles from "./styles.module.css";
+import { useRouter } from "next/navigation";
 import { Card } from "antd";
 
-const Vagas = ({ 
-    text, 
-    title, 
-    creation_time, 
-    expiration_time, 
-    type, 
-    id, 
-    onClick // Função para abrir o modal
-}) => {
+const Vagas = ({ title, creation_time, expiration_time, type, id }) => {
+    
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const day = date.getUTCDate().toString().padStart(2, "0");
@@ -18,9 +12,15 @@ const Vagas = ({
         return `${day}-${month}-${year}`;
     };
 
+    const router = useRouter();
+    const handleClick = () => {
+        router.push(`/Candidato?id=${id}`);
+        console.log(id);
+    };
+
     return (
         <Card
-            onClick={() => onClick({ title, text, creation_time, expiration_time, type })} // Passa os detalhes da vaga
+            onClick={() => handleClick()} // Passa os detalhes da vaga
             title={title}
             style={{
                 width: "100%",

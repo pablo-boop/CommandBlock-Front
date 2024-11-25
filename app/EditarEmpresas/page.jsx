@@ -27,7 +27,7 @@ const EditarEmpresas = () => {
         // buscar as empresas cadastradas
         const fetchEmpresas = async () => {
             try {
-                const response = await fetch(`http://192.168.1.9:4000/companies`, {
+                const response = await fetch(`http://localhost:4000/companies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const EditarEmpresas = () => {
 
     const fillInputs = async (id) => {
         try {
-            const response = await fetch(`http://192.168.1.9:4000/companies/${id}`, {
+            const response = await fetch(`http://localhost:4000/companies/${id}`, {
                 method: 'GET',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -133,14 +133,14 @@ const EditarEmpresas = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`http://192.168.1.9:4000/companies/${id}`, {
+            const response = await fetch(`http://localhost:4000/companies/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
                 throw new Error("Erro ao excluir a empresa.");
             }
             success("Empresa excluída com sucesso!");
-            const responseGet = await fetch(`http://192.168.1.9:4000/companies`);
+            const responseGet = await fetch(`http://localhost:4000/companies`);
 
             const updatedCompanies = await responseGet.json()
 
@@ -154,7 +154,7 @@ const EditarEmpresas = () => {
     const handleSubmit = async (id) => {
 
         try {
-            const response = await fetch(`http://192.168.1.9:4000/companies/${id}`, {
+            const response = await fetch(`http://localhost:4000/companies/${id}`, {
                 method: 'PUT',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -189,7 +189,7 @@ const EditarEmpresas = () => {
 
     const postCompany = async () => {
         try {
-            const response = await fetch(`http://192.168.1.9:4000/companies`, {
+            const response = await fetch(`http://localhost:4000/companies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',

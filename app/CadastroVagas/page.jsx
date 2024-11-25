@@ -48,7 +48,7 @@ const cadastrovagas = () => {
     useEffect(() => {
         const fetchCompanies = async (name) => {
             try {
-                const response = await fetch(`http://192.168.1.9:4000/companies?name=${name}`);
+                const response = await fetch(`http://localhost:4000/companies?name=${name}`);
                 if (!response.ok) throw new Error('Erro ao buscar empresas');
                 const data = await response.json();
                 setCompanyOptions(data.companies);
@@ -80,7 +80,7 @@ const cadastrovagas = () => {
     useEffect(() => {
         const fetchCandidacies = async () => {
             try {
-                const response = await fetch(`http://192.168.1.9:4000/candidacies`, {
+                const response = await fetch(`http://localhost:4000/candidacies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ const cadastrovagas = () => {
 
     const postVacancy = useCallback(async (data) => {
         try {
-            const response = await fetch(`http://192.168.1.9:4000/vacancies`, {
+            const response = await fetch(`http://localhost:4000/vacancies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ const cadastrovagas = () => {
 
     const postCompany = useCallback(async (data) => {
         try {
-            const response = await fetch(`http://192.168.1.9:4000/companies`, {
+            const response = await fetch(`http://localhost:4000/companies`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -245,7 +245,7 @@ const cadastrovagas = () => {
         if (name && description && creationTime && expirationTime && type && companyName && companyEmail && companyCnpj && companyPhone) {
             try {
                 // First check if company exists by CNPJ
-                const response = await fetch(`http://192.168.1.9:4000/companies?cnpj=${companyCnpj}`);
+                const response = await fetch(`http://localhost:4000/companies?cnpj=${companyCnpj}`);
                 if (!response.ok) {
                     throw new Error('Erro ao verificar empresa');
                 }

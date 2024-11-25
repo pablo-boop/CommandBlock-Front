@@ -28,7 +28,7 @@ const Header = () => {
                 }
 
                 ('Fetching user data...'); // Debug log 3
-                const response = await fetch('http://192.168.1.9:4000/users', {
+                const response = await fetch('http://localhost:4000/users', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ const Header = () => {
                         <Image src={senaiLogo} alt="logo" className={styles.logo} />
                     </Link>
                     <div className={styles.buttons}>
-                        <p className={styles.welcome}>Seja bem-vindo {user.name}</p>
+                        <p className={styles.welcome}>Seja bem-vindo <strong>{user.name}</strong></p>
                         <Button className={styles.buttonRegister} variant="primary">
                             <Link href='/Vaga'>
                                 <p className={styles.buttonTxt}>Vagas</p>
@@ -136,7 +136,7 @@ const Header = () => {
                         <Image src={senaiLogo} alt="logo" className={styles.logo} />
                     </Link>
                     <div className={styles.buttons}>
-                        <p className={styles.welcome}>Seja bem-vindo {user.name}</p>
+                        <p className={styles.welcome}>Seja bem-vindo <strong>{user.name}</strong></p>
                         <Button className={styles.buttonRegister} variant="primary">
                             <Link href='/Conta'>
                                 <p className={styles.buttonTxt}>Cadastros</p>

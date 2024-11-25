@@ -15,7 +15,7 @@ const Vaga = () => {
     useEffect(() => {
         const handleSubmit = async () => {
             try {
-                const response = await fetch(`http://192.168.1.9:4000/vacancies`, {
+                const response = await fetch(`http://localhost:4000/vacancies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ const Vaga = () => {
 
                             ) : (
                                 vacancies.map((vacancy, index) => (
-                                    <Vagas key={index} imageURL="./cadastro.svg" text={vacancy.description} id={vacancy.id}/>
+                                    <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time}/>
                                 ))
                             )
                         }

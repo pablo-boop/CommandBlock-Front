@@ -49,7 +49,7 @@ const Candidato = () => {
     useEffect(() => {
         const handleSubmit = async () => {
             try {
-                const vacancyResponse = await fetch(`http://192.168.1.9:4000/vacancies/${vacancyId}`, {
+                const vacancyResponse = await fetch(`http://localhost:4000/vacancies/${vacancyId}`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const Candidato = () => {
                 console.log(vacancyData.vacancy.company_id);
                 
 
-                const companyResponse = await fetch(`http://192.168.1.9:4000/companies/${vacancyData.vacancy.company_id}`, {
+                const companyResponse = await fetch(`http://localhost:4000/companies/${vacancyData.vacancy.company_id}`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ const Candidato = () => {
             }
 
             try {
-                const response = await fetch(`http://192.168.1.9:4000/candidacies/${idLS}/${vacancyId}/${companyId}`, {
+                const response = await fetch(`http://localhost:4000/candidacies/${idLS}/${vacancyId}/${companyId}`, {
                     method: "POST",
                     headers: new Headers({
                         "Content-Type": "application/json",
