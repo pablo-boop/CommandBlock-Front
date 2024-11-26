@@ -118,7 +118,7 @@ const Candidacies = ({ student, vacancy, company, description, creation_time }) 
     return (
         <Card
             onClick={() => handleClick()} // Passa os detalhes da vaga
-            title={userName}
+            title={""}
             style={{
                 width: "100%",
             }}

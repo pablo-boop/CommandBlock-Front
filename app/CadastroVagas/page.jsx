@@ -4,7 +4,7 @@ import Header from "../components/Header/Header";
 import Vagas from "../components/Vagas/Vagas";
 
 import { DatePicker } from 'antd';
-import { message, Space, Modal } from 'antd';
+import { message, Space, Modal, Button } from 'antd';
 import { useState, useEffect, useCallback } from "react";
 import Candidacies from "../components/Candidacies/Candidacies";
 
@@ -20,16 +20,134 @@ const cadastrovagas = () => {
     const [companyEmail, setCompanyEmail] = useState("");
     const [companyCnpj, setCompanyCnpj] = useState("");
     const [companyPhone, setCompanyPhone] = useState("");
-    const [companyOptions, setCompanyOptions] = useState([]); // Armazena as empresas sugeridas
+    const [companyOptions, setCompanyOptions] = useState([]);
 
     //Messages Pop Up
     const [messageApi, contextHolder] = message.useMessage();
-    const [response, setResponse] = useState("");
     const [candidacies, setCandidacies] = useState([]);
 
     //Modal Pop Up
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCandidacy, setSelectedCandidacy] = useState(null);
+
+    //Manage candidates
+    const [duplicateCandidacies, setDuplicateCandidacies] = useState([]);
+    const [isManageCandidatesModalOpen, setIsManageCandidatesModalOpen] = useState(false);
+    const [selectedVacancyForManagement, setSelectedVacancyForManagement] = useState(null);
+
+    // Success and Error Message Functions
+    const success = (msg) => {
+        messageApi.open({
+            type: 'success',
+            content: msg,
+        });
+    };
+
+    const error = (msg) => {
+        messageApi.open({
+            type: 'error',
+            content: msg,
+        });
+    };
+
+    // Fetch Duplicate Candidacies Function
+    const fetchDuplicateCandidacies = async (vacancyId) => {
+        try {
+            const response = await fetch(`http://localhost:4000/manage-candidates/${vacancyId}`, {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao buscar candidaturas duplicadas');
+            }
+
+            const data = await response.json();
+
+            // If duplicate candidacies exist, open the management modal
+            if (data.success && data.duplicates && data.duplicates.length > 0) {
+                setDuplicateCandidacies(data.duplicates);
+                setSelectedVacancyForManagement(vacancyId);
+                setIsManageCandidatesModalOpen(true);
+            } else {
+                message.info('Não foram encontradas candidaturas duplicadas.');
+            }
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+        }
+    };
+
+    // Manage Candidates Function
+    const manageCandidates = async (selectedStudentId, vacancyId) => {
+        try {
+            const response = await fetch(`http://localhost:4000/manage-candidates/${vacancyId}`, {
+                method: 'POST',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                }),
+                body: JSON.stringify({ selectedStudentId })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                success(result.message);
+                // Refresh candidacies after managing
+                fetchCandidacies();
+                setIsManageCandidatesModalOpen(false);
+            } else {
+                error(result.message);
+            }
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+        }
+    };
+
+
+    // Fetch Candidacies Function
+    const fetchCandidacies = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/candidacies`, {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = response.statusText;
+
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.message;
+                } catch (e) {
+                    console.error("Erro ao parsear JSON:", e);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            const responseData = await response.json();
+            setCandidacies(responseData.candidacies);
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+        }
+    };
+
+    // Fetch Candidacies on Component Mount
+    useEffect(() => {
+        fetchCandidacies();
+    }, []);
+
 
     const openModal = (candidacy) => {
         setSelectedCandidacy(candidacy); // Define a vaga selecionada
@@ -78,47 +196,6 @@ const cadastrovagas = () => {
         setCompanyOptions([]);
     };
 
-    useEffect(() => {
-        const fetchCandidacies = async () => {
-            try {
-                const response = await fetch(`http://localhost:4000/candidacies`, {
-                    method: 'GET',
-                    headers: new Headers({
-                        'Content-Type': 'application/json',
-                        "ngrok-skip-browser-warning": "69420",
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    let errorMessage = response.statusText;
-
-                    try {
-                        const errorJson = JSON.parse(errorText);
-                        errorMessage = errorJson.message;
-                    } catch (e) {
-                        console.error("Erro ao parsear JSON:", e);
-                    }
-
-                    throw new Error(errorMessage);
-                }
-
-                const responseData = await response.json();
-                setCandidacies(responseData.candidacies);
-
-                if (responseData.candidacies.length === 0) {
-                    setResponse("Não há candidaturas disponíveis no momento.");
-                }
-
-            } catch (err) {
-                console.error(err);
-                error(err.message);
-            }
-        };
-        fetchCandidacies();
-    }, []);
-
-
     const onChangeCreation = (date, dateString) => {
         const formattedDate = dateString.split('-').reverse().join('-');
         setCreationTime(formattedDate);
@@ -141,21 +218,6 @@ const cadastrovagas = () => {
         const month = dateParts[1].padStart(2, '0');
 
         return `${day}/${month}/${dateParts[2]}`;
-    };
-
-    //Messages Succes and Error
-    const success = (msg) => {
-        messageApi.open({
-            type: 'success',
-            content: msg,
-        });
-    };
-
-    const error = (msg) => {
-        messageApi.open({
-            type: 'error',
-            content: msg,
-        });
     };
 
     const clearInputs = () => {
@@ -310,13 +372,55 @@ const cadastrovagas = () => {
                 >
                     {selectedCandidacy ? (
                         <>
-                            <p><strong>Descrição:</strong> {selectedVacancy.description}</p>
-                            <p><strong>Data de Criação:</strong> {selectedVacancy.creation_time}</p>
-                            <p><strong>Data de Expiração:</strong> {selectedVacancy.expiration_time}</p>
-                            <p><strong>Tipo:</strong> {selectedVacancy.type}</p>
+                            <p><strong>Descrição:</strong> {selectedCandidacy.description}</p>
+                            <p><strong>Data de Criação:</strong> {selectedCandidacy.creation_time}</p>
+                            <p><strong>Data de Expiração:</strong> {selectedCandidacy.expiration_time}</p>
+                            <p><strong>Tipo:</strong> {selectedCandidacy.type}</p>
                         </>
                     ) : (
                         <p>Carregando...</p>
+                    )}
+                </Modal>
+                <Modal
+                    title="Candidaturas Duplicadas"
+                    open={isManageCandidatesModalOpen}
+                    onCancel={() => setIsManageCandidatesModalOpen(false)}
+                    footer={null}
+                    className={styles.modal}
+                >
+                    {duplicateCandidacies.length > 0 ? (
+                        <div>
+                            <p>Foram encontradas candidaturas duplicadas para esta vaga. Escolha um grupo de candidaturas para gerenciar:</p>
+                            {duplicateCandidacies.map((duplicateGroup, groupIndex) => (
+                                <div key={groupIndex} className={styles.duplicateGroup}>
+                                    <p><strong>Descrição:</strong> {duplicateGroup.description}</p>
+                                    <p><strong>Vaga:</strong> {duplicateGroup.vacancy_name}</p>
+                                    <p><strong>Número de Duplicatas:</strong> {duplicateGroup.duplicate_count}</p>
+                                    <ul className={styles.duplicateCandidacyList}>
+                                        {duplicateGroup.candidacies.map((candidacy, index) => (
+                                            <li key={index} className={styles.duplicateCandidacy}>
+                                                <span>
+                                                    {candidacy.student_name}
+                                                    (ID: {candidacy.student_id})
+                                                    - Criado em: {new Date(candidacy.creation_time).toLocaleString()}
+                                                </span>
+                                                <Button
+                                                    type="primary"
+                                                    onClick={() => manageCandidates(
+                                                        candidacy.student_id,
+                                                        selectedVacancyForManagement
+                                                    )}
+                                                >
+                                                    Selecionar
+                                                </Button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>Nenhuma candidatura duplicada encontrada.</p>
                     )}
                 </Modal>
                 <form className={styles.forms}>
@@ -433,21 +537,41 @@ const cadastrovagas = () => {
                 <div className={styles.vagacontainer}>
                     <h3 className={styles.h3}>Candidaturas</h3>
                     <div className={styles.vagaitem}>
-
                         <div className={styles.vaga}>
                             {
                                 candidacies.length === 0 ? (
                                     <p className={styles.text}>Nenhuma vaga cadastrada</p>
                                 ) : (
-                                    candidacies.map((candidacy, index) => {
-                                        return <Candidacies onClick={() => openModal(candidacy)} key={index} student={candidacy.id_student} vacancy={candidacy.id_vacancy} company={candidacy.id_company} creation_time={candidacy.creation_time} description={candidacy.description ? candidacy.creation_time : "Sem comentário"} />
-                                    })
+                                    // Remover duplicatas com base no atributo id_vacancy
+                                    candidacies
+                                        .filter((candidacy, index, self) =>
+                                            index === self.findIndex((c) => c.id_vacancy === candidacy.id_vacancy)
+                                        )
+                                        .map((candidacy, index) => {
+                                            return (
+                                                <div key={index} className={styles.candidacyWrapper}>
+                                                    <Candidacies
+                                                        onClick={() => openModal(candidacy)}
+                                                        student={candidacy.id_student}
+                                                        vacancy={candidacy.id_vacancy}
+                                                        company={candidacy.id_company}
+                                                        creation_time={candidacy.creation_time}
+                                                        description={candidacy.description ? candidacy.creation_time : "Sem comentário"}
+                                                    />
+                                                    <Button
+                                                        type="link"
+                                                        onClick={() => fetchDuplicateCandidacies(candidacy.id_vacancy)}
+                                                    >
+                                                        Gerenciar Candidaturas Duplicadas
+                                                    </Button>
+                                                </div>
+                                            );
+                                        })
                                 )
                             }
                         </div>
                     </div>
                 </div>
-
             </div>
 
         </>
