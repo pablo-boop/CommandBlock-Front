@@ -2,12 +2,16 @@
 'use client'
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { message, Space } from 'antd';
 
 const AuthContext = createContext({});
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    //Message success and error
+    const [messageApi, contextHolder] = message.useMessage();
     const router = useRouter();
 
     useEffect(() => {
@@ -18,6 +22,21 @@ export function AuthProvider({ children }) {
         }
         setLoading(false);
     }, []);
+
+    //Messages Succes and Error
+    const success = (msg) => {
+        messageApi.open({
+            type: 'success',
+            content: msg,
+        });
+    };
+
+    const error = (msg) => {
+        messageApi.open({
+            type: 'error',
+            content: msg,
+        });
+    };
 
     const login = (email, password) => {
         return new Promise((resolve, reject) => {
@@ -30,22 +49,24 @@ export function AuthProvider({ children }) {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.error) {
-                        throw new Error(data.error);
+                    console.log(data);
+                    
+                    if (data.message == 'Senha incorreta' || data.message == 'Usuário não encontrado') {
+                        error(data.message)
+                    } else {
+                        // Save both token and ID
+                        localStorage.setItem('auth_token', data.token);
+                        localStorage.setItem('id', data.id); // Make sure your API returns user.id
+
+                        // Update user state
+                        setUser({
+                            token: data.token,
+                            id: data.id
+                        });
+
+                        router.push('/');
+                        resolve({ success: true });
                     }
-                    
-                    // Save both token and ID
-                    localStorage.setItem('auth_token', data.token);
-                    localStorage.setItem('id', data.id); // Make sure your API returns user.id
-                    
-                    // Update user state
-                    setUser({ 
-                        token: data.token,
-                        id: data.id
-                    });
-                    
-                    router.push('/');
-                    resolve({ success: true });
                 })
                 .catch((error) => {
                     console.error('Login error:', error);
@@ -69,6 +90,7 @@ export function AuthProvider({ children }) {
             logout,
             isAuthenticated: !!user
         }}>
+            {contextHolder}
             {!loading && children}
         </AuthContext.Provider>
     );
