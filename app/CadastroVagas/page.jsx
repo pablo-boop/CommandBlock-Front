@@ -2,11 +2,11 @@
 import styles from "./cadastrovagas.module.css";
 import Header from "../components/Header/Header";
 import Vagas from "../components/Vagas/Vagas";
+import Candidacies from "../components/Candidacies/Candidacies";
 
 import { DatePicker } from 'antd';
-import { message, Space, Modal, Button } from 'antd';
+import { message, Space, Modal, Button, Tag, Steps } from 'antd';
 import { useState, useEffect, useCallback } from "react";
-import Candidacies from "../components/Candidacies/Candidacies";
 
 const cadastrovagas = () => {
     //candidacies properties
@@ -34,6 +34,8 @@ const cadastrovagas = () => {
     const [duplicateCandidacies, setDuplicateCandidacies] = useState([]);
     const [isManageCandidatesModalOpen, setIsManageCandidatesModalOpen] = useState(false);
     const [selectedVacancyForManagement, setSelectedVacancyForManagement] = useState(null);
+    const [managedCandidacies, setManagedCandidacies] = useState([]);
+    const [fullDuplicateCandidacies, setFullDuplicateCandidacies] = useState([]);
 
     // Success and Error Message Functions
     const success = (msg) => {
@@ -50,8 +52,8 @@ const cadastrovagas = () => {
         });
     };
 
-    // Fetch Duplicate Candidacies Function
-    const fetchDuplicateCandidacies = async (vacancyId) => {
+    // Fetch Managed Candidacies Function
+    const fetchManagedCandidacies = async (vacancyId) => {
         try {
             const response = await fetch(`http://localhost:4000/manage-candidates/${vacancyId}`, {
                 method: 'GET',
@@ -61,19 +63,13 @@ const cadastrovagas = () => {
                 })
             });
 
-            if (!response.ok) {
-                throw new Error('Erro ao buscar candidaturas duplicadas');
-            }
-
             const data = await response.json();
 
-            // If duplicate candidacies exist, open the management modal
-            if (data.success && data.duplicates && data.duplicates.length > 0) {
-                setDuplicateCandidacies(data.duplicates);
-                setSelectedVacancyForManagement(vacancyId);
-                setIsManageCandidatesModalOpen(true);
+            if (data.candidacies) {
+                setManagedCandidacies(data.candidacies);
+                success("Candidaturas gerenciadas carregadas com sucesso!");
             } else {
-                message.info('Não foram encontradas candidaturas duplicadas.');
+                message.info('Nenhuma candidatura gerenciada encontrada.');
             }
         } catch (err) {
             console.error(err);
@@ -81,7 +77,56 @@ const cadastrovagas = () => {
         }
     };
 
-    // Manage Candidates Function
+    // Fetch Full Duplicate Candidacies Function
+    const fetchFullDuplicateCandidacies = async (vacancyId) => {
+        try {
+            const response = await fetch(`http://localhost:4000/duplicate-candidates/${vacancyId}`, {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.duplicates.length > 0) {
+                setFullDuplicateCandidacies(data.duplicates);
+                success("Candidaturas duplicadas carregadas com sucesso!");
+            } else {
+                message.info('Nenhuma candidatura duplicada encontrada.');
+            }
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+        }
+    };
+
+    // Add this function alongside the other fetch functions
+    const fetchDuplicateCandidacies = async (vacancyId) => {
+        try {
+            const response = await fetch(`http://localhost:4000/duplicate-candidates/${vacancyId}`, {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.duplicates.length > 0) {
+                setDuplicateCandidacies(data.duplicates);
+                success("Candidaturas duplicadas carregadas com sucesso!");
+            } else {
+                message.info('Nenhuma candidatura duplicada encontrada.');
+            }
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+        }
+    };
+
     const manageCandidates = async (selectedStudentId, vacancyId) => {
         try {
             const response = await fetch(`http://localhost:4000/manage-candidates/${vacancyId}`, {
@@ -109,6 +154,43 @@ const cadastrovagas = () => {
         }
     };
 
+    const updateCandidacyStatus = async (candidacyId, field) => {
+        try {
+            const response = await fetch(`http://localhost:4000/candidacies/update-status/${candidacyId}`, {
+                method: 'PATCH',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                }),
+                body: JSON.stringify({ field })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = response.statusText;
+
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.message;
+                } catch (e) {
+                    console.error("Erro ao parsear JSON:", e);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            const responseData = await response.json();
+            success(responseData.message);
+
+            // Refresh managed candidacies to update the steps
+            if (selectedVacancyForManagement) {
+                fetchManagedCandidacies(selectedVacancyForManagement);
+            }
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+        }
+    };
 
     // Fetch Candidacies Function
     const fetchCandidacies = async () => {
@@ -369,6 +451,7 @@ const cadastrovagas = () => {
                     onOk={handleOk}
                     onCancel={handleCancel}
                     className={styles.modal}
+                    style={{ width: '80vw', height: '80vh', maxWidth: 'none' }}
                 >
                     {selectedCandidacy ? (
                         <>
@@ -382,47 +465,77 @@ const cadastrovagas = () => {
                     )}
                 </Modal>
                 <Modal
-                    title="Candidaturas Duplicadas"
-                    open={isManageCandidatesModalOpen}
-                    onCancel={() => setIsManageCandidatesModalOpen(false)}
+                    title="Candidaturas Gerenciadas"
+                    open={managedCandidacies.length > 0}
+                    onCancel={() => setManagedCandidacies([])}
                     footer={null}
                     className={styles.modal}
+                    style={{ width: '80vw', height: '80vh', maxWidth: 'none' }}
                 >
-                    {duplicateCandidacies.length > 0 ? (
-                        <div>
-                            <p>Foram encontradas candidaturas duplicadas para esta vaga. Escolha um grupo de candidaturas para gerenciar:</p>
-                            {duplicateCandidacies.map((duplicateGroup, groupIndex) => (
-                                <div key={groupIndex} className={styles.duplicateGroup}>
-                                    <p><strong>Descrição:</strong> {duplicateGroup.description}</p>
-                                    <p><strong>Vaga:</strong> {duplicateGroup.vacancy_name}</p>
-                                    <p><strong>Número de Duplicatas:</strong> {duplicateGroup.duplicate_count}</p>
-                                    <ul className={styles.duplicateCandidacyList}>
-                                        {duplicateGroup.candidacies.map((candidacy, index) => (
-                                            <li key={index} className={styles.duplicateCandidacy}>
-                                                <span>
-                                                    {candidacy.student_name}
-                                                    (ID: {candidacy.student_id})
-                                                    - Criado em: {new Date(candidacy.creation_time).toLocaleString()}
-                                                </span>
-                                                <Button
-                                                    type="primary"
-                                                    onClick={() => manageCandidates(
-                                                        candidacy.student_id,
-                                                        selectedVacancyForManagement
-                                                    )}
-                                                >
-                                                    Selecionar
-                                                </Button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p>Nenhuma candidatura duplicada encontrada.</p>
-                    )}
+                    {managedCandidacies.map((candidacy, index) => {
+                        const getCurrentStep = (candidacy) => {
+                            if (candidacy.hired) return 3;
+                            if (candidacy.done) return 2;
+                            if (candidacy.documentsManagement) return 1;
+                            if (candidacy.curriculumAvaliation) return 1;
+                            return 0;
+                        };
+
+                        const steps = [
+                            {
+                                title: 'Iniciado',
+                                description: 'Candidatura Iniciada',
+                                field: 'iniciated',
+                                isActive: candidacy.iniciated
+                            },
+                            {
+                                title: 'Avaliação',
+                                description: 'Avaliação de Currículo',
+                                field: 'curriculumAvaliation',
+                                isActive: candidacy.curriculumAvaliation
+                            },
+                            {
+                                title: 'Documentos',
+                                description: 'Gestão de Documentos',
+                                field: 'documentsManagement',
+                                isActive: candidacy.documentsManagement
+                            },
+                            {
+                                title: 'Finalizado',
+                                description: 'Candidatura Concluída',
+                                field: candidacy.hired ? 'hired' : 'done',
+                                isActive: candidacy.hired || candidacy.done
+                            }
+                        ];
+
+                        const handleStepChange = async (stepIndex) => {
+                            const selectedStep = steps[stepIndex];
+                            await updateCandidacyStatus(candidacy.id, selectedStep.field);
+                        };
+
+                        return (
+                            <div key={index} className={styles.managedCandidacy}>
+                                <Steps
+                                    current={getCurrentStep(candidacy)}
+                                    onChange={handleStepChange}
+                                    items={steps.map(step => ({
+                                        title: step.title,
+                                        description: step.description,
+                                        status: step.isActive ? 'finish' : 'wait'
+                                    }))}
+                                />
+                                <p><strong>ID do Estudante:</strong> {candidacy.id_student}</p>
+                                <p><strong>Vaga:</strong> {candidacy.id_vacancy}</p>
+                                <p><strong>Empresa:</strong> {candidacy.id_company}</p>
+                                <p><strong>Descrição:</strong> {candidacy.description || "Sem descrição"}</p>
+                                <Tag color={candidacy.hired ? "green" : "blue"}>
+                                    {candidacy.hired ? "Contratado" : "Em Processo"}
+                                </Tag>
+                            </div>
+                        );
+                    })}
                 </Modal>
+
                 <form className={styles.forms}>
                     <h3 className={styles.h3}>Cadastrar Nova Vaga</h3>
 
@@ -542,7 +655,6 @@ const cadastrovagas = () => {
                                 candidacies.length === 0 ? (
                                     <p className={styles.text}>Nenhuma vaga cadastrada</p>
                                 ) : (
-                                    // Remover duplicatas com base no atributo id_vacancy
                                     candidacies
                                         .filter((candidacy, index, self) =>
                                             index === self.findIndex((c) => c.id_vacancy === candidacy.id_vacancy)
@@ -558,12 +670,26 @@ const cadastrovagas = () => {
                                                         creation_time={candidacy.creation_time}
                                                         description={candidacy.description ? candidacy.creation_time : "Sem comentário"}
                                                     />
-                                                    <Button
-                                                        type="link"
-                                                        onClick={() => fetchDuplicateCandidacies(candidacy.id_vacancy)}
-                                                    >
-                                                        Gerenciar Candidaturas Duplicadas
-                                                    </Button>
+                                                    <div className={styles.candidacyActions}>
+                                                        <Button
+                                                            type="link"
+                                                            onClick={() => fetchDuplicateCandidacies(candidacy.id_vacancy)}
+                                                        >
+                                                            Gerenciar Candidaturas Duplicadas
+                                                        </Button>
+                                                        <Button
+                                                            type="link"
+                                                            onClick={() => fetchManagedCandidacies(candidacy.id_vacancy)}
+                                                        >
+                                                            Ver Candidaturas Gerenciadas
+                                                        </Button>
+                                                        <Button
+                                                            type="link"
+                                                            onClick={() => fetchFullDuplicateCandidacies(candidacy.id_vacancy)}
+                                                        >
+                                                            Detalhes de Duplicatas
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             );
                                         })
@@ -572,6 +698,91 @@ const cadastrovagas = () => {
                         </div>
                     </div>
                 </div>
+
+                <Modal
+                    title="Candidaturas Duplicadas"
+                    open={duplicateCandidacies.length > 0}
+                    onCancel={() => setDuplicateCandidacies([])}
+                    footer={null}
+                    className={styles.modal}
+                    style={{ width: '80vw', height: '80vh', maxWidth: 'none' }}
+                >
+                    {duplicateCandidacies.map((duplicateGroup, index) => (
+                        <div key={index} className={styles.duplicateGroup}>
+                            <h4>Grupo de Duplicatas</h4>
+                            <p><strong>Descrição:</strong> {duplicateGroup.description}</p>
+                            <p><strong>Vaga:</strong> {duplicateGroup.vacancy_name}</p>
+                            <p><strong>Total de Duplicatas:</strong> {duplicateGroup.duplicate_count}</p>
+
+                            <div className={styles.duplicateCandidatesList}>
+                                {duplicateGroup.candidacies.map((candidacy, candIndex) => (
+                                    <div key={candIndex} className={styles.duplicateCandidate}>
+                                        <p>
+                                            <strong>Nome:</strong> {candidacy.student_name}
+                                            <Tag color="blue" style={{ marginLeft: 10 }}>
+                                                ID: {candidacy.student_id}
+                                            </Tag>
+                                        </p>
+                                        <p>
+                                            <strong>Data de Criação:</strong>
+                                            {new Date(candidacy.creation_time).toLocaleString()}
+                                        </p>
+                                        <Button
+                                            type="primary"
+                                            onClick={() => {
+                                                // Call manageCandidates with the selected student ID and the vacancy ID
+                                                manageCandidates(
+                                                    candidacy.student_id,
+                                                    duplicateGroup.vacancy_id
+                                                );
+                                                // Close the modal after managing
+                                                setDuplicateCandidacies([]);
+                                            }}
+                                        >
+                                            Selecionar para a Vaga
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </Modal>
+
+                {/* New Modal for Full Duplicate Candidacies */}
+                <Modal
+                    title="Detalhes de Candidaturas Duplicadas"
+                    open={fullDuplicateCandidacies.length > 0}
+                    onCancel={() => setFullDuplicateCandidacies([])}
+                    footer={null}
+                    className={styles.modal}
+                    style={{ width: '80vw', height: '80vh', maxWidth: 'none' }}
+                >
+                    {fullDuplicateCandidacies.map((duplicateGroup, index) => (
+                        <div key={index} className={styles.duplicateGroup}>
+                            <h4>Grupo de Duplicatas</h4>
+                            <p><strong>Descrição:</strong> {duplicateGroup.description}</p>
+                            <p><strong>Vaga:</strong> {duplicateGroup.vacancy_name}</p>
+                            <p><strong>Total de Duplicatas:</strong> {duplicateGroup.duplicate_count}</p>
+
+                            <div className={styles.duplicateCandidatesList}>
+                                {duplicateGroup.candidacies.map((candidacy, candIndex) => (
+                                    <div key={candIndex} className={styles.duplicateCandidate}>
+                                        <p>
+                                            <strong>Nome:</strong> {candidacy.student_name}
+                                            <Tag color="blue" style={{ marginLeft: 10 }}>
+                                                ID: {candidacy.student_id}
+                                            </Tag>
+                                        </p>
+                                        <p>
+                                            <strong>Data de Criação:</strong>
+                                            {new Date(candidacy.creation_time).toLocaleString()}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </Modal>
             </div>
 
         </>
