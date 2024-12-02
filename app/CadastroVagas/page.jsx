@@ -228,7 +228,7 @@ const cadastrovagas = () => {
     // Fetch Candidacies on Component Mount
     useEffect(() => {
         fetchCandidacies();
-    }, []);
+    }, [candidacies]);
 
 
     const openModal = (candidacy) => {
@@ -668,6 +668,7 @@ const cadastrovagas = () => {
                                                         student={candidacy.id_student}
                                                         vacancy={candidacy.id_vacancy}
                                                         company={candidacy.id_company}
+                                                        candicacy_id={candidacy.id}
                                                         creation_time={candidacy.creation_time}
                                                         description={candidacy.description ? candidacy.creation_time : "Sem comentário"}
                                                     />

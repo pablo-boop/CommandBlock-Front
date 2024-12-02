@@ -156,6 +156,7 @@ const Candidato = () => {
                     try {
                         const errorJson = JSON.parse(errorText);
                         errorMessage = errorJson.message;
+                        error(errorJson.message)
                     } catch (e) {
                         console.error("Erro ao parsear JSON:", e);
                     }

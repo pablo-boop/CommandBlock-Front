@@ -1,17 +1,18 @@
 //Styles
 import styles from "./styles.module.css";
 import { Card } from "antd";
-import { AiOutlineCheck } from "react-icons/ai";
+import { FaTrashAlt } from "react-icons/fa";
 //Hooks
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Candidacies = ({ student, vacancy, company, description, creation_time }) => {
+const Candidacies = ({ student, vacancy, company, description, creation_time, candicacy_id }) => {
 
     //States
     const [userName, setUserName] = useState("");
     const [vacancyName, setVacancyName] = useState("");
     const [companyName, setCompanyName] = useState("");
+    const candidacyId = candicacy_id;
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -19,12 +20,6 @@ const Candidacies = ({ student, vacancy, company, description, creation_time }) 
         const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
         const year = date.getUTCFullYear();
         return `${day}-${month}-${year}`;
-    };
-
-    const router = useRouter();
-    const handleClick = () => {
-        router.push(`/Candidato?id=${id}`);
-        console.log(id);
     };
 
     useEffect(() => {
@@ -115,9 +110,36 @@ const Candidacies = ({ student, vacancy, company, description, creation_time }) 
         fetchCompany();
     }, [])
 
+    const deletedCanidacy = async (candidacy_id) => {
+        //Vagas
+
+        console.log(candicacy_id);
+        
+        const response = await fetch(`http://localhost:4000/candidacies/${candidacy_id}`, {
+            method: 'DELETE',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                "ngrok-skip-browser-warning": "69420",
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            let errorMessage = response.statusText;
+
+            try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = errorJson.message;
+            } catch (e) {
+                console.error("Erro ao parsear JSON:", e);
+            }
+
+            throw new Error(errorMessage);
+        }
+    }
+
     return (
         <Card
-            onClick={() => handleClick()} // Passa os detalhes da vaga
             title={""}
             style={{
                 width: "100%",
@@ -146,7 +168,7 @@ const Candidacies = ({ student, vacancy, company, description, creation_time }) 
                         </div>
                     </>
                     <div className={styles.icons}>
-                        <AiOutlineCheck className={styles.icon}/>
+                        <FaTrashAlt className={styles.icon} onClick={() => deletedCanidacy(candidacyId)}/>
                     </div>
                 </div>
             </div>

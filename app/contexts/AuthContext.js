@@ -54,6 +54,8 @@ export function AuthProvider({ children }) {
                     if (data.message == 'Senha incorreta' || data.message == 'Usuário não encontrado') {
                         error(data.message)
                     } else {
+                        console.log(email, password);
+                        
                         // Save both token and ID
                         localStorage.setItem('auth_token', data.token);
                         localStorage.setItem('id', data.id); // Make sure your API returns user.id

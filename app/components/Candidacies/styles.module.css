@@ -55,9 +55,10 @@
 }
 
 .icon {
-    width: 5vw;
-    height: 5vh;
+    width: 3vw;
+    height: 3vh;
     position: absolute;
     bottom: 2rem;
     right: 3rem;
+    cursor: pointer;
 }
