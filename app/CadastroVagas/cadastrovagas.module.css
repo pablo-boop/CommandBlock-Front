@@ -81,14 +81,15 @@
 }
 
 .vagacontainer {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
     padding: 1rem;
     border: none;
     background-color: #F9F6F6;
     border-radius: 8px;
-    text-align: center;
-    max-width: 100vh;
-    scroll-behavior: auto;
+    height: 100vh;
 }
 
 .vagaitem {
@@ -98,18 +99,21 @@
     justify-content: center;
     padding: 2rem;
     width: 100%;
+    height: 90%;
 }
 
 .vaga {
     display: flex;
-    width: 70%;
-    height: 60vh;
+    width: 90%;
+    height: 100%;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 1rem;
-    scroll-behavior: auto;
-    margin: 1rem;
+    margin: 2rem;
+    padding: 1rem;
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    scrollbar-width: thin;
 }
 
 .button {

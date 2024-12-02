@@ -28,3 +28,16 @@
     color: #333;
     font-family: "Poppins", sans-serif;
 }
+
+.icons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.icon {
+    width: 3vw;
+    height: 3vh;
+}

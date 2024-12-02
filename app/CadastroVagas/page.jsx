@@ -704,7 +704,7 @@ const cadastrovagas = () => {
                                 <option value={'vacancies'}>Vagas</option>
                             </select>
                         </div>
-                        <input type="text" className={styles.filter} value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Pesquisar vaga por nome"/>
+                        <input type="text" className={styles.filter} value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Pesquisar vaga por nome" />
                         <div className={styles.vaga}>
                             {
                                 selectRender === 'candidacies' ? (
@@ -752,13 +752,20 @@ const cadastrovagas = () => {
                                             })
                                     )
                                 ) : (
-                                    vacancies.map((vacancy, index) => (
-                                        vacancies.length == 0 ? (
-                                            <p className={styles.text}>Nenhuma Vaga cadastrada</p>
-                                        ) : (
-                                            <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time} />
-                                        )
-                                    ))
+                                    vacancies.length === 0 ? (
+                                        <p className={styles.text}>Nenhuma Vaga cadastrada</p>
+                                    ) : (
+                                        vacancies.map((vacancy, index) => (
+                                            <Vagas
+                                                key={index}
+                                                id={vacancy.id}
+                                                title={vacancy.name}
+                                                type={vacancy.type}
+                                                creation_time={vacancy.creation_time}
+                                                expiration_time={vacancy.creation_time}
+                                            />
+                                        ))
+                                    )
                                 )
                             }
                         </div>

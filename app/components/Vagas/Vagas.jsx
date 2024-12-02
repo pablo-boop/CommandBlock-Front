@@ -1,6 +1,7 @@
 import styles from "./styles.module.css";
 import { useRouter } from "next/navigation";
 import { Card } from "antd";
+import { FaTrashAlt, FaPencilAlt } from "react-icons/fa";
 
 const Vagas = ({ title, creation_time, expiration_time, type, id }) => {
     
@@ -16,6 +17,30 @@ const Vagas = ({ title, creation_time, expiration_time, type, id }) => {
     const handleClick = () => {
         router.push(`/Candidato?id=${id}`);
         console.log(id);
+    };
+
+    const deleteVacancy = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:4000/vacancies/${id}`, {
+                method: 'DELETE',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.duplicates.length > 0) {
+                setDuplicateCandidacies(data.duplicates);
+                success("Candidaturas duplicadas carregadas com sucesso!");
+            } else {
+                message.info('Nenhuma candidatura duplicada encontrada.');
+            }
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+        }
     };
 
     return (
@@ -39,6 +64,10 @@ const Vagas = ({ title, creation_time, expiration_time, type, id }) => {
                     <p className={styles.subTitle}>Data de Expiração: </p>
                     <p className={styles.text}>{formatDate(expiration_time)}</p>
                 </>
+                <div className={styles.icons}>
+                    < FaTrashAlt className={styles.icon} onClick={() => deleteVacancy(id)}/>
+                    < FaPencilAlt className={styles.icon} onClick={() => editVacancy(id)}/>
+                </div>
             </div>
         </Card>
     );
