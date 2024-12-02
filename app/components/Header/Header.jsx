@@ -19,16 +19,16 @@ const Header = () => {
         const fetchUserData = async () => {
             try {
                 const id = localStorage.getItem('id');
-                console.log('Stored ID:', id); // Debug log 1
+                ('Stored ID:', id); // Debug log 1
 
                 if (!id) {
-                    console.log('No ID found in localStorage'); // Debug log 2
+                    ('No ID found in localStorage'); // Debug log 2
                     setLoading(false);
                     return;
                 }
 
-                console.log('Fetching user data...'); // Debug log 3
-                const response = await fetch('http://192.168.56.1:4000/users', {
+                ('Fetching user data...'); // Debug log 3
+                const response = await fetch('http://localhost:4000/users', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -36,21 +36,20 @@ const Header = () => {
                 });
 
                 const data = await response.json();
-                console.log('API Response:', data); // Debug log 4
+                ('API Response:', data); // Debug log 4
 
                 if (!data.users) {
-                    console.log('No users array in response'); // Debug log 5
+                    ('No users array in response'); // Debug log 5
                     setError('Invalid data format from API');
                     setLoading(false);
                     return;
                 }
 
                 const foundUser = data.users.find(u => {
-                    console.log('Comparing:', u.id, id); // Debug log 6
+                    ('Comparing:', u.id, id); // Debug log 6
                     return u.id.toString() === id.toString(); // Convert both to strings for comparison
                 });
 
-                console.log('Found User:', foundUser); // Debug log 7
                 setUser(foundUser || null);
                 setLoading(false);
 
@@ -81,14 +80,14 @@ const Header = () => {
     };
 
     // Debug render log
-    console.log('Render State:', { user, loading, error });
+    ('Render State:', { user, loading, error });
 
     if (loading) {
         return (
             <div className={styles.container}>
                 <Link href='/'>
                     <Image src={senaiLogo} alt="logo" className={styles.logo} />
-                </Link><Image src={senaiLogo} alt="logo" className={styles.logo} />
+                </Link>
                 <div className={styles.buttons}>
                     <p>Carregando...</p>
                 </div>
@@ -105,27 +104,54 @@ const Header = () => {
                 <div className={styles.buttons}>
                     <p>Erro: {error}</p>
                 </div>
+                <CiLogout className={styles.logout} onClick={handleLogout} />
             </div>
         );
     }
 
     if (user) {
-        return (
-            <div className={styles.container}>
-                <Link href='/'>
-                    <Image src={senaiLogo} alt="logo" className={styles.logo} />
-                </Link>
-                <div className={styles.buttons}>
-                    <p className={styles.welcome}>Seja bem-vindo {user.name}</p>
-                    <Button className={styles.buttonRegister} variant="primary">
-                        <Link href='/Vaga'>
-                            <p className={styles.buttonTxt}>Vagas</p>
-                        </Link>
-                    </Button>
-                    <CiLogout className={styles.logout} onClick={handleLogout} />
+        if (user.type == 'Aluno') {
+            return (
+                <div className={styles.container}>
+                    <Link href='/'>
+                        <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                    </Link>
+                    <div className={styles.buttons}>
+                        <p className={styles.welcome}>Seja bem-vindo <strong>{user.name}</strong></p>
+                        <Button className={styles.buttonRegister} variant="primary">
+                            <Link href='/Vaga'>
+                                <p className={styles.buttonTxt}>Vagas</p>
+                            </Link>
+                        </Button>
+                        <CiLogout className={styles.logout} onClick={handleLogout} />
+                    </div>
                 </div>
-            </div>
-        );
+            )
+        }
+
+        if (user.type == 'Administrador') {
+            return (
+                <div className={styles.container}>
+                    <Link href='/'>
+                        <Image src={senaiLogo} alt="logo" className={styles.logo} />
+                    </Link>
+                    <div className={styles.buttons}>
+                        <p className={styles.welcome}>Seja bem-vindo <strong>{user.name}</strong></p>
+                        <Button className={styles.buttonRegister} variant="primary">
+                            <Link href='/Conta'>
+                                <p className={styles.buttonTxt}>Cadastros</p>
+                            </Link>
+                        </Button>
+                        <Button className={styles.buttonRegister} variant="primary">
+                            <Link href='/CadastroVagas'>
+                                <p className={styles.buttonTxt}>Gerenciamento</p>
+                            </Link>
+                        </Button>
+                        <CiLogout className={styles.logout} onClick={handleLogout} />
+                    </div>
+                </div>
+            )
+        }
     }
 
     // Default return for not logged in state

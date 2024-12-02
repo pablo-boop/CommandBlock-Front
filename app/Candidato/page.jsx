@@ -37,17 +37,19 @@ const Candidato = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     //vaga pelo ID
-    const [vacancies, setVacancies] = useState([]);
+    const [vacancy, setVacancy] = useState(null);
+    const [companyId, setCompanyId] = useState(null);
 
     //Props throw params
     const router = useRouter();
     const searchParams = useSearchParams();
-    const id = searchParams.get('id');
+    const vacancyId = searchParams.get('id');
+    
 
     useEffect(() => {
         const handleSubmit = async () => {
             try {
-                const response = await fetch(`http://10.88.199.225:4000/vacancies/${id}`, {
+                const vacancyResponse = await fetch(`http://localhost:4000/vacancies/${vacancyId}`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -55,9 +57,9 @@ const Candidato = () => {
                     })
                 });
 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    let errorMessage = response.statusText;
+                if (!vacancyResponse.ok) {
+                    const errorText = await vacancyResponse.text();
+                    let errorMessage = vacancyResponse.statusText;
 
                     try {
                         const errorJson = JSON.parse(errorText);
@@ -69,13 +71,40 @@ const Candidato = () => {
                     throw new Error(errorMessage);
                 }
 
-                const responseData = await response.json();
-                console.log(responseData);
-                setVacancies(responseData.vacancy);
+                const vacancyData = await vacancyResponse.json();
+                setVacancy(vacancyData.vacancy);
+                console.log(vacancyData.vacancy.company_id);
+                
+
+                const companyResponse = await fetch(`http://localhost:4000/companies/${vacancyData.vacancy.company_id}`, {
+                    method: 'GET',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        "ngrok-skip-browser-warning": "69420",
+                    })
+                });
+
+                if (!companyResponse.ok) {
+                    const errorText = await companyResponse.text();
+                    let errorMessage = companyResponse.statusText;
+
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorMessage = errorJson.message;
+                    } catch (e) {
+                        console.error("Erro ao parsear JSON:", e);
+                    }
+
+                    throw new Error(errorMessage);
+                }
+
+                const companyData = await companyResponse.json();
+                setCompanyId(companyData.company.id);
+                console.log(companyData);
+                
 
             } catch (err) {
                 console.error(err);
-                error(err.message);
             }
         };
         handleSubmit();
@@ -106,18 +135,19 @@ const Candidato = () => {
         if (name === "" || email === "" || cpf === "") {
             error("Preencha todos os campos!");
         } else {
+            const idLS = localStorage.getItem('id');
+
+            if (!idLS) {
+                error("Por favor, faça o login para se candidatar!")
+            }
+
             try {
-                const response = await fetch(`https://16fb-200-231-33-146.ngrok-free.app/users`, {
+                const response = await fetch(`http://localhost:4000/candidacies/${idLS}/${vacancyId}/${companyId}`, {
                     method: "POST",
                     headers: new Headers({
                         "Content-Type": "application/json",
                         "ngrok-skip-browser-warning": "69420",
-                    }),
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,
-                        cpf: cpf,
-                    }),
+                    })
                 });
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -126,6 +156,7 @@ const Candidato = () => {
                     try {
                         const errorJson = JSON.parse(errorText);
                         errorMessage = errorJson.message;
+                        error(errorJson.message)
                     } catch (e) {
                         console.error("Erro ao parsear JSON:", e);
                     }
@@ -136,9 +167,12 @@ const Candidato = () => {
                 clearInputs()
                 success(responseData.message);
 
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+
             } catch (err) {
                 console.error(err);
-                error(err.message); // Exibe apenas a mensagem de erro
             }
         }
     };
@@ -147,7 +181,9 @@ const Candidato = () => {
         <div className={styles.container}>
             {contextHolder}
             <Header />
-            <h2 className={styles.tituloVaga}>Vaga no SENAI</h2>
+            {vacancy && (
+                <h2 className={styles.tituloVaga}>{vacancy.name}</h2>
+            )}
             <div className={styles.container}>
                 <div className={styles.allTexto}>
                     <img src="./candidatoImage.png" className={styles.image} />
@@ -158,74 +194,27 @@ const Candidato = () => {
                         ambiente de mudanças e constantes desafios. O Investimento na formação das lideranças,
                         acreditando em pessoas preparadas é fundamental para qualquer empresa. </p>
 
-                        <h2 className={styles.tituloVaga}>Vaga no SENAI</h2>
-                        <img src="./candidatoImage.png" className={styles.image} />
-                        <h2 className={styles.title}>Sobre a vaga</h2>
-                        <p className={styles.text}>Para manter a qualidade de seus processos, produtos e garantir o seu crescimento,
-                            o SENAI investe constantemente no aprimoramento de seus colaboradores. Por meio de programas
-                            de capacitação e qualificação, fortalecemos as competências organizacionais necessárias em um
-                            ambiente de mudanças e constantes desafios. O Investimento na formação das lideranças,
-                            acreditando em pessoas preparadas é fundamental para qualquer empresa. </p>
+                    <h2 className={styles.title}>Estágio</h2>
+                    <img src="./estagio.jpg" className={styles.image} />
+                    <p className={styles.text}>O estágio no SENAI é uma oportunidade única para os estudantes aplicarem
+                        conhecimentos em um ambiente profissional dinâmico e desafiador.
+                        Oferece desenvolvimento de habilidades práticas, além de contribuir para a formação técnica e profissional.
+                        Com foco no aprendizado contínuo, os estagiários têm a chance de
+                        trabalhar em projetos relevantes, sendo orientados por profissionais qualificados.
+                        O SENAI incentiva a inovação e a excelência, preparando jovens para o mercado de trabalho.
+                    </p>
 
-
-                        <h2 className={styles.title}>Estágio</h2>
-                        <img src="./estagio.jpg" className={styles.image} />
-                        <p className={styles.text}>O estágio no SENAI é uma oportunidade única para os estudantes aplicarem
-                            conhecimentos em um ambiente profissional dinâmico e desafiador.
-                            Oferece desenvolvimento de habilidades práticas, além de contribuir para a formação técnica e profissional.
-                            Com foco no aprendizado contínuo, os estagiários têm a chance de
-                            trabalhar em projetos relevantes, sendo orientados por profissionais qualificados.
-                            O SENAI incentiva a inovação e a excelência, preparando jovens para o mercado de trabalho.
-                        </p>
-
-                        <h2 className={styles.title}>Efetivação</h2>
-                        <img src="./efetivo.png" className={styles.image} />
-                        <p className={styles.text}>A efetivação no SENAI representa o reconhecimento do desempenho e dedicação de profissionais que demonstram excelência em suas funções.
-                            Esse processo valoriza colaboradores que se destacam por seu comprometimento com a qualidade do ensino e com o desenvolvimento de competências técnicas dos alunos.
-                            A efetivação garante estabilidade e continuidade na prestação de serviços, fortalecendo o crescimento do mercado de trabalho.</p>
+                    <h2 className={styles.title}>Efetivação</h2>
+                    <img src="./efetivo.png" className={styles.image} />
+                    <p className={styles.text}>A efetivação no SENAI representa o reconhecimento do desempenho e dedicação de profissionais que demonstram excelência em suas funções.
+                        Esse processo valoriza colaboradores que se destacam por seu comprometimento com a qualidade do ensino e com o desenvolvimento de competências técnicas dos alunos.
+                        A efetivação garante estabilidade e continuidade na prestação de serviços, fortalecendo o crescimento do mercado de trabalho.</p>
 
                     <div className={styles.formsContainer}>
-                        <form className={styles.canto}>
-                            <p className={styles.textin}>Candidate-se à vaga</p>
-
-                            <div className={styles.inputIcon}>
-                                <FiUser className={styles.icon} />
-                                <input
-                                    className={styles.inputs}
-                                    value={name}
-                                    onChange={(e) => setNome(e.target.value)}
-                                    type="text"
-                                    placeholder="Nome do Usuário" />
-                            </div>
-
-                            <div className={styles.inputIcon}>
-                                <FiMail className={styles.icon} />
-                                <input
-                                    className={styles.inputs}
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    type="email"
-                                    placeholder="E-mail" />
-                            </div>
-
-                            <div className={styles.inputIcon}>
-                                <FiLock className={styles.icon} />
-                                <input
-                                    className={styles.inputs}
-                                    value={cpf}
-                                    onChange={(e) => setcpf(e.target.value)}
-                                    type="text"
-                                    placeholder="CPF" />
-                            </div>
-                        </form>
                         <div className={styles.formsContainer}>
                             <div className={styles.canto}>
                                 <p className={styles.textin}>Candidate-se à vaga</p>
 
-                                <div className={styles.inputIcon}>
-                                    <FiUser className={styles.icon} />
-                                    <input className={styles.inputs} type="text" placeholder="Nome do Usuário"></input>
-                                </div>
                                 <div className={styles.inputIcon}>
                                     <FiUser className={styles.icon} />
                                     <input
@@ -273,7 +262,7 @@ const Candidato = () => {
 
                                 </div>
                                 <div>
-                                    <button className={styles.registerEnviar}>
+                                    <button className={styles.registerEnviar} onClick={() => handleSubmit()}>
                                         <p className={styles.buttonEnviar}>Enviar</p>
                                     </button>
                                 </div>

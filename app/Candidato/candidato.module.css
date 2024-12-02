@@ -76,6 +76,7 @@
     font-size: 1rem;
     margin-top: 2.5rem;
     height: 2rem;
+    color: #000;
 }
 
 .dragger {
@@ -106,6 +107,7 @@
     font-weight: 400;
     color: #fff;
     margin-top: 7.2rem;
+    cursor: pointer;
 }
 
 .textin {

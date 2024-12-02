@@ -19,6 +19,31 @@
     font-style: normal;
 }
 
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50rem;
+    height: 25rem;
+}
+
+.modalContent {
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+    gap: 1rem;
+}
+
+.modalTextContent {
+    align-items: center;
+    justify-content: start;
+    gap: 1rem;
+}
+
+.modalSteps {
+    margin: 2rem;
+}
+
 .forms {
     flex: 1;
     padding: 1srem;
@@ -51,16 +76,20 @@
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-style: normal;
+    background-color: #fff;
+    color: #000;
 }
 
 .vagacontainer {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
     padding: 1rem;
     border: none;
     background-color: #F9F6F6;
     border-radius: 8px;
-    text-align: center;
-    margin-left: -7rem;
+    height: 100vh;
 }
 
 .vagaitem {
@@ -69,15 +98,22 @@
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    width: 100%;
+    height: 90%;
 }
 
 .vaga {
     display: flex;
+    width: 90%;
+    height: 100%;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 1rem;
-    scroll-behavior: auto;
+    margin: 2rem;
+    padding: 1rem;
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    scrollbar-width: thin;
 }
 
 .button {
@@ -105,6 +141,8 @@
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-style: normal;
+    background-color: #fff;
+    color: #000;
 }
 
 .dropdown {
@@ -157,6 +195,8 @@
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-style: normal;
+    background-color: #fff;
+    color: #000;
 }
 
 .input3 {
@@ -170,6 +210,8 @@
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-style: normal;
+    background-color: #fff;
+    color: #000;
 }
 
 .empresas {
@@ -182,17 +224,32 @@
     font-style: normal;
     cursor: pointer;
 }
-@media only screen and (max-width: 1400px){
-    .container {
-        display: flex;
-        flex-direction: column;
-        padding: 3rem;
-    }
-    .forms {
-        margin-right: 0rem;
-    }
-    .vagacontainer{
-        margin-left: 0;
-    }
-   
+
+.tipo {
+    width: 35vw;
+    height: 5vh;
+    background-color: #fff;
+    color: #303030;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+    border-radius: 0.5rem;
+    border: none;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    margin: 1rem;
+}
+
+.filter {
+    width: 35vw;
+    height: 5vh;
+    padding: 0.6rem;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    background-color: #fff;
+    color: #000;
 }

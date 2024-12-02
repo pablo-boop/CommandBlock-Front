@@ -27,7 +27,7 @@ const EditarEmpresas = () => {
         // buscar as empresas cadastradas
         const fetchEmpresas = async () => {
             try {
-                const response = await fetch(`http://10.88.200.155:4000/companies`, {
+                const response = await fetch(`http://localhost:4000/companies`, {
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
@@ -69,39 +69,39 @@ const EditarEmpresas = () => {
 
     const fillInputs = async (id) => {
         try {
-            const response = await fetch(`http://10.88.200.155:4000/companies/${id}`, {
+            const response = await fetch(`http://localhost:4000/companies/${id}`, {
                 method: 'GET',
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     "ngrok-skip-browser-warning": "69420",
                 })
             });
-    
+
             if (!response.ok) {
                 const errorText = await response.text();
                 let errorMessage = response.statusText;
-    
+
                 try {
                     const errorJson = JSON.parse(errorText);
                     errorMessage = errorJson.message;
                 } catch (e) {
                     console.error("Erro ao parsear JSON:", e);
                 }
-    
+
                 throw new Error(errorMessage);
             }
-    
+
             const responseData = await response.json();
             const selectedCompany = responseData.company; // Ajuste aqui, se companies for um array, use companies[0]
 
-            const limparCNPJ = (cnpj) =>{
+            const limparCNPJ = (cnpj) => {
                 return cnpj.replace(/[-./]/g, '');
             }
 
-            const limparPhone = (phone) =>{
+            const limparPhone = (phone) => {
                 return phone.replace(/[()-\s]/g, '');
             }
-    
+
             if (selectedCompany) {
                 setCompany(selectedCompany);
                 setEditMode(true);
@@ -117,44 +117,44 @@ const EditarEmpresas = () => {
         }
     };
 
-const success = (msg) => {
-    messageApi.open({
-        type: 'success',
-        content: msg,
-    });
-};
-
-const error = (msg) => {
-    messageApi.open({
-        type: 'error',
-        content: msg,
-    });
-};
-
-const handleDelete = async (id) => {
-    try {
-        const response = await fetch(`http://10.88.200.155:4000/companies/${id}`, {
-            method: 'DELETE',
+    const success = (msg) => {
+        messageApi.open({
+            type: 'success',
+            content: msg,
         });
-        if (!response.ok) {
-            throw new Error("Erro ao excluir a empresa.");
-        }
-        success("Empresa excluída com sucesso!");
-        const responseGet = await fetch(`http://10.88.200.155:4000/companies`);
+    };
 
-        const updatedCompanies = await responseGet.json()
+    const error = (msg) => {
+        messageApi.open({
+            type: 'error',
+            content: msg,
+        });
+    };
 
-        console.log(updatedCompanies.companies)
-        setCompanies(updatedCompanies.companies);
-    } catch (err) {
-        error(err.message);
-    }
-};
-
-const handleSubmit = async (id) => {
-     
+    const handleDelete = async (id) => {
         try {
-            const response = await fetch(`http://10.88.200.155:4000/companies/${id}`, {
+            const response = await fetch(`http://localhost:4000/companies/${id}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error("Erro ao excluir a empresa.");
+            }
+            success("Empresa excluída com sucesso!");
+            const responseGet = await fetch(`http://localhost:4000/companies`);
+
+            const updatedCompanies = await responseGet.json()
+
+            console.log(updatedCompanies.companies)
+            setCompanies(updatedCompanies.companies);
+        } catch (err) {
+            error(err.message);
+        }
+    };
+
+    const handleSubmit = async (id) => {
+
+        try {
+            const response = await fetch(`http://localhost:4000/companies/${id}`, {
                 method: 'PUT',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -185,136 +185,67 @@ const handleSubmit = async (id) => {
             error(err.message);
         }
 
-};
+    };
 
-const postCompany = async () => {
-    try {
-        const response = await fetch(`http://10.88.200.155:4000/companies`, {
-            method: 'POST',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": "69420",
-            }),
-            body: JSON.stringify({
-                name: name,
-                cnpj: cnpj,
-                email: email,
-                phone: phone
-            })
-        });
+    const postCompany = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/companies`, {
+                method: 'POST',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                }),
+                body: JSON.stringify({
+                    name: name,
+                    cnpj: cnpj,
+                    email: email,
+                    phone: phone
+                })
+            });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            let errorMessage = response.statusText;
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = response.statusText;
 
-            try {
-                const errorJson = JSON.parse(errorText);
-                errorMessage = errorJson.message;
-            } catch (e) {
-                console.error("Erro ao parsear JSON:", e);
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.message;
+                } catch (e) {
+                    console.error("Erro ao parsear JSON:", e);
+                }
+
+                throw new Error(errorMessage);
             }
 
-            throw new Error(errorMessage);
+            const responseData = await response.json();
+            clearInputs();
+            success(responseData.message);
+            return responseData;
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+            return null;
         }
+    };
 
-        const responseData = await response.json();
-        clearInputs();
-        success(responseData.message);
-        return responseData;
-    } catch (err) {
-        console.error(err);
-        error(err.message);
-        return null;
+    const clearInputs = () => {
+        setName("");
+        setCnpj("");
+        setEmail("");
+        setPhone("");
     }
-};
 
-const clearInputs = () => {
-    setName("");
-    setCnpj("");
-    setEmail("");
-    setPhone("");
-}
+    return (
+        <>
+            <div className={styles.cadastro}>
+                {contextHolder}
+                <div className={styles.card}>
+                    <a href="/CadastroVagas">
+                        <FiArrowLeft className={styles.arrow} />
+                    </a>
 
-return (
-    <>
-        <div className={styles.cadastro}>
-            {contextHolder}
-            <div className={styles.card}>
-                <a href="/CadastroVagas">
-                    <FiArrowLeft className={styles.arrow} />
-                </a>
-                
                     {/* Lista de empresas */}
-                    
-                    <div className={styles.form}>
-                <div className={styles.forms}>
-                    <h1 className={styles.title}> Editar Empresas</h1>
-                    <p className={styles.text}>Por favor, Preencha o campo de nome e atualize os outros dados</p>
-                    <div className={styles.campos}>
-                        <FaRegUser className={styles.icone} />
-                        <input
-                            value={name}
-                            onChange={e => setName(e.target.value)}
-                            type="text"
-                            placeholder="Nome da Empresa"
-                            required
-                            className={styles.inputs}
-                        />
-                    </div>
-
-                    <div className={styles.campos}>
-                        <MdOutlineEmail className={styles.icone} />
-                        <input
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            type="email"
-                            placeholder="E-mail"
-                            required
-                            className={styles.inputs}
-                        />
-                    </div>
-
-                    <div className={styles.campos}>
-                        <IoLockClosedOutline className={styles.icone} />
-                        <input
-                            value={cnpj}
-                            onChange={e => setCnpj(e.target.value)}
-                            type="number"
-                            placeholder="CNPJ"
-                            required
-                            className={styles.inputs}
-                        />
-                    </div>
-
-                    <div className={styles.campos}>
-                        <CiPhone className={styles.icone} />
-                        <input
-                            value={phone}
-                            onChange={e => setPhone(e.target.value)}
-                            type="number"
-                            placeholder="Telefone"
-                            required
-                            className={styles.inputs}
-                        />
-                    </div>
-
-                    <Space>
-                        {editMode == false ? (
-                             <button className={styles.button} onClick={() => postCompany()}>
-                             Cadastrar
-                         </button>
-                        ) : (
-                            <button className={styles.button} onClick={() => handleSubmit(editId)}>
-                             Atualizar
-                         </button>
-                        )}
-    
-                    </Space>
-                    </div>
-
-
-                
-                <div className={styles.listaEmpresas}>
+                    <div className={styles.listaEmpresas}>
                         <h1 className={styles.titulo}>Empresas Cadastradas</h1>
                         <ul className={styles.empresas}>
                             {
@@ -334,11 +265,75 @@ return (
                                     )))}
                         </ul>
                     </div>
-            </div></div>
-            
-        </div>
-    </>
-);
+
+                    <div className={styles.forms}>
+                        <h1 className={styles.title}> Editar Empresas</h1>
+                        <p className={styles.text}>Por favor, Preencha o campo de nome e atualize os outros dados</p>
+                        <div className={styles.campos}>
+                            <FaRegUser className={styles.icone} />
+                            <input
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                type="text"
+                                placeholder="Nome da Empresa"
+                                required
+                                className={styles.inputs}
+                            />
+                        </div>
+
+                        <div className={styles.campos}>
+                            <MdOutlineEmail className={styles.icone} />
+                            <input
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                type="email"
+                                placeholder="E-mail"
+                                required
+                                className={styles.inputs}
+                            />
+                        </div>
+
+                        <div className={styles.campos}>
+                            <IoLockClosedOutline className={styles.icone} />
+                            <input
+                                value={cnpj}
+                                onChange={e => setCnpj(e.target.value)}
+                                type="number"
+                                placeholder="CNPJ"
+                                required
+                                className={styles.inputs}
+                            />
+                        </div>
+
+                        <div className={styles.campos}>
+                            <CiPhone className={styles.icone} />
+                            <input
+                                value={phone}
+                                onChange={e => setPhone(e.target.value)}
+                                type="number"
+                                placeholder="Telefone"
+                                required
+                                className={styles.inputs}
+                            />
+                        </div>
+
+                        <Space>
+                            {editMode == false ? (
+                                <button className={styles.button} onClick={() => postCompany()}>
+                                    Cadastrar
+                                </button>
+                            ) : (
+                                <button className={styles.button} onClick={() => handleSubmit(editId)}>
+                                    Atualizar
+                                </button>
+                            )}
+
+                        </Space>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
 }
 
 export default EditarEmpresas;
