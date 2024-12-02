@@ -329,8 +329,6 @@ const EditarEmpresas = () => {
                             )}
 
                         </Space>
-
-
                     </div>
                 </div>
             </div>

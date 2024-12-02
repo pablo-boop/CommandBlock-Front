@@ -161,7 +161,7 @@ const Header = () => {
                 <Image src={senaiLogo} alt="logo" className={styles.logo} />
             </Link>
             <div className={styles.buttons}>
-                <Button className={styles.buttonRegister} variant="primary">
+                <Button className={styles.buttonRegister1} variant="primary">
                     <Link href='/Cadastro'>
                         <p className={styles.buttonTxt}>Cadastrar-se</p>
                     </Link>
