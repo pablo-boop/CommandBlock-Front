@@ -234,3 +234,18 @@
     font-style: normal;
     margin: 1rem;
 }
+
+.filter {
+    width: 35vw;
+    height: 5vh;
+    padding: 0.6rem;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    background-color: #fff;
+    color: #000;
+}

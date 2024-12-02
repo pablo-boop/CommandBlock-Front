@@ -234,7 +234,7 @@ const cadastrovagas = () => {
 
     const fetchVacancies = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/vacancies`, {
+            const response = await fetch(`http://localhost:4000/vacancies?name=${filter}`, {
                 method: 'GET',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -268,7 +268,7 @@ const cadastrovagas = () => {
     useEffect(() => {
         fetchCandidacies();
         fetchVacancies();
-    }, [candidacies]);
+    }, [candidacies, vacancies]);
 
 
     const openModal = (candidacy) => {
@@ -704,6 +704,7 @@ const cadastrovagas = () => {
                                 <option value={'vacancies'}>Vagas</option>
                             </select>
                         </div>
+                        <input type="text" className={styles.filter} value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Pesquisar vaga por nome"/>
                         <div className={styles.vaga}>
                             {
                                 selectRender === 'candidacies' ? (
@@ -752,7 +753,11 @@ const cadastrovagas = () => {
                                     )
                                 ) : (
                                     vacancies.map((vacancy, index) => (
-                                        <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time} />
+                                        vacancies.length == 0 ? (
+                                            <p className={styles.text}>Nenhuma Vaga cadastrada</p>
+                                        ) : (
+                                            <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time} />
+                                        )
                                     ))
                                 )
                             }
