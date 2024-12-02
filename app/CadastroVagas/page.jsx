@@ -451,15 +451,14 @@ const cadastrovagas = () => {
                     onOk={handleOk}
                     onCancel={handleCancel}
                     className={styles.modal}
-                    style={{ width: '80vw', height: '80vh', maxWidth: 'none' }}
                 >
                     {selectedCandidacy ? (
-                        <>
-                            <p><strong>Descrição:</strong> {selectedCandidacy.description}</p>
-                            <p><strong>Data de Criação:</strong> {selectedCandidacy.creation_time}</p>
-                            <p><strong>Data de Expiração:</strong> {selectedCandidacy.expiration_time}</p>
-                            <p><strong>Tipo:</strong> {selectedCandidacy.type}</p>
-                        </>
+                        <div className={styles.modalContent}>
+                            <p className={styles.modalText}><strong>Descrição:</strong> {selectedCandidacy.description}</p>
+                            <p className={styles.modalText}><strong>Data de Criação:</strong> {selectedCandidacy.creation_time}</p>
+                            <p className={styles.modalText}><strong>Data de Expiração:</strong> {selectedCandidacy.expiration_time}</p>
+                            <p className={styles.modalText}><strong>Tipo:</strong> {selectedCandidacy.type}</p>
+                        </div>
                     ) : (
                         <p>Carregando...</p>
                     )}
@@ -470,7 +469,6 @@ const cadastrovagas = () => {
                     onCancel={() => setManagedCandidacies([])}
                     footer={null}
                     className={styles.modal}
-                    style={{ width: '80vw', height: '80vh', maxWidth: 'none' }}
                 >
                     {managedCandidacies.map((candidacy, index) => {
                         const getCurrentStep = (candidacy) => {
@@ -514,23 +512,26 @@ const cadastrovagas = () => {
                         };
 
                         return (
-                            <div key={index} className={styles.managedCandidacy}>
+                            <div key={index} className={styles.modal}>
                                 <Steps
                                     current={getCurrentStep(candidacy)}
                                     onChange={handleStepChange}
+                                    className={styles.modalSteps}
                                     items={steps.map(step => ({
                                         title: step.title,
                                         description: step.description,
                                         status: step.isActive ? 'finish' : 'wait'
                                     }))}
                                 />
-                                <p><strong>ID do Estudante:</strong> {candidacy.id_student}</p>
-                                <p><strong>Vaga:</strong> {candidacy.id_vacancy}</p>
-                                <p><strong>Empresa:</strong> {candidacy.id_company}</p>
-                                <p><strong>Descrição:</strong> {candidacy.description || "Sem descrição"}</p>
-                                <Tag color={candidacy.hired ? "green" : "blue"}>
-                                    {candidacy.hired ? "Contratado" : "Em Processo"}
-                                </Tag>
+                                <div className={styles.modalTextContent}>
+                                    <p><strong>ID do Estudante:</strong> {candidacy.id_student}</p>
+                                    <p><strong>Vaga:</strong> {candidacy.id_vacancy}</p>
+                                    <p><strong>Empresa:</strong> {candidacy.id_company}</p>
+                                    <p><strong>Descrição:</strong> {candidacy.description || "Sem descrição"}</p>
+                                    <Tag color={candidacy.hired ? "green" : "blue"}>
+                                        {candidacy.hired ? "Contratado" : "Em Processo"}
+                                    </Tag>
+                                </div>
                             </div>
                         );
                     })}
@@ -755,7 +756,6 @@ const cadastrovagas = () => {
                     onCancel={() => setFullDuplicateCandidacies([])}
                     footer={null}
                     className={styles.modal}
-                    style={{ width: '80vw', height: '80vh', maxWidth: 'none' }}
                 >
                     {fullDuplicateCandidacies.map((duplicateGroup, index) => (
                         <div key={index} className={styles.duplicateGroup}>
