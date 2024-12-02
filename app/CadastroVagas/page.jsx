@@ -22,6 +22,9 @@ const cadastrovagas = () => {
     const [companyPhone, setCompanyPhone] = useState("");
     const [companyOptions, setCompanyOptions] = useState([]);
 
+    //Fetch Vacancies
+    const [vacancies, setVacancies] = useState([])
+
     //Messages Pop Up
     const [messageApi, contextHolder] = message.useMessage();
     const [candidacies, setCandidacies] = useState([]);
@@ -36,6 +39,10 @@ const cadastrovagas = () => {
     const [selectedVacancyForManagement, setSelectedVacancyForManagement] = useState(null);
     const [managedCandidacies, setManagedCandidacies] = useState([]);
     const [fullDuplicateCandidacies, setFullDuplicateCandidacies] = useState([]);
+
+    //Filters
+    const [selectRender, setSelectRender] = useState("candidacies");
+    const [filter, setFilter] = useState("")
 
     // Success and Error Message Functions
     const success = (msg) => {
@@ -225,9 +232,42 @@ const cadastrovagas = () => {
         }
     };
 
+    const fetchVacancies = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/vacancies`, {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = response.statusText;
+
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.message;
+                } catch (e) {
+                    console.error("Erro ao parsear JSON:", e);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            const responseData = await response.json();
+            setVacancies(responseData.vacancies);
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+        }
+    };
+
     // Fetch Candidacies on Component Mount
     useEffect(() => {
         fetchCandidacies();
+        fetchVacancies();
     }, [candidacies]);
 
 
@@ -649,52 +689,71 @@ const cadastrovagas = () => {
                 </form>
 
                 <div className={styles.vagacontainer}>
-                    <h3 className={styles.h3}>Candidaturas</h3>
+                    <h3 className={styles.h3}>Candidaturas e Vagas</h3>
                     <div className={styles.vagaitem}>
+                        <div>
+                            <select
+                                value={selectRender}
+                                onChange={(e) => setSelectRender(e.target.value)}
+                                type="text"
+                                placeholder="Tipo de Conta"
+                                required
+                                className={styles.tipo}
+                            >
+                                <option value={'candidacies'}>Candidaturas</option>
+                                <option value={'vacancies'}>Vagas</option>
+                            </select>
+                        </div>
                         <div className={styles.vaga}>
                             {
-                                candidacies.length === 0 ? (
-                                    <p className={styles.text}>Nenhuma vaga cadastrada</p>
-                                ) : (
-                                    candidacies
-                                        .filter((candidacy, index, self) =>
-                                            index === self.findIndex((c) => c.id_vacancy === candidacy.id_vacancy)
-                                        )
-                                        .map((candidacy, index) => {
-                                            return (
-                                                <div key={index} className={styles.candidacyWrapper}>
-                                                    <Candidacies
-                                                        onClick={() => openModal(candidacy)}
-                                                        student={candidacy.id_student}
-                                                        vacancy={candidacy.id_vacancy}
-                                                        company={candidacy.id_company}
-                                                        candicacy_id={candidacy.id}
-                                                        creation_time={candidacy.creation_time}
-                                                        description={candidacy.description ? candidacy.creation_time : "Sem comentário"}
-                                                    />
-                                                    <div className={styles.candidacyActions}>
-                                                        <Button
-                                                            type="link"
-                                                            onClick={() => fetchDuplicateCandidacies(candidacy.id_vacancy)}
-                                                        >
-                                                            Gerenciar Candidaturas Duplicadas
-                                                        </Button>
-                                                        <Button
-                                                            type="link"
-                                                            onClick={() => fetchManagedCandidacies(candidacy.id_vacancy)}
-                                                        >
-                                                            Ver Candidaturas Gerenciadas
-                                                        </Button>
-                                                        <Button
-                                                            type="link"
-                                                            onClick={() => fetchFullDuplicateCandidacies(candidacy.id_vacancy)}
-                                                        >
-                                                            Detalhes de Duplicatas
-                                                        </Button>
+                                selectRender === 'candidacies' ? (
+                                    candidacies.length === 0 ? (
+                                        <p className={styles.text}>Nenhuma candidatura cadastrada</p>
+                                    ) : (
+                                        candidacies
+                                            .filter((candidacy, index, self) =>
+                                                index === self.findIndex((c) => c.id_vacancy === candidacy.id_vacancy)
+                                            )
+                                            .map((candidacy, index) => {
+                                                return (
+                                                    <div key={index} className={styles.candidacyWrapper}>
+                                                        <Candidacies
+                                                            onClick={() => openModal(candidacy)}
+                                                            student={candidacy.id_student}
+                                                            vacancy={candidacy.id_vacancy}
+                                                            company={candidacy.id_company}
+                                                            candicacy_id={candidacy.id}
+                                                            creation_time={candidacy.creation_time}
+                                                            description={candidacy.description ? candidacy.creation_time : "Sem comentário"}
+                                                        />
+                                                        <div className={styles.candidacyActions}>
+                                                            <Button
+                                                                type="link"
+                                                                onClick={() => fetchDuplicateCandidacies(candidacy.id_vacancy)}
+                                                            >
+                                                                Gerenciar Candidaturas Duplicadas
+                                                            </Button>
+                                                            <Button
+                                                                type="link"
+                                                                onClick={() => fetchManagedCandidacies(candidacy.id_vacancy)}
+                                                            >
+                                                                Ver Candidaturas Gerenciadas
+                                                            </Button>
+                                                            <Button
+                                                                type="link"
+                                                                onClick={() => fetchFullDuplicateCandidacies(candidacy.id_vacancy)}
+                                                            >
+                                                                Detalhes de Duplicatas
+                                                            </Button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            );
-                                        })
+                                                );
+                                            })
+                                    )
+                                ) : (
+                                    vacancies.map((vacancy, index) => (
+                                        <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time} />
+                                    ))
                                 )
                             }
                         </div>
