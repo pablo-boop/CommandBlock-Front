@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { message, Skeleton } from 'antd';
 import Link from 'next/link';
 import styles from "./page.module.css";
@@ -69,7 +70,7 @@ export default function Home() {
   };
 
   const router = useRouter();
-  const handleClick = () => {
+  const handleClick = (id) => {
       router.push(`/Candidato?id=${id}`);
       console.log(id);
   };
@@ -140,7 +141,7 @@ export default function Home() {
               </>
             ) : (
               vacancies.map((vacancy, index) => (
-                <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time} navigate={() => handleClick()}/>
+                <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time} navigate={() => handleClick(vacancy.id)}/>
               ))
             )
           }

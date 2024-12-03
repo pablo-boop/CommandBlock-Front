@@ -15,7 +15,7 @@ const Vagas = ({ title, creation_time, expiration_time, type, id, editVacancy, d
 
     return (
         <Card
-            onClick={() => navigate} // Passa os detalhes da vaga
+            onClick={() => navigate()} // Passa os detalhes da vaga
             title={title}
             style={{
                 width: "100%",
