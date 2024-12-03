@@ -7,6 +7,9 @@ import Candidacies from "../components/Candidacies/Candidacies";
 import { DatePicker } from 'antd';
 import { message, Space, Modal, Button, Tag, Steps } from 'antd';
 import { useState, useEffect, useCallback } from "react";
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 const cadastrovagas = () => {
     //candidacies properties
@@ -21,6 +24,10 @@ const cadastrovagas = () => {
     const [companyCnpj, setCompanyCnpj] = useState("");
     const [companyPhone, setCompanyPhone] = useState("");
     const [companyOptions, setCompanyOptions] = useState([]);
+
+    //... previous state declarations ...
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingVacancyId, setEditingVacancyId] = useState(null);
 
     //Fetch Vacancies
     const [vacancies, setVacancies] = useState([])
@@ -268,7 +275,7 @@ const cadastrovagas = () => {
     useEffect(() => {
         fetchCandidacies();
         fetchVacancies();
-    }, [candidacies, vacancies]);
+    }, [filter, vacancies, candidacies]);
 
 
     const openModal = (candidacy) => {
@@ -426,14 +433,72 @@ const cadastrovagas = () => {
         }
     }, []);
 
+    //Delete Function
+    const deleteVacancy = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:4000/vacancies/${id}`, {
+                method: 'DELETE',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "69420",
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.message == 'Vaga deletada com sucesso') {
+                success(data.message);
+            } else {
+                error(data.message)
+            }
+
+        } catch (err) {
+            console.error(err);
+            error(err.message);
+        }
+    };
+
+    //Edit Function
+    const handleEditVacancy = async (vacancy) => {
+        setIsEditing(true);
+        setEditingVacancyId(vacancy.id);
+
+        // Populate form fields with existing vacancy data
+        setName(vacancy.name);
+        setDescription(vacancy.description);
+        setType(vacancy.type);
+
+        // Set creation and expiration times
+        const [day, month, year] = vacancy.creation_time.split('-');
+        setCreationTime(dayjs(`${year}-${month}-${day}`, 'YYYY-MM-DD'));
+
+        const [expDay, expMonth, expYear] = vacancy.expiration_time.split('-');
+        setExpirationTime(dayjs(`${expYear}-${expMonth}-${expDay}`, 'YYYY-MM-DD'));
+
+        // Fetch and populate company details
+        try {
+            const response = await fetch(`http://localhost:4000/companies/${vacancy.company_id}`);
+            const data = await response.json();
+
+            if (data.company) {
+                const company = data.company;
+                setCompanyName(company.name);
+                setCompanyEmail(company.email);
+                setCompanyCnpj(sanitizeInput(company.cnpj));
+                setCompanyPhone(sanitizeInput(company.phone));
+            }
+        } catch (err) {
+            console.error("Error fetching company details:", err);
+            error("Erro ao carregar detalhes da empresa");
+        }
+    };
+
     const handleSubmit = async () => {
         if (name && description && creationTime && expirationTime && type && companyName && companyEmail && companyCnpj && companyPhone) {
             try {
-                // Modify to use formatted date from creationTime and expirationTime
                 const formattedCreationTime = creationTime.format('DD-MM-YYYY');
                 const formattedExpirationTime = expirationTime.format('DD-MM-YYYY');
 
-                // First check if company exists by CNPJ
                 const response = await fetch(`http://localhost:4000/companies?cnpj=${companyCnpj}`);
                 if (!response.ok) {
                     throw new Error('Erro ao verificar empresa');
@@ -442,7 +507,6 @@ const cadastrovagas = () => {
 
                 let companyId;
 
-                // If company doesn't exist in the suggestions, create new company first
                 if (!data.companies || data.companies.length === 0) {
                     const companyResponse = await postCompany({
                         name: companyName,
@@ -451,29 +515,45 @@ const cadastrovagas = () => {
                         phone: companyPhone
                     });
 
-                    console.log(companyResponse);
-
                     if (!companyResponse) {
                         throw new Error('Erro ao cadastrar empresa');
                     }
 
-                    // Get the ID from the newly created company
                     companyId = companyResponse.id;
                 } else {
-                    // Get the ID from the existing company
                     companyId = data.companies[0].id;
                 }
 
-                // Create the vacancy with the correct company ID
-                await postVacancy({
-                    name,
-                    description,
-                    creation_time: formattedCreationTime,
-                    expiration_time: formattedExpirationTime,
-                    type,
-                    company_id: companyId
-                });
+                if (isEditing && editingVacancyId) {
+                    // Update existing vacancy
+                    const updateResponse = await fetch(`http://localhost:4000/vacancies/${editingVacancyId}`, {
+                        method: 'PUT',
+                        headers: new Headers({
+                            'Content-Type': 'application/json',
+                            "ngrok-skip-browser-warning": "69420",
+                        }),
+                        body: JSON.stringify({
+                            name,
+                            description,
+                            creation_time: formattedCreationTime,
+                            expiration_time: formattedExpirationTime,
+                            type,
+                            company_id: companyId
+                        })
+                    });
 
+                    const updateData = await updateResponse.json();
+
+                    success(updateData.message);
+                    // Reset editing state
+                    setIsEditing(false);
+                    setEditingVacancyId(null);
+
+                    // Refresh vacancies
+                    fetchVacancies();
+                }
+
+                clearInputs();
             } catch (err) {
                 console.error(err);
                 error(err.message || 'Erro ao processar requisição');
@@ -685,10 +765,16 @@ const cadastrovagas = () => {
                     </a>
 
                     <div className={styles.inputarea}>
-                        <button className={styles.button} type="submit" onClick={(e) => {
-                            e.preventDefault();
-                            handleSubmit();
-                        }}>Cadastrar</button>
+                        <button
+                            className={styles.button}
+                            type="submit"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleSubmit();
+                            }}
+                        >
+                            {isEditing ? 'Atualizar Vaga' : 'Cadastrar Vaga'}
+                        </button>
                     </div>
 
                 </form>
@@ -768,6 +854,8 @@ const cadastrovagas = () => {
                                                 type={vacancy.type}
                                                 creation_time={vacancy.creation_time}
                                                 expiration_time={vacancy.creation_time}
+                                                deleteVacancy={() => deleteVacancy(vacancy.id)}
+                                                editVacancy={() => handleEditVacancy(vacancy)}
                                             />
                                         ))
                                     )

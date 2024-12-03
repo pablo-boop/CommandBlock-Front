@@ -68,6 +68,12 @@ export default function Home() {
     });
   };
 
+  const router = useRouter();
+  const handleClick = () => {
+      router.push(`/Candidato?id=${id}`);
+      console.log(id);
+  };
+
   return (
     <div>
       <Header />
@@ -134,7 +140,7 @@ export default function Home() {
               </>
             ) : (
               vacancies.map((vacancy, index) => (
-                <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time}/>
+                <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time} navigate={() => handleClick()}/>
               ))
             )
           }

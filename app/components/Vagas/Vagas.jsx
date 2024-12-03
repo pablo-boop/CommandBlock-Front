@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { Card } from "antd";
 import { FaTrashAlt, FaPencilAlt } from "react-icons/fa";
 
-const Vagas = ({ title, creation_time, expiration_time, type, id }) => {
+const Vagas = ({ title, creation_time, expiration_time, type, id, editVacancy, deleteVacancy, navigate }) => {
     
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -13,39 +13,9 @@ const Vagas = ({ title, creation_time, expiration_time, type, id }) => {
         return `${day}-${month}-${year}`;
     };
 
-    const router = useRouter();
-    const handleClick = () => {
-        router.push(`/Candidato?id=${id}`);
-        console.log(id);
-    };
-
-    const deleteVacancy = async (id) => {
-        try {
-            const response = await fetch(`http://localhost:4000/vacancies/${id}`, {
-                method: 'DELETE',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                    "ngrok-skip-browser-warning": "69420",
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success && data.duplicates.length > 0) {
-                setDuplicateCandidacies(data.duplicates);
-                success("Candidaturas duplicadas carregadas com sucesso!");
-            } else {
-                message.info('Nenhuma candidatura duplicada encontrada.');
-            }
-        } catch (err) {
-            console.error(err);
-            error(err.message);
-        }
-    };
-
     return (
         <Card
-            onClick={() => handleClick()} // Passa os detalhes da vaga
+            onClick={() => navigate} // Passa os detalhes da vaga
             title={title}
             style={{
                 width: "100%",
