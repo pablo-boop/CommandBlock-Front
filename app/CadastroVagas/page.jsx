@@ -320,12 +320,12 @@ const cadastrovagas = () => {
 
     const onChangeCreation = (date, dateString) => {
         const formattedDate = dateString.split('-').reverse().join('-');
-        setCreationTime(formattedDate);
+        setCreationTime(date);  // Keep the date object
     };
 
     const onChangeExpiration = (date, dateString) => {
         const formattedDate = dateString.split('-').reverse().join('-');
-        setExpirationTime(formattedDate);
+        setExpirationTime(date);  // Keep the date object
     };
 
     //Formatação da data
@@ -345,8 +345,8 @@ const cadastrovagas = () => {
     const clearInputs = () => {
         setName("");
         setDescription("");
-        setCreationTime("");
-        setExpirationTime("");
+        setCreationTime(null);
+        setExpirationTime(null);
         setType("");
         setCompanyName("");
         setCompanyCnpj("");
@@ -429,6 +429,10 @@ const cadastrovagas = () => {
     const handleSubmit = async () => {
         if (name && description && creationTime && expirationTime && type && companyName && companyEmail && companyCnpj && companyPhone) {
             try {
+                // Modify to use formatted date from creationTime and expirationTime
+                const formattedCreationTime = creationTime.format('DD-MM-YYYY');
+                const formattedExpirationTime = expirationTime.format('DD-MM-YYYY');
+
                 // First check if company exists by CNPJ
                 const response = await fetch(`http://localhost:4000/companies?cnpj=${companyCnpj}`);
                 if (!response.ok) {
@@ -449,7 +453,6 @@ const cadastrovagas = () => {
 
                     console.log(companyResponse);
 
-
                     if (!companyResponse) {
                         throw new Error('Erro ao cadastrar empresa');
                     }
@@ -465,8 +468,8 @@ const cadastrovagas = () => {
                 await postVacancy({
                     name,
                     description,
-                    creation_time: creationTime,
-                    expiration_time: expirationTime,
+                    creation_time: formattedCreationTime,
+                    expiration_time: formattedExpirationTime,
                     type,
                     company_id: companyId
                 });
@@ -641,6 +644,7 @@ const cadastrovagas = () => {
 
                     <div className={styles.inputarea}>
                         <DatePicker
+                            value={creationTime}
                             className={styles.datePicker}
                             onChange={onChangeCreation} // Update here
                             placeholder="Selecionar data de Criação"
@@ -649,6 +653,7 @@ const cadastrovagas = () => {
 
                     <div className={styles.inputarea}>
                         <DatePicker
+                            value={expirationTime}
                             className={styles.datePicker}
                             onChange={onChangeExpiration} // Update here
                             placeholder="Selecionar data de Expiração"
