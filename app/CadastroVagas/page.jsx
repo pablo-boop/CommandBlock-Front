@@ -97,11 +97,56 @@ const cadastrovagas = () => {
                     "ngrok-skip-browser-warning": "69420",
                 })
             });
-
+    
             const data = await response.json();
-
+            console.log(data);
+            
+    
             if (data.candidacies) {
-                setManagedCandidacies(data.candidacies);
+                // Create a new array with additional details
+                const enrichedCandidacies = await Promise.all(data.candidacies.map(async (candidacy) => {
+                    try {
+                        // Fetch student details
+                        const studentResponse = await fetch(`http://localhost:4000/users/${candidacy.id_student}`, {
+                            headers: {
+                                "ngrok-skip-browser-warning": "69420",
+                            }
+                        });
+                        const studentData = await studentResponse.json();
+    
+                        // Fetch vacancy details
+                        const vacancyResponse = await fetch(`http://localhost:4000/vacancies/${candidacy.id_vacancy}`, {
+                            headers: {
+                                "ngrok-skip-browser-warning": "69420",
+                            }
+                        });
+                        const vacancyData = await vacancyResponse.json();
+    
+                        // Fetch company details
+                        const companyResponse = await fetch(`http://localhost:4000/companies/${candidacy.id_company}`, {
+                            headers: {
+                                "ngrok-skip-browser-warning": "69420",
+                            }
+                        });
+                        const companyData = await companyResponse.json();
+    
+                        // Combine all details
+                        console.log(candidacy, studentData.user.name, vacancyData.vacancy.name, companyData.company.name, vacancyData.vacancy.description); 
+                        return {
+                            ...candidacy,
+                            student_name: studentData.user.name,
+                            vacancy_name: vacancyData.vacancy.name,
+                            company_name: companyData.company.name,
+                            description: vacancyData.vacancy.description
+                        };
+                        
+                    } catch (detailError) {
+                        console.error("Error fetching additional details:", detailError);
+                        return candidacy; // Return original candidacy if fetch fails
+                    }
+                }));
+    
+                setManagedCandidacies(enrichedCandidacies);
                 success("Candidaturas gerenciadas carregadas com sucesso!");
             } else {
                 message.info('Nenhuma candidatura gerenciada encontrada.');
@@ -578,17 +623,17 @@ const cadastrovagas = () => {
                     error("Data inválida. Por favor, selecione uma data válida.");
                     return null;
                 };
-    
+
                 // Format dates
                 const formattedCreationTime = formatDate(creationTime);
                 const formattedExpirationTime = formatDate(expirationTime);
-    
+
                 // Date validation
                 if (new Date(formattedExpirationTime) < new Date(formattedCreationTime)) {
                     error("A data de expiração não pode ser anterior à data de criação.");
                     return;
                 }
-    
+
                 // Prepare company data
                 const companyData = {
                     name: companyName,
@@ -596,9 +641,9 @@ const cadastrovagas = () => {
                     email: companyEmail,
                     phone: companyPhone
                 };
-    
+
                 let companyId;
-    
+
                 // Determine if we're in update or create mode
                 if (isEditing && editingVacancyId) {
                     // Update mode - first fetch the existing vacancy to get the company ID
@@ -609,10 +654,10 @@ const cadastrovagas = () => {
                             "ngrok-skip-browser-warning": "69420"
                         },
                     });
-    
+
                     const vacancyData = await vacancyResponse.json();
                     const existingCompanyId = vacancyData.vacancy.company_id;
-    
+
                     // Update the existing company
                     const updateCompanyResponse = await fetch(`http://localhost:4000/companies/${existingCompanyId}`, {
                         method: 'PUT',
@@ -622,12 +667,12 @@ const cadastrovagas = () => {
                         },
                         body: JSON.stringify(companyData)
                     });
-    
+
                     if (!updateCompanyResponse.ok) {
                         const errorData = await updateCompanyResponse.json();
                         throw new Error(errorData.message || "Erro ao atualizar empresa");
                     }
-    
+
                     companyId = existingCompanyId;
                     success("Empresa atualizada com sucesso");
                 } else {
@@ -638,7 +683,7 @@ const cadastrovagas = () => {
                         }
                     });
                     const existingCompanyData = await companyResponse.json();
-    
+
                     // If company exists, use its ID
                     if (existingCompanyData.companies && existingCompanyData.companies.length > 0) {
                         companyId = existingCompanyData.companies[0].id;
@@ -652,7 +697,7 @@ const cadastrovagas = () => {
                         companyId = newCompanyResponse.id;
                     }
                 }
-    
+
                 // Prepare vacancy data
                 const vacancyData = {
                     name,
@@ -662,7 +707,7 @@ const cadastrovagas = () => {
                     type,
                     company_id: companyId
                 };
-    
+
                 // Create or update vacancy
                 let vacancyResult;
                 if (isEditing && editingVacancyId) {
@@ -675,26 +720,26 @@ const cadastrovagas = () => {
                         },
                         body: JSON.stringify(vacancyData)
                     });
-    
+
                     if (!vacancyResult.ok) {
                         const errorData = await vacancyResult.json();
                         throw new Error(errorData.message || "Erro ao atualizar vaga");
                     }
-    
+
                     success("Vaga atualizada com sucesso");
                 } else {
                     // Create new vacancy
                     vacancyResult = await postVacancy(vacancyData);
                 }
-    
+
                 // Reset editing state
                 setIsEditing(false);
                 setEditingVacancyId(null);
-    
+
                 // Clear inputs and refresh vacancies list
                 clearInputs();
                 fetchVacancies();
-    
+
             } catch (err) {
                 console.error(err);
                 error(err.message || 'Erro ao processar requisição');
@@ -735,6 +780,7 @@ const cadastrovagas = () => {
                     className={styles.modal}
                 >
                     {managedCandidacies.map((candidacy, index) => {
+                        
                         const steps = [
                             {
                                 title: 'Iniciado',
@@ -784,9 +830,10 @@ const cadastrovagas = () => {
                                     }))}
                                 />
                                 <div className={styles.modalTextContent}>
-                                    <p><strong>ID do Estudante:</strong> {candidacy.id_student}</p>
-                                    <p><strong>Vaga:</strong> {candidacy.id_vacancy}</p>
-                                    <p><strong>Empresa:</strong> {candidacy.id_company}</p>
+                                    <p><strong>Estudante:</strong> {candidacy.student_name}</p>
+                                    <p><strong>Vaga:</strong> {candidacy.vacancy_name}</p>
+                                    <p><strong>Empresa:</strong> {candidacy.company_name}</p>
+                                    <p><strong>Data de Criação:</strong> {new Date(candidacy.creation_time).toLocaleDateString()}</p>
                                     <p><strong>Descrição:</strong> {candidacy.description || "Sem descrição"}</p>
                                     <Tag color={candidacy.hired ? "green" : "blue"}>
                                         {candidacy.hired ? "Contratado" : "Em Processo"}
