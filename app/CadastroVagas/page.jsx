@@ -51,6 +51,27 @@ const cadastrovagas = () => {
     const [selectRender, setSelectRender] = useState("candidacies");
     const [filter, setFilter] = useState("")
 
+    const handleStepChange = async (stepIndex, index) => {
+        const candidacy = managedCandidacies[index];
+        const steps = [
+            { field: 'iniciated' },
+            { field: 'curriculumAvaliation' },
+            { field: 'documentsManagement' },
+            { field: 'hired' }
+        ];
+
+        const selectedStep = steps[stepIndex];
+        await updateCandidacyStatus(candidacy.id, selectedStep.field);
+
+        // Optionally, you might want to update the state to reflect the new step
+        const updatedManagedCandidacies = [...managedCandidacies];
+        updatedManagedCandidacies[index] = {
+            ...updatedManagedCandidacies[index],
+            [selectedStep.field]: true
+        };
+        setManagedCandidacies(updatedManagedCandidacies);
+    };
+
     // Success and Error Message Functions
     const success = (msg) => {
         messageApi.open({
@@ -96,48 +117,75 @@ const cadastrovagas = () => {
         try {
             const response = await fetch(`http://localhost:4000/duplicate-candidates/${vacancyId}`, {
                 method: 'GET',
-                headers: new Headers({
+                headers: {
                     'Content-Type': 'application/json',
                     "ngrok-skip-browser-warning": "69420",
-                })
+                }
             });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
             const data = await response.json();
 
-            if (data.success && data.duplicates.length > 0) {
+            if (data.success && data.duplicates?.length > 0) {
                 setFullDuplicateCandidacies(data.duplicates);
                 success("Candidaturas duplicadas carregadas com sucesso!");
             } else {
                 message.info('Nenhuma candidatura duplicada encontrada.');
             }
         } catch (err) {
-            console.error(err);
-            error(err.message);
+            console.error('Error fetching duplicate candidacies:', err);
+            error(err.message || 'Erro ao buscar candidaturas duplicadas');
         }
     };
 
     // Add this function alongside the other fetch functions
     const fetchDuplicateCandidacies = async (vacancyId) => {
         try {
-            const response = await fetch(`http://localhost:4000/duplicate-candidates/${vacancyId}`, {
-                method: 'GET',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                    "ngrok-skip-browser-warning": "69420",
-                })
-            });
 
-            const data = await response.json();
+            const managedResponse = await fetch(`http://localhost:4000/vacancies/${vacancyId}`);
+            const managedData = await managedResponse.json();
 
-            if (data.success && data.duplicates.length > 0) {
-                setDuplicateCandidacies(data.duplicates);
-                success("Candidaturas duplicadas carregadas com sucesso!");
+            if (managedData.vacancy.managed == true) {
+                message.info('Candidatura já gerenciada!');
             } else {
-                message.info('Nenhuma candidatura duplicada encontrada.');
+                const response = await fetch(`http://localhost:4000/duplicate-candidates/${vacancyId}`, {
+                    method: 'GET',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        "ngrok-skip-browser-warning": "69420",
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data && data.success && data.candidacies && data.candidacies.length > 0) {
+                    // Transform the data to match the existing modal's expected structure
+                    const transformedDuplicates = [{
+                        description: data.candidacies[0].vacancy.description,
+                        vacancy_name: data.candidacies[0].vacancy.name,
+                        duplicate_count: data.total,
+                        vacancy_id: data.candidacies[0].vacancy.id,
+                        candidacies: data.candidacies.map(candidacy => ({
+                            student_name: candidacy.student.name,
+                            student_id: candidacy.student.id,
+                            creation_time: new Date(), // You might want to add a creation time field if available
+                        }))
+                    }];
+
+                    setDuplicateCandidacies(transformedDuplicates);
+                    success("Candidaturas duplicadas carregadas com sucesso!");
+                } else {
+                    message.info('Nenhuma candidatura duplicada encontrada.');
+                    setDuplicateCandidacies([]);
+                }
             }
         } catch (err) {
             console.error(err);
             error(err.message);
+            setDuplicateCandidacies([]);
         }
     };
 
@@ -205,6 +253,34 @@ const cadastrovagas = () => {
             error(err.message);
         }
     };
+
+    const deleteCandidacy = async (candidacy_id) => {
+        //Vagas
+
+        console.log(candidacy_id);
+
+        const response = await fetch(`http://localhost:4000/candidacies/${candidacy_id}`, {
+            method: 'DELETE',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                "ngrok-skip-browser-warning": "69420",
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            let errorMessage = response.statusText;
+
+            try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = errorJson.message;
+            } catch (e) {
+                console.error("Erro ao parsear JSON:", e);
+            }
+
+            throw new Error(errorMessage);
+        }
+    }
 
     // Fetch Candidacies Function
     const fetchCandidacies = async () => {
@@ -389,11 +465,9 @@ const cadastrovagas = () => {
             const responseData = await response.json();
             clearInputs();
             success(responseData.message);
-            return responseData;
         } catch (err) {
             console.error(err);
             error(err.message);
-            return null;
         }
     }, []);
 
@@ -425,11 +499,9 @@ const cadastrovagas = () => {
             const responseData = await response.json();
             clearInputs();
             success(responseData.message);
-            return responseData;
         } catch (err) {
             console.error(err);
             error(err.message);
-            return null;
         }
     }, []);
 
@@ -443,18 +515,16 @@ const cadastrovagas = () => {
                     "ngrok-skip-browser-warning": "69420",
                 })
             });
-
             const data = await response.json();
 
             if (data.message == 'Vaga deletada com sucesso') {
                 success(data.message);
             } else {
-                error(data.message)
+                error('Erro ao deletar Vaga. Obs: possivelmente é uma vaga associada há uma candidatura!')
             }
 
         } catch (err) {
-            console.error(err);
-            error(err.message);
+            error('Erro ao deletar Vaga. Obs: possivelmente é uma vaga associada há uma candidatura!')
         }
     };
 
@@ -494,66 +564,137 @@ const cadastrovagas = () => {
     };
 
     const handleSubmit = async () => {
-        if (name && description && creationTime && expirationTime && type && companyName && companyEmail && companyCnpj && companyPhone) {
+        // Validate all required fields are filled
+        if (name && description && creationTime && expirationTime && type &&
+            companyName && companyEmail && companyCnpj && companyPhone) {
             try {
-                const formattedCreationTime = creationTime.format('DD-MM-YYYY');
-                const formattedExpirationTime = expirationTime.format('DD-MM-YYYY');
-
-                const response = await fetch(`http://localhost:4000/companies?cnpj=${companyCnpj}`);
-                if (!response.ok) {
-                    throw new Error('Erro ao verificar empresa');
-                }
-                const data = await response.json();
-
-                let companyId;
-
-                if (!data.companies || data.companies.length === 0) {
-                    const companyResponse = await postCompany({
-                        name: companyName,
-                        cnpj: companyCnpj,
-                        email: companyEmail,
-                        phone: companyPhone
-                    });
-
-                    if (!companyResponse) {
-                        throw new Error('Erro ao cadastrar empresa');
+                const formatDate = (date) => {
+                    if (date && date.$d instanceof Date) {
+                        const year = date.$d.getFullYear();
+                        const month = String(date.$d.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.$d.getDate()).padStart(2, '0');
+                        return `${year}-${month}-${day}`;
                     }
-
-                    companyId = companyResponse.id;
-                } else {
-                    companyId = data.companies[0].id;
+                    error("Data inválida. Por favor, selecione uma data válida.");
+                    return null;
+                };
+    
+                // Format dates
+                const formattedCreationTime = formatDate(creationTime);
+                const formattedExpirationTime = formatDate(expirationTime);
+    
+                // Date validation
+                if (new Date(formattedExpirationTime) < new Date(formattedCreationTime)) {
+                    error("A data de expiração não pode ser anterior à data de criação.");
+                    return;
                 }
-
+    
+                // Prepare company data
+                const companyData = {
+                    name: companyName,
+                    cnpj: companyCnpj,
+                    email: companyEmail,
+                    phone: companyPhone
+                };
+    
+                let companyId;
+    
+                // Determine if we're in update or create mode
+                if (isEditing && editingVacancyId) {
+                    // Update mode - first fetch the existing vacancy to get the company ID
+                    const vacancyResponse = await fetch(`http://localhost:4000/vacancies/${editingVacancyId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "ngrok-skip-browser-warning": "69420"
+                        },
+                    });
+    
+                    const vacancyData = await vacancyResponse.json();
+                    const existingCompanyId = vacancyData.vacancy.company_id;
+    
+                    // Update the existing company
+                    const updateCompanyResponse = await fetch(`http://localhost:4000/companies/${existingCompanyId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "ngrok-skip-browser-warning": "69420"
+                        },
+                        body: JSON.stringify(companyData)
+                    });
+    
+                    if (!updateCompanyResponse.ok) {
+                        const errorData = await updateCompanyResponse.json();
+                        throw new Error(errorData.message || "Erro ao atualizar empresa");
+                    }
+    
+                    companyId = existingCompanyId;
+                    success("Empresa atualizada com sucesso");
+                } else {
+                    // Create mode - check for existing company or create new
+                    const companyResponse = await fetch(`http://localhost:4000/companies?name=${companyName}`, {
+                        headers: {
+                            "ngrok-skip-browser-warning": "69420"
+                        }
+                    });
+                    const existingCompanyData = await companyResponse.json();
+    
+                    // If company exists, use its ID
+                    if (existingCompanyData.companies && existingCompanyData.companies.length > 0) {
+                        companyId = existingCompanyData.companies[0].id;
+                        message.info("Empresa já cadastrada");
+                    } else {
+                        // Create new company
+                        const newCompanyResponse = await postCompany(companyData);
+                        if (!newCompanyResponse) {
+                            throw new Error("Erro ao criar empresa");
+                        }
+                        companyId = newCompanyResponse.id;
+                    }
+                }
+    
+                // Prepare vacancy data
+                const vacancyData = {
+                    name,
+                    description,
+                    creation_time: formattedCreationTime,
+                    expiration_time: formattedExpirationTime,
+                    type,
+                    company_id: companyId
+                };
+    
+                // Create or update vacancy
+                let vacancyResult;
                 if (isEditing && editingVacancyId) {
                     // Update existing vacancy
-                    const updateResponse = await fetch(`http://localhost:4000/vacancies/${editingVacancyId}`, {
+                    vacancyResult = await fetch(`http://localhost:4000/vacancies/${editingVacancyId}`, {
                         method: 'PUT',
-                        headers: new Headers({
+                        headers: {
                             'Content-Type': 'application/json',
-                            "ngrok-skip-browser-warning": "69420",
-                        }),
-                        body: JSON.stringify({
-                            name,
-                            description,
-                            creation_time: formattedCreationTime,
-                            expiration_time: formattedExpirationTime,
-                            type,
-                            company_id: companyId
-                        })
+                            "ngrok-skip-browser-warning": "69420"
+                        },
+                        body: JSON.stringify(vacancyData)
                     });
-
-                    const updateData = await updateResponse.json();
-
-                    success(updateData.message);
-                    // Reset editing state
-                    setIsEditing(false);
-                    setEditingVacancyId(null);
-
-                    // Refresh vacancies
-                    fetchVacancies();
+    
+                    if (!vacancyResult.ok) {
+                        const errorData = await vacancyResult.json();
+                        throw new Error(errorData.message || "Erro ao atualizar vaga");
+                    }
+    
+                    success("Vaga atualizada com sucesso");
+                } else {
+                    // Create new vacancy
+                    vacancyResult = await postVacancy(vacancyData);
                 }
-
+    
+                // Reset editing state
+                setIsEditing(false);
+                setEditingVacancyId(null);
+    
+                // Clear inputs and refresh vacancies list
                 clearInputs();
+                fetchVacancies();
+    
             } catch (err) {
                 console.error(err);
                 error(err.message || 'Erro ao processar requisição');
@@ -594,6 +735,33 @@ const cadastrovagas = () => {
                     className={styles.modal}
                 >
                     {managedCandidacies.map((candidacy, index) => {
+                        const steps = [
+                            {
+                                title: 'Iniciado',
+                                description: 'Candidatura Iniciada',
+                                field: 'iniciated',
+                                status: 'wait'
+                            },
+                            {
+                                title: 'Avaliação',
+                                description: 'Avaliação de Currículo',
+                                field: 'curriculumAvaliation',
+                                status: 'wait'
+                            },
+                            {
+                                title: 'Documentos',
+                                description: 'Gestão de Documentos',
+                                field: 'documentsManagement',
+                                status: 'wait'
+                            },
+                            {
+                                title: 'Finalizado',
+                                description: 'Candidatura Concluída',
+                                field: candidacy.hired ? 'hired' : 'done',
+                                status: 'wait'
+                            }
+                        ];
+
                         const getCurrentStep = (candidacy) => {
                             if (candidacy.hired) return 3;
                             if (candidacy.done) return 2;
@@ -602,48 +770,17 @@ const cadastrovagas = () => {
                             return 0;
                         };
 
-                        const steps = [
-                            {
-                                title: 'Iniciado',
-                                description: 'Candidatura Iniciada',
-                                field: 'iniciated',
-                                isActive: candidacy.iniciated
-                            },
-                            {
-                                title: 'Avaliação',
-                                description: 'Avaliação de Currículo',
-                                field: 'curriculumAvaliation',
-                                isActive: candidacy.curriculumAvaliation
-                            },
-                            {
-                                title: 'Documentos',
-                                description: 'Gestão de Documentos',
-                                field: 'documentsManagement',
-                                isActive: candidacy.documentsManagement
-                            },
-                            {
-                                title: 'Finalizado',
-                                description: 'Candidatura Concluída',
-                                field: candidacy.hired ? 'hired' : 'done',
-                                isActive: candidacy.hired || candidacy.done
-                            }
-                        ];
-
-                        const handleStepChange = async (stepIndex) => {
-                            const selectedStep = steps[stepIndex];
-                            await updateCandidacyStatus(candidacy.id, selectedStep.field);
-                        };
-
                         return (
                             <div key={index} className={styles.modal}>
                                 <Steps
                                     current={getCurrentStep(candidacy)}
-                                    onChange={handleStepChange}
+                                    onChange={(stepIndex) => handleStepChange(stepIndex, index)}
                                     className={styles.modalSteps}
-                                    items={steps.map(step => ({
+                                    items={steps.map((step, stepIndex) => ({
                                         title: step.title,
                                         description: step.description,
-                                        status: step.isActive ? 'finish' : 'wait'
+                                        status: stepIndex < getCurrentStep(candidacy) ? 'finish' :
+                                            stepIndex === getCurrentStep(candidacy) ? 'process' : 'wait'
                                     }))}
                                 />
                                 <div className={styles.modalTextContent}>
@@ -816,7 +953,8 @@ const cadastrovagas = () => {
                                                             company={candidacy.id_company}
                                                             candicacy_id={candidacy.id}
                                                             creation_time={candidacy.creation_time}
-                                                            description={candidacy.description ? candidacy.creation_time : "Sem comentário"}
+                                                            description={candidacy.description ? candidacy.description : "Sem comentário"}
+                                                            deleteCandidacy={() => deleteCandidacy(candidacy.id)}
                                                         />
                                                         <div className={styles.candidacyActions}>
                                                             <Button
@@ -830,12 +968,6 @@ const cadastrovagas = () => {
                                                                 onClick={() => fetchManagedCandidacies(candidacy.id_vacancy)}
                                                             >
                                                                 Ver Candidaturas Gerenciadas
-                                                            </Button>
-                                                            <Button
-                                                                type="link"
-                                                                onClick={() => fetchFullDuplicateCandidacies(candidacy.id_vacancy)}
-                                                            >
-                                                                Detalhes de Duplicatas
                                                             </Button>
                                                         </div>
                                                     </div>
@@ -853,7 +985,7 @@ const cadastrovagas = () => {
                                                 title={vacancy.name}
                                                 type={vacancy.type}
                                                 creation_time={vacancy.creation_time}
-                                                expiration_time={vacancy.creation_time}
+                                                expiration_time={vacancy.expiration_time}
                                                 deleteVacancy={() => deleteVacancy(vacancy.id)}
                                                 editVacancy={() => handleEditVacancy(vacancy)}
                                             />
@@ -871,10 +1003,9 @@ const cadastrovagas = () => {
                     onCancel={() => setDuplicateCandidacies([])}
                     footer={null}
                     className={styles.modal}
-                    style={{ width: '80vw', height: '80vh', maxWidth: 'none' }}
                 >
                     {duplicateCandidacies.map((duplicateGroup, index) => (
-                        <div key={index} className={styles.duplicateGroup}>
+                        <div key={index} className={styles.modalContent}>
                             <h4>Grupo de Duplicatas</h4>
                             <p><strong>Descrição:</strong> {duplicateGroup.description}</p>
                             <p><strong>Vaga:</strong> {duplicateGroup.vacancy_name}</p>

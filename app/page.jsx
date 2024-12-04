@@ -141,7 +141,7 @@ export default function Home() {
               </>
             ) : (
               vacancies.map((vacancy, index) => (
-                <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.creation_time} navigate={() => handleClick(vacancy.id)}/>
+                <Vagas key={index} id={vacancy.id} title={vacancy.name} type={vacancy.type} creation_time={vacancy.creation_time} expiration_time={vacancy.expiration_time} navigate={() => handleClick(vacancy.id)}/>
               ))
             )
           }

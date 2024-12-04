@@ -6,7 +6,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Candidacies = ({ student, vacancy, company, description, creation_time, candicacy_id }) => {
+const Candidacies = ({ student, vacancy, company, description, creation_time, candicacy_id, deleteCandidacy }) => {
 
     //States
     const [userName, setUserName] = useState("");
@@ -110,34 +110,6 @@ const Candidacies = ({ student, vacancy, company, description, creation_time, ca
         fetchCompany();
     }, [])
 
-    const deletedCanidacy = async (candidacy_id) => {
-        //Vagas
-
-        console.log(candicacy_id);
-        
-        const response = await fetch(`http://localhost:4000/candidacies/${candidacy_id}`, {
-            method: 'DELETE',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": "69420",
-            })
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            let errorMessage = response.statusText;
-
-            try {
-                const errorJson = JSON.parse(errorText);
-                errorMessage = errorJson.message;
-            } catch (e) {
-                console.error("Erro ao parsear JSON:", e);
-            }
-
-            throw new Error(errorMessage);
-        }
-    }
-
     return (
         <Card
             title={""}
@@ -168,7 +140,7 @@ const Candidacies = ({ student, vacancy, company, description, creation_time, ca
                         </div>
                     </>
                     <div className={styles.icons}>
-                        <FaTrashAlt className={styles.icon} onClick={() => deletedCanidacy(candidacyId)}/>
+                        <FaTrashAlt className={styles.icon} onClick={() => deleteCandidacy(candidacyId)}/>
                     </div>
                 </div>
             </div>
